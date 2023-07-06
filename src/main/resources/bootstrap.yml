@@ -1,0 +1,107 @@
+spring:
+  profiles:
+    active: ${ENVIRONMENT}
+  data:
+    rest:
+      detection-strategy: annotated
+  lifecycle:
+    timeout-per-shutdown-phase: ${graceful-shutdown-timeout}
+
+aws:
+  parameter-store:
+    enabled: true
+
+application:
+  namespace: gtv-adapter
+  project: api
+  validation:
+    fipsModeEnabled: false
+  status:
+    serviceHealthIndicatorsEnabled: false
+
+security:
+  ccsi-token:
+    enabled: false
+
+server:
+  port: 8443
+  ssl:
+    enabled: true
+  shutdown: graceful
+
+logback:
+  trace.enabled: true
+  response-logging:
+    enabled: true
+    body: true
+  request-logging:
+    enabled: true
+    body: true
+  console:
+    format.json.enabled: true
+    trace:
+      request:
+        prefix: 'trace.request.'
+      response:
+        prefix: 'trace.response.'
+  opensearch:
+    enabled: false
+ 
+
+---
+########################################################################################################################
+# local PROFILE
+# local profile uses localstack to mock AWS components (SSM parameters come from localstack) and local databases for local development
+# standard config likely reusable as-is
+########################################################################################################################
+spring:
+  config:
+    activate:
+      on-profile: local
+application:
+  validation:
+    fipsModeEnabled: false
+
+server:
+  port: 8080
+  ssl:
+    enabled: false
+
+aws:
+  parameter-store:
+    endpoint: http://localhost:${ccsi-local.aws.port}
+  endpoint:
+    localstack: http://localhost:${ccsi-local.aws.port}
+
+logback.opensearch.enabled: false
+
+AWS_ACCOUNT: 000000000000
+AWS_ACCESS_KEY_ID: accessKey
+AWS_SECRET_KEY: secretKey
+REGION: us-west-2
+REGION_CODE: usw2
+
+ccsi-local:
+  embedded: true
+  asyncStart: true
+  api-enabled: false
+  aws:
+    enabled: true
+    post-start-wait-time: 0
+    account: ${AWS_ACCOUNT}
+    endpoint: http://localhost:${ccsi-local.aws.port}
+    env: ${ENVIRONMENT}
+    secretKey: ${AWS_ACCESS_KEY_ID}
+    accessKey: ${AWS_SECRET_KEY}
+    region: ${REGION}
+    regionCode: ${REGION_CODE}
+    port: 8810
+    resources-root-path: classpath:local-infra/aws
+    namespaces: ${application.namespace}
+  wiremock:
+    enabled: true
+    post-startwait-time: 0
+    stubs-path: classpath:local-infra/wiremock
+    port: 8820
+  postgres:
+    enabled: false

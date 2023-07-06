@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.consensus</groupId>
+        <artifactId>consensus-platform-spring-boot-2.7-parent</artifactId>
+        <version>1.0.22</version>
+    </parent>
+
+
+    <groupId>com.consensus.gtvadapter</groupId>
+    <artifactId>api</artifactId>
+    <version>1.0.0</version>
+    <name>gtv-adapter-api</name>
+
+    <properties>
+        <ccsi-local-infra.version>1.0.77</ccsi-local-infra.version>
+        <ccsi-common.version>1.0.72</ccsi-common.version>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.consensus</groupId>
+            <artifactId>ccsi-common</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!-- Local development dependencies -->
+        <dependency>
+            <groupId>com.consensus</groupId>
+            <artifactId>ccsi-local-infra</artifactId>
+            <version>${ccsi-local-infra.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+</project>
