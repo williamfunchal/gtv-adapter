@@ -1,0 +1,14 @@
+aws:
+  sqs:
+    api:
+      queueUrl: ${/sqs/url}
+      queueShortName: processor-events
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+gtv:
+  host: ${/gtv/host}
+  apiXKey: ${/gtv/api-x-key}}

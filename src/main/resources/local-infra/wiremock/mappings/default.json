@@ -1,0 +1,16 @@
+{
+	"id": "26ee5222-e598-4fe6-981b-3476d794a8b8",
+	"request": {
+		"urlPathPattern": ".*"
+	},
+	"response": {
+		"status": 404,
+		"fixedDelayMilliseconds": 200,
+		"bodyFileName": "default.json",
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	},
+	"priority": "5",
+	"uuid": "26ee5222-e598-4fe6-981b-3476d794a8b8"
+}

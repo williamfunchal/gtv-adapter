@@ -1,0 +1,17 @@
+{
+  "id": "05d01322-e0ac-4c71-8079-7104ab0c5c75",
+  "request": {
+    "method": "POST",
+    "urlPattern": "/billing/2/usage-events/bulk"
+  },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 200,
+    "bodyFileName": "usage/create_usage_bulk_200.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "priority": "3",
+  "uuid": "05d01322-e0ac-4c71-8079-7104ab0c5c75"
+}

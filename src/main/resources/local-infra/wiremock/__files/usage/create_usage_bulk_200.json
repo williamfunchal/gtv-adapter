@@ -1,0 +1,102 @@
+{
+  "rated_events": [
+    {
+      "id": "1438752",
+      "description": "string",
+      "start_time": "2019-08-24T14:15:22Z",
+      "end_time": "2019-08-24T14:15:22Z",
+      "service_resource_identifier": "string",
+      "usage_uom": "MILLISECOND",
+      "usage_amount": 0,
+      "reference_id": "string",
+      "sequence_id": "string",
+      "text01": "string",
+      "text02": "string",
+      "text03": "string",
+      "text04": "string",
+      "text05": "string",
+      "text06": "string",
+      "number01": 0,
+      "number02": 0,
+      "number03": 0,
+      "number04": 0,
+      "number05": 0,
+      "boolean01": true,
+      "boolean02": true,
+      "boolean03": true,
+      "boolean04": true,
+      "boolean05": true,
+      "date01": "2019-08-24T14:15:22Z",
+      "date02": "2019-08-24T14:15:22Z",
+      "date03": "2019-08-24T14:15:22Z",
+      "date04": "2019-08-24T14:15:22Z",
+      "date05": "2019-08-24T14:15:22Z",
+      "total_charge": 0,
+      "overwrite_counter": 0,
+      "request_id": "string",
+      "service_period": {
+        "id": "1438752"
+      },
+      "event_charges": [
+        {
+          "id": "1438752",
+          "usage_uom": "MILLISECOND",
+          "usage_amount": 0,
+          "usage_rule": {
+            "id": "1438752"
+          },
+          "charge": 0,
+          "charge_category": {
+            "id": "1438752",
+            "charge_category_type": "adjustment",
+            "name": "string"
+          },
+          "consume_prepaid_balance": true,
+          "service": {
+            "id": "1438752"
+          }
+        }
+      ],
+      "overwritten_event_id": "string"
+    }
+  ],
+  "erred_events": [
+    {
+      "request_id": "string",
+      "unrated_usage_event": {
+        "description": "string",
+        "start_time": "2019-08-24T14:15:22Z",
+        "end_time": "2019-08-24T14:15:22Z",
+        "service_resource_identifier": "string",
+        "usage_uom": "MILLISECOND",
+        "usage_amount": 0,
+        "reference_id": "string",
+        "sequence_id": "string",
+        "text01": "string",
+        "text02": "string",
+        "text03": "string",
+        "text04": "string",
+        "text05": "string",
+        "text06": "string",
+        "number01": 0,
+        "number02": 0,
+        "number03": 0,
+        "number04": 0,
+        "number05": 0,
+        "boolean01": true,
+        "boolean02": true,
+        "boolean03": true,
+        "boolean04": true,
+        "boolean05": true,
+        "date01": "2019-08-24T14:15:22Z",
+        "date02": "2019-08-24T14:15:22Z",
+        "date03": "2019-08-24T14:15:22Z",
+        "date04": "2019-08-24T14:15:22Z",
+        "date05": "2019-08-24T14:15:22Z"
+      },
+      "message": "string",
+      "code": "string",
+      "voided_event_id": "string"
+    }
+  ]
+}

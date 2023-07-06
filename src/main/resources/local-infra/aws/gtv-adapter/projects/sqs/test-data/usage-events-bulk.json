@@ -1,0 +1,36 @@
+{
+  "mode": "FAIL_ON_EXISTING",
+  "usage_events": [
+    {
+      "description": "string",
+      "start_time": "2019-08-24T14:15:22Z",
+      "end_time": "2019-08-24T14:15:22Z",
+      "service_resource_identifier": "string",
+      "usage_uom": "MILLISECOND",
+      "usage_amount": 0,
+      "reference_id": "string",
+      "sequence_id": "string",
+      "text01": "string",
+      "text02": "string",
+      "text03": "string",
+      "text04": "string",
+      "text05": "string",
+      "text06": "string",
+      "number01": 0,
+      "number02": 0,
+      "number03": 0,
+      "number04": 0,
+      "number05": 0,
+      "boolean01": true,
+      "boolean02": true,
+      "boolean03": true,
+      "boolean04": true,
+      "boolean05": true,
+      "date01": "2019-08-24T14:15:22Z",
+      "date02": "2019-08-24T14:15:22Z",
+      "date03": "2019-08-24T14:15:22Z",
+      "date04": "2019-08-24T14:15:22Z",
+      "date05": "2019-08-24T14:15:22Z"
+    }
+  ]
+}
