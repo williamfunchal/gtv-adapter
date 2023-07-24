@@ -1,8 +1,53 @@
 aws:
   sqs:
     api:
-      queueUrl: ${/sqs/url}
-      queueShortName: processor-events
+      queueUrl: ${/sqs/api-ready-url}
+      queueShortName: api-ready
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    add-data:
+      queueUrl: ${/sqs/ready-to-add-url}
+      queueShortName: ready-to-add
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    update-data:
+      queueUrl: ${/sqs/ready-to-update-url}
+      queueShortName: ready-to-update
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    isp-data:
+      queueUrl: ${/sqs/isp-data-ready-url}
+      queueShortName: isp-data-ready
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    data-updated:
+      queueUrl: ${/sqs/updated-url}
+      queueShortName: updated
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    data-stored:
+      queueUrl: ${/sqs/stored-url}
+      queueShortName: stored
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}

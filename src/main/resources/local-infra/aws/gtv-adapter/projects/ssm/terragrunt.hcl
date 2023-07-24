@@ -2,9 +2,14 @@ inputs = {
 
   project_parameters = {
     api = {
-        "sqs/fetch-size" = "5"
-        "sqs/url"        = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-api-event"
-        "gtv/host"       = "http://localhost:8820"
+        "sqs/fetch-size"          = "5"
+        "sqs/api-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-api-ready"
+        "sqs/ready-to-update-url" = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-ready-to-update"
+        "sqs/ready-to-add-url"    = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-ready-to-add"
+        "sqs/isp-data-ready-url"  = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-isp-data-ready"
+        "sqs/updated-url"         = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-updated"
+        "sqs/stored-url"          = "${ccsi-local.aws.endpoint}/000000000000/local-gtv-adapter-stored"
+        "gtv/host"                = "http://localhost:8820"
     }
   }
 

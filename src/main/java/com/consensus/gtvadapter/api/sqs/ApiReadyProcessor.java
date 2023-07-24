@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ApiMessageProcessor implements CCSIQueueMessageProcessor {
+public class ApiReadyProcessor implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
     private final GtvService gtvService;
 
-    public ApiMessageProcessor(final QueueProperties queueProperties, final GtvService gtvService) {
+    public ApiReadyProcessor(final QueueProperties queueProperties, final GtvService gtvService) {
         this.properties = queueProperties.getApi();
         this.gtvService = gtvService;
     }
@@ -32,8 +32,8 @@ public class ApiMessageProcessor implements CCSIQueueMessageProcessor {
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final CCSIQueueMessage message = ccsiQueueMessageContext.getMessage();
-        log.info("Api event received with correlationId: {} and message body: {}", ccsiQueueMessageContext.getCorrelationId(), message.getBody());
-        final UsageEventsBulkResponse usageEventsBulkResponse = gtvService.createUsageBulk(message.getBody()).orElseThrow(() -> new IllegalStateException());
+        log.info("Api-Ready event received with correlationId: {} and message body: {}", ccsiQueueMessageContext.getCorrelationId(), message.getBody());
+        final UsageEventsBulkResponse usageEventsBulkResponse = gtvService.createUsageBulk(message.getBody()).orElseThrow(IllegalStateException::new);
         log.info("GTV API response: {}", usageEventsBulkResponse);
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
