@@ -3,7 +3,6 @@ package com.consensus.gtvadapter.api.controller;
 import com.consensus.gtvadapter.api.models.request.UsageEventsBulkRequest;
 import com.consensus.gtvadapter.api.models.response.UsageEventsBulkResponse;
 import com.consensus.gtvadapter.api.service.GtvService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,10 +25,10 @@ public class GtvUsageController {
     private final GtvService gtvService;
 
     @PostMapping("/{account}/usage-events/bulk")
-    public ResponseEntity<UsageEventsBulkResponse> createBillingUsages(@RequestBody UsageEventsBulkRequest usageEventsBulkRequest) throws JsonProcessingException {
+    public ResponseEntity<UsageEventsBulkResponse> createBillingUsages(@RequestBody UsageEventsBulkRequest usageEventsBulkRequest){
 
         final Optional<UsageEventsBulkResponse> optionalUsageEventsBulkResponse = gtvService.createUsageBulk(usageEventsBulkRequest);
-        final UsageEventsBulkResponse response = optionalUsageEventsBulkResponse.orElseThrow(() -> new IllegalStateException());
+        final UsageEventsBulkResponse response = optionalUsageEventsBulkResponse.orElseThrow(IllegalStateException::new);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

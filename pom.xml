@@ -18,7 +18,7 @@
 
     <properties>
         <ccsi-local-infra.version>1.0.77</ccsi-local-infra.version>
-        <ccsi-common.version>1.0.72</ccsi-common.version>
+        <ccsi-common.version>1.1.27</ccsi-common.version>
     </properties>
 
     <build>

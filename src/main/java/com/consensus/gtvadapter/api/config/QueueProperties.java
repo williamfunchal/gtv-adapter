@@ -8,4 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("aws.sqs")
 public class QueueProperties {
     private CCSIQueueListenerProperties api;
+    private CCSIQueueListenerProperties updateData;
+    private CCSIQueueListenerProperties addData;
+    private CCSIQueueListenerProperties dataUpdated;
+    private CCSIQueueListenerProperties dataStored;
+    private CCSIQueueListenerProperties ispData;
 }

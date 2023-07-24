@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.api;
+package com.consensus.gtvadapter;
 
 import com.consensus.gtvadapter.api.config.GtvProperties;
 import com.consensus.gtvadapter.api.config.QueueProperties;
