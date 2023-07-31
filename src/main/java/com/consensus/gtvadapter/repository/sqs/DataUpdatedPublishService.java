@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.poller.sqs;
+package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.consensus.common.sqs.CCSIQueueProperties;
@@ -7,13 +7,13 @@ import com.consensus.gtvadapter.common.CCSIAbstractQueuePublishService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ISPDataPublishService extends CCSIAbstractQueuePublishService {
+public class DataUpdatedPublishService extends CCSIAbstractQueuePublishService {
 
     private CCSIQueueProperties queueProperties;
 
-    public ISPDataPublishService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
+    public DataUpdatedPublishService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
         super(amazonSQS);
-        this.queueProperties = queueProperties.getIspDataReady();
+        this.queueProperties = queueProperties.getDataUpdated();
     }
 
     @Override

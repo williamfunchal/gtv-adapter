@@ -12,8 +12,8 @@ aws:
     enabled: true
 
 application:
-  namespace: gtv-adapter
-  project: api
+  namespace: billplatform
+  project: gtv-adapter
   validation:
     fipsModeEnabled: false
   status:

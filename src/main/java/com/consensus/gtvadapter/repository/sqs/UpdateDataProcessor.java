@@ -5,7 +5,7 @@ import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
-import com.consensus.gtvadapter.api.config.QueueProperties;
+import com.consensus.gtvadapter.config.QueueProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
