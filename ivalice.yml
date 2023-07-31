@@ -5,8 +5,8 @@
   
 
   ### Required params
-  project:                  api      # Project name (Please use dashes in place of underscores here)
-  namespace:                gtv-adapter      # Synonym for 'product' - describes the family this app lives under (e.g. usr, ccs)
+  project:                  gtv-adapter      # Project name (Please use dashes in place of underscores here)
+  namespace:                billplatform      # Synonym for 'product' - describes the family this app lives under (e.g. usr, ccs)
   #product:                  MY_PRODUCT      # Supported as alternate to namespace. If both are present, namespace will be used.
 
   ### Optional params (Uncomment to use as needed)
@@ -14,7 +14,7 @@
   default_region:           us-west-2       # Primary region for this project                                                    - Default = us-west-2
   default_branch:           develop       # Default branch any pipeline for the application will use if none is specified      - Default = main
   #slack_channel:            MY_SLACK        # ID of this product/project's slack channel (supports #channel format also)         - Default = GP0EAHT8W (#opsadmin-ci)
-  github_repo:              gtv-adapter-api         # Name of the repository that contains this application                              - Default = 'project' value above
+  github_repo:              billplatform-gtv-adapter         # Name of the repository that contains this application                              - Default = 'project' value above
   #build_agent:              MY_BUILDER      # Name of the Jenkins build worker to use when building code                         - Default = ecs_java11
   #pipeline_types:           MY_PIPES        # Keyword designating the pipeline(s) to generate/manage (all, build, infra, deploy) - Default = build
 

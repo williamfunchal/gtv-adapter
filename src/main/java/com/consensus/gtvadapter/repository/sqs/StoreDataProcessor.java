@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.processor.sqs;
+package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
@@ -18,14 +18,14 @@ import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORR
 
 @Slf4j
 @Component
-public class ISPDataProcessor implements CCSIQueueMessageProcessor {
+public class StoreDataProcessor implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
-    private final StoreDataPublishService storeDataPublishService;
+    private final DataStoredPublishService dataStoredPublishService;
 
-    public ISPDataProcessor(final QueueProperties queueProperties, final StoreDataPublishService storeDataPublishService) {
-        this.properties = queueProperties.getIspDataReady();
-        this.storeDataPublishService = storeDataPublishService;
+    public StoreDataProcessor(final QueueProperties queueProperties, final DataStoredPublishService dataStoredPublishService) {
+        this.properties = queueProperties.getStoreData();
+        this.dataStoredPublishService = dataStoredPublishService;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        log.info("ISP-Data event received with correlationId: {}", correlationId);
-        storeDataPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
+        log.info("Add-Data event received with correlationId: {}", correlationId);
+        dataStoredPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

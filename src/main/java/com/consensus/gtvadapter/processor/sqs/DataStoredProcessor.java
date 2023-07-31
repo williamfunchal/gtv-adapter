@@ -6,7 +6,7 @@ import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
-import com.consensus.gtvadapter.api.config.QueueProperties;
+import com.consensus.gtvadapter.config.QueueProperties;
 import com.consensus.gtvadapter.util.SqsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,11 +21,11 @@ import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORR
 public class DataStoredProcessor implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
-    private final APIReadyPublishService apiReadyPublishService;
+    private final GtvRequestPublishService gtvRequestPublishService;
 
-    public DataStoredProcessor(final QueueProperties queueProperties, final APIReadyPublishService apiReadyPublishService) {
+    public DataStoredProcessor(final QueueProperties queueProperties, final GtvRequestPublishService gtvRequestPublishService) {
         this.properties = queueProperties.getDataStored();
-        this.apiReadyPublishService = apiReadyPublishService;
+        this.gtvRequestPublishService = gtvRequestPublishService;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DataStoredProcessor implements CCSIQueueMessageProcessor {
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
         log.info("Data-Stored event received with correlationId: {}", correlationId);
-        apiReadyPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
+        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

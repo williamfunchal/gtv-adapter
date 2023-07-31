@@ -1,17 +1,8 @@
 aws:
   sqs:
-    api:
-      queueUrl: ${/sqs/api-ready-url}
-      queueShortName: api-ready
-      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
-      waitTimeSeconds: ${/sqs/message-wait-time-sec}
-      batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: 20000
-      concurrency: 10
-      enableTracing: true
-    add-data:
-      queueUrl: ${/sqs/ready-to-add-url}
-      queueShortName: ready-to-add
+    isp-data-ready:
+      queueUrl: ${/sqs/adapter-isp-data-ready-url}
+      queueShortName: adapter-isp-data-ready
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -19,17 +10,8 @@ aws:
       concurrency: 10
       enableTracing: true
     update-data:
-      queueUrl: ${/sqs/ready-to-update-url}
-      queueShortName: ready-to-update
-      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
-      waitTimeSeconds: ${/sqs/message-wait-time-sec}
-      batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: 20000
-      concurrency: 10
-      enableTracing: true
-    isp-data:
-      queueUrl: ${/sqs/isp-data-ready-url}
-      queueShortName: isp-data-ready
+      queueUrl: ${/sqs/adapter-update-data-url}
+      queueShortName: adapter-update-data
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -37,8 +19,17 @@ aws:
       concurrency: 10
       enableTracing: true
     data-updated:
-      queueUrl: ${/sqs/updated-url}
-      queueShortName: updated
+      queueUrl: ${/sqs/adapter-data-updated-url}
+      queueShortName: adapter-data-updated
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    store-data:
+      queueUrl: ${/sqs/adapter-store-data-url}
+      queueShortName: adapter-store-data
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -46,8 +37,26 @@ aws:
       concurrency: 10
       enableTracing: true
     data-stored:
-      queueUrl: ${/sqs/stored-url}
-      queueShortName: stored
+      queueUrl: ${/sqs/adapter-data-stored-url}
+      queueShortName: adapter-data-stored
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    gtv-request:
+      queueUrl: ${/sqs/adapter-gtv-request-url}
+      queueShortName: adapter-gtv-request
+      visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
+      waitTimeSeconds: ${/sqs/message-wait-time-sec}
+      batchSize: ${/sqs/fetch-size}
+      emptyRecievedWaitTimeMil: 20000
+      concurrency: 10
+      enableTracing: true
+    gtv-response:
+      queueUrl: ${/sqs/adapter-gtv-response-url}
+      queueShortName: adapter-gtv-response
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
