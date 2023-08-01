@@ -2,15 +2,15 @@ inputs = {
 
   project_parameters = {
     gtv-adapter = {
-        "sqs/fetch-size"                 = "5"
-        "sqs/adapter-isp-data-ready-url" = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-isp-data-ready"
-        "sqs/adapter-update-data-url"    = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-update-data"
-        "sqs/adapter-data-updated-url"   = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-updated"
-        "sqs/adapter-store-data-url"     = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-store-data"
-        "sqs/adapter-data-stored-url"    = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-stored"
-        "sqs/adapter-gtv-request-url"    = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-request"
-        "sqs/adapter-gtv-response-url"   = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-response"
-        "gtv/host"                       = "http://localhost:8820"
+        "sqs/fetch-size"                       = "5"
+        "sqs/adapter-isp-data-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-isp-data-ready"
+        "sqs/adapter-data-ready-to-update-url" = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-ready-to-update"
+        "sqs/adapter-data-updated-url"         = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-updated"
+        "sqs/adapter-data-ready-to-store-url"  = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-ready-to-store"
+        "sqs/adapter-data-stored-url"          = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-stored"
+        "sqs/adapter-gtv-data-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-data-ready"
+        "sqs/adapter-gtv-response-received-url"= "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-response-received"
+        "gtv/host"                             = "http://localhost:8820"
     }
   }
 

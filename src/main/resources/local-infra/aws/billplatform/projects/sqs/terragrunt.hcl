@@ -10,7 +10,7 @@ inputs = {
       redrive_maxreceive = 1
     }
 
-    "adapter-update-data" = {
+    "adapter-data-ready-to-update" = {
       fifo               = false
       dedup              = false
       delay_seconds      = 0
@@ -28,7 +28,7 @@ inputs = {
       redrive_maxreceive = 1
     }
 
-    "adapter-store-data" = {
+    "adapter-data-ready-to-store" = {
       fifo               = false
       dedup              = false
       delay_seconds      = 0
@@ -46,7 +46,7 @@ inputs = {
       redrive_maxreceive = 1
     }
 
-    "adapter-gtv-request" = {
+    "adapter-gtv-data-ready" = {
       fifo               = false
       dedup              = false
       delay_seconds      = 0
@@ -55,7 +55,7 @@ inputs = {
       redrive_maxreceive = 1
     }
 
-    "adapter-gtv-response" = {
+    "adapter-gtv-response-received" = {
       fifo               = false
       dedup              = false
       delay_seconds      = 0
