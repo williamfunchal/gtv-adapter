@@ -1,0 +1,42 @@
+// Jenkins Job naming specification
+// [region_code]_[job_env]_[product]_[project]_[job_type]
+//
+// ex: usw2_dev_billplatform_myproject_build
+
+node {
+    // This is a map of the default pipeline values. If no override is provided, these will be used for every pipeline executed.
+    def pipeline_defaults = [
+        product: 'billplatform',
+        branch: 'develop',
+        slack_channel: 'GP0EAHT8W',
+        gh_repo: 'billplatform-gtv-adapter',
+        jenkins_agent: 'ecs_java11'
+    ]
+
+    // The map below is where you can define 'pipeline overrides', which provides the ability
+    // to alter the default values a pipeline will use in certain regions or environments. It also
+    // allows for the declaration of any available optional parameters.
+    //
+    // There are NOT required, and only provide a method for overriding default values
+    //
+    // The map itself is actually a map of maps
+    // - Top-level keys can reference either any regioncode or environment combo (see example)
+    //   - Top-level values are themselves k/v maps
+    // - The 2nd-level maps are k/v pairs of pipeline params and their desired value
+    //
+    // In the following example, overrides are set for the branch and jenkins agent for all scratch pipelines
+    //
+    // EXAMPLE:
+    //
+    // def pipeline_overrides = [
+    //     scratch : [
+    //         branch: 'my_branch',
+    //         jenkins_agent: 'ecs_java11'
+    //     ]
+    // ]
+    def pipeline_overrides = [:]
+
+    // Execute the pipeline
+    code_build(pipeline_defaults, pipeline_overrides)
+
+}
