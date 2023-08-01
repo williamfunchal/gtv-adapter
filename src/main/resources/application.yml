@@ -10,8 +10,8 @@ aws:
       concurrency: 10
       enableTracing: true
     update-data:
-      queueUrl: ${/sqs/adapter-update-data-url}
-      queueShortName: adapter-update-data
+      queueUrl: ${/sqs/adapter-data-ready-to-update-url}
+      queueShortName: adapter-data-ready-to-update
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -28,8 +28,8 @@ aws:
       concurrency: 10
       enableTracing: true
     store-data:
-      queueUrl: ${/sqs/adapter-store-data-url}
-      queueShortName: adapter-store-data
+      queueUrl: ${/sqs/adapter-data-ready-to-store-url}
+      queueShortName: adapter-data-ready-to-store
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -46,8 +46,8 @@ aws:
       concurrency: 10
       enableTracing: true
     gtv-request:
-      queueUrl: ${/sqs/adapter-gtv-request-url}
-      queueShortName: adapter-gtv-request
+      queueUrl: ${/sqs/adapter-gtv-data-ready-url}
+      queueShortName: adapter-gtv-data-ready
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
@@ -55,8 +55,8 @@ aws:
       concurrency: 10
       enableTracing: true
     gtv-response:
-      queueUrl: ${/sqs/adapter-gtv-response-url}
-      queueShortName: adapter-gtv-response
+      queueUrl: ${/sqs/adapter-gtv-response-received-url}
+      queueShortName: adapter-gtv-response-received
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
