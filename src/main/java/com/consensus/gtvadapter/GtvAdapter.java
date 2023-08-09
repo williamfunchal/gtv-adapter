@@ -1,11 +1,12 @@
 package com.consensus.gtvadapter;
 
-import com.consensus.gtvadapter.config.GtvProperties;
-import com.consensus.gtvadapter.config.QueueProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import com.consensus.gtvadapter.config.GtvProperties;
+import com.consensus.gtvadapter.config.QueueProperties;
 
 
 @EnableScheduling

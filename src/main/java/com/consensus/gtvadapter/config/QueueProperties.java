@@ -7,11 +7,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties("aws.sqs")
 public class QueueProperties {
-    private CCSIQueueListenerProperties ispDataReady;
-    private CCSIQueueListenerProperties updateData;
-    private CCSIQueueListenerProperties dataUpdated;
-    private CCSIQueueListenerProperties storeData;
-    private CCSIQueueListenerProperties dataStored;
-    private CCSIQueueListenerProperties gtvRequest;
-    private CCSIQueueListenerProperties gtvResponse;
+    private CCSIQueueListenerProperties adapterIspDataReady;
+    private CCSIQueueListenerProperties adapterDataReadyToUpdate;
+    private CCSIQueueListenerProperties adapterDataUpdated;
+    private CCSIQueueListenerProperties adapterDataReadyToStore;
+    private CCSIQueueListenerProperties adapterDataStored;
+    private CCSIQueueListenerProperties adapterGtvDataReady;
+    private CCSIQueueListenerProperties gtvResponseReceived;
 }

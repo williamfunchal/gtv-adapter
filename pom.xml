@@ -8,8 +8,8 @@
         <groupId>com.consensus</groupId>
         <artifactId>consensus-platform-spring-boot-2.7-parent</artifactId>
         <version>1.0.22</version>
+        <relativePath/>
     </parent>
-
 
     <groupId>com.consensus.billplatform</groupId>
     <artifactId>gtv-adapter</artifactId>
@@ -20,23 +20,21 @@
         <ccsi-local-infra.version>1.0.77</ccsi-local-infra.version>
         <ccsi-common.version>1.1.27</ccsi-common.version>
     </properties>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
     <dependencies>
+        <dependency> 
+            <groupId>org.springframework.boot</groupId> 
+            <artifactId>spring-boot-starter-validation</artifactId> 
+        </dependency>      
         <dependency>
             <groupId>com.consensus</groupId>
             <artifactId>ccsi-common</artifactId>
             <version>2.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.8</version>
+          </dependency> 
         <!-- Local development dependencies -->
         <dependency>
             <groupId>com.consensus</groupId>
@@ -45,5 +43,34 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- attached to Maven test phase -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,0 +1,16 @@
+package com.consensus.gtvadapter.module.gateway.model.request;
+
+import java.util.List;
+
+import com.consensus.gtvadapter.module.gateway.model.UsageEvent;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import lombok.Data;
+
+@Data
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class UsageEventsBulkRequest {
+    private String mode;
+    private List<UsageEvent> usageEvents;
+}
