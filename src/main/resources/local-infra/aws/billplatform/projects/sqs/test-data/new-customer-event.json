@@ -1,0 +1,22 @@
+{
+  "operation": "CREATE",
+  "table_name": "ispcustomer",
+  "type": "customer",
+  "data":{
+    "customerkey": 2,
+    "company": "Test account",
+    "country": "US",
+    "address_line_1": "620 Congress Ave.",
+    "address_line_2": "Suite 100",
+    "city": "Austin",
+    "mail_region": "TX",
+    "mail_code": "78701",
+    "email_address": "test@email.com",
+    "start_date": "2015-04-21",
+    "currency_code": "USD",
+    "payment_terms": "Upon Receipt",
+    "reseller_id": 423452,
+    "offer_code": "CORP_10DID_1495_NOTRI_NOACT_25PGIFT_1000SEND"
+  },
+  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71"
+}
