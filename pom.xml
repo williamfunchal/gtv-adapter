@@ -14,7 +14,7 @@
     <groupId>com.consensus.billplatform</groupId>
     <artifactId>gtv-adapter</artifactId>
     <version>1.0.0</version>
-    <name>gtv-adapter-api</name>
+    <name>gtv-adapter</name>
 
     <properties>
         <ccsi-local-infra.version>1.0.77</ccsi-local-infra.version>

@@ -105,3 +105,8 @@ ccsi-local:
     port: 8820
   postgres:
     enabled: false
+
+logging:
+  level:
+    com.amazonaws: INFO
+    com.consensus: DEBUG
