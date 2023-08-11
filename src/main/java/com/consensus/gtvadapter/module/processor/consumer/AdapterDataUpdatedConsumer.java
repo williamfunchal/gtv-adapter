@@ -22,15 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class AdapterDataStoredConsumer implements CCSIQueueMessageProcessor {
+public class AdapterDataUpdatedConsumer implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
-    private final GatewayService adapterGtvDataReadyPublishService;
 
     @Autowired
-    public AdapterDataStoredConsumer(final QueueProperties queueProperties, final GatewayService adapterGtvDataReadyPublishService) {
-        this.properties = queueProperties.getAdapterDataStored();
-        this.adapterGtvDataReadyPublishService = adapterGtvDataReadyPublishService;
+    public AdapterDataUpdatedConsumer(final QueueProperties queueProperties, final GatewayService adapterGtvDataReadyPublishService) {
+        this.properties = queueProperties.getAdapterDataUpdated();
     }
 
     @Override
@@ -41,8 +39,8 @@ public class AdapterDataStoredConsumer implements CCSIQueueMessageProcessor {
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        log.info("Data-Stored event received with correlationId: {}", correlationId);
-        adapterGtvDataReadyPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
+        log.info("Data-Updated event received with correlationId: {}", correlationId);
+        //process
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

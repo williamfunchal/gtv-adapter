@@ -15,20 +15,20 @@ import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.config.QueueProperties;
-import com.consensus.gtvadapter.module.processor.service.AdapterDataReadyToStorePublishService;
+import com.consensus.gtvadapter.module.processor.service.StorageService;
 import com.consensus.gtvadapter.util.SqsUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class ISPDataProcessor implements CCSIQueueMessageProcessor {
+public class AdapterIspDataReadyConsumer implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
-    private final AdapterDataReadyToStorePublishService adapterDataReadyToStorePublishService;
+    private final StorageService adapterDataReadyToStorePublishService;
 
     @Autowired
-    public ISPDataProcessor(final QueueProperties queueProperties, final AdapterDataReadyToStorePublishService adapterDataReadyToStorePublishService) {
+    public AdapterIspDataReadyConsumer(final QueueProperties queueProperties, final StorageService adapterDataReadyToStorePublishService) {
         this.properties = queueProperties.getAdapterIspDataReady();
         this.adapterDataReadyToStorePublishService = adapterDataReadyToStorePublishService;
     }

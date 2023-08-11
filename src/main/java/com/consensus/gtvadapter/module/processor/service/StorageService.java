@@ -9,12 +9,12 @@ import com.consensus.gtvadapter.common.sqs.CCSIAbstractQueuePublishService;
 import com.consensus.gtvadapter.config.QueueProperties;
 
 @Service
-public class AdapterDataReadyToStorePublishService extends CCSIAbstractQueuePublishService {
+public class StorageService extends CCSIAbstractQueuePublishService {
 
     private CCSIQueueProperties queueProperties;
 
     @Autowired
-    public AdapterDataReadyToStorePublishService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
+    public StorageService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
         super(amazonSQS);
         this.queueProperties = queueProperties.getAdapterDataReadyToStore();
     }
