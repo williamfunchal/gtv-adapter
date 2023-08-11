@@ -17,11 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class AdapterGtvDataReadyConsumer implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
     private final GtvService gtvService;
+
+    public AdapterGtvDataReadyConsumer(QueueProperties queueProperties, GtvService gtvService) {
+        this.properties = queueProperties.getAdapterGtvDataReady();
+        this.gtvService = gtvService;
+    }
 
     @Override
     public CCSIQueueListenerProperties getQueueListenerProperties() {
