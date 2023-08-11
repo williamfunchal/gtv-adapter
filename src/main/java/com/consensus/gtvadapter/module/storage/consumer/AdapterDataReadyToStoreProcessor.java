@@ -15,7 +15,7 @@ import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.config.QueueProperties;
-import com.consensus.gtvadapter.module.storage.services.AdapterDataStoredPublishService;
+import com.consensus.gtvadapter.module.storage.services.sqs.AdapterDataStoredPublishService;
 import com.consensus.gtvadapter.util.SqsUtils;
 
 import lombok.extern.slf4j.Slf4j;

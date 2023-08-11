@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.module.storage.services;
+package com.consensus.gtvadapter.module.storage.services.sqs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
