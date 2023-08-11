@@ -1,4 +1,7 @@
 aws:
+  s3:
+    bucketName: ${/s3/bucket-name}
+    prefix: ${/s3/prefix}
   sqs:
     isp-data-ready:
       queueUrl: ${/sqs/adapter-isp-data-ready-url}

@@ -15,10 +15,14 @@ import java.util.Map;
 import javax.validation.constraints.NotEmpty;
 
 @Slf4j
-@RequiredArgsConstructor
 public abstract class CCSIAbstractQueuePublishService implements CCSIQueuePublishService{
 
     private final AmazonSQS amazonSQS;
+
+    public CCSIAbstractQueuePublishService(AmazonSQS amazonSQS) {
+        Assert.notNull(amazonSQS, "amazonSQS cannot be null");
+        this.amazonSQS = amazonSQS;
+    }
 
     @Override
     public SendMessageResult publishMessageToQueue(@NotEmpty String message,  Map<String, MessageAttributeValue> attributes){

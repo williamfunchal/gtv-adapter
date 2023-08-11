@@ -5,6 +5,7 @@ import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORR
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
@@ -26,6 +27,7 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     private final CCSIQueueListenerProperties properties;
     private final AdapterDataReadyToStorePublishService adapterDataReadyToStorePublishService;
 
+    @Autowired
     public ISPDataProcessor(final QueueProperties queueProperties, final AdapterDataReadyToStorePublishService adapterDataReadyToStorePublishService) {
         this.properties = queueProperties.getAdapterIspDataReady();
         this.adapterDataReadyToStorePublishService = adapterDataReadyToStorePublishService;

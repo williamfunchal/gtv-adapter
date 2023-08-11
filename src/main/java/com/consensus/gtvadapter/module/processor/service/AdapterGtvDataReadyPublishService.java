@@ -1,5 +1,6 @@
 package com.consensus.gtvadapter.module.processor.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -13,6 +14,7 @@ public class AdapterGtvDataReadyPublishService extends CCSIAbstractQueuePublishS
 
     private CCSIQueueProperties queueProperties;
 
+    @Autowired
     public AdapterGtvDataReadyPublishService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
         super(amazonSQS);
         this.queueProperties = queueProperties.getAdapterGtvDataReady();

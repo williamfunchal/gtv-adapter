@@ -1,5 +1,6 @@
 package com.consensus.gtvadapter.module.storage.consumer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
@@ -17,6 +18,7 @@ public class AdapterDataReadyToUpdateProcessor implements CCSIQueueMessageProces
 
     private final CCSIQueueListenerProperties properties;
 
+    @Autowired
     public AdapterDataReadyToUpdateProcessor(final QueueProperties queueProperties) {
         this.properties = queueProperties.getAdapterDataReadyToUpdate();
     }

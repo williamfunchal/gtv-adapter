@@ -11,6 +11,8 @@ inputs = {
         "sqs/adapter-gtv-data-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-data-ready"
         "sqs/adapter-gtv-response-received-url"= "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-response-received"
         "gtv/host"                             = "http://localhost:8820"
+        "s3/bucket-name"                       = "tbd"
+        "s3/prefix"                            = "tbd"
     }
   }
 

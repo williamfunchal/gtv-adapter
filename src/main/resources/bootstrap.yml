@@ -99,7 +99,7 @@ ccsi-local:
     resources-root-path: classpath:local-infra/aws
     namespaces: ${application.namespace}
   wiremock:
-    enabled: true
+    enabled: false
     post-startwait-time: 0
     stubs-path: classpath:local-infra/wiremock
     port: 8820

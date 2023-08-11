@@ -12,19 +12,16 @@ import com.consensus.gtvadapter.config.QueueProperties;
 import com.consensus.gtvadapter.module.gateway.model.response.UsageEventsBulkResponse;
 import com.consensus.gtvadapter.module.gateway.service.GtvService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AdapterGtvDataReadyConsumer implements CCSIQueueMessageProcessor {
 
     private final CCSIQueueListenerProperties properties;
     private final GtvService gtvService;
-
-    public AdapterGtvDataReadyConsumer(final QueueProperties queueProperties, final GtvService gtvService) {
-        this.properties = queueProperties.getAdapterGtvDataReady();
-        this.gtvService = gtvService;
-    }
 
     @Override
     public CCSIQueueListenerProperties getQueueListenerProperties() {
