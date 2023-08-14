@@ -6,6 +6,7 @@ import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
 import com.consensus.gtvadapter.common.models.IspGtvMapping;
 import com.consensus.gtvadapter.common.models.MappedData;
 import com.consensus.gtvadapter.common.models.rawdata.IspRawData;
@@ -23,6 +24,7 @@ import java.time.DateTimeException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
 
@@ -81,7 +83,7 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
         ispGtvMapping.setMappedData(mappedData);
         ispGtvMapping.setCorrelationId(correlationId);
 
-        final String message = createMessage(ispGtvMapping);
+        final String message = createMessage(ispGtvMapping, ispRawData.getCorrelationId());
         storeDataPublishService.publishMessageToQueue(message, getMessageAttributes(correlationId));
 
         return CCSIQueueMessageResult.builder()
@@ -101,7 +103,11 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     }
 
     @SneakyThrows
-    private String createMessage(IspGtvMapping ispGtvMapping){
-        return objectMapper.writeValueAsString(ispGtvMapping);
+    private String createMessage(IspGtvMapping ispGtvMapping, UUID correlationId){
+        final DataMappingStoreEvent dataMappingStoreEvent = new DataMappingStoreEvent();
+        dataMappingStoreEvent.setCorrelationId(correlationId);
+        dataMappingStoreEvent.setEventType(DataMappingStoreEvent.TYPE);
+        dataMappingStoreEvent.setIspGtvMapping(ispGtvMapping);
+        return objectMapper.writeValueAsString(dataMappingStoreEvent);
     }
 }

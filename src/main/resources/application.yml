@@ -63,6 +63,8 @@ aws:
       emptyRecievedWaitTimeMil: 20000
       concurrency: 10
       enableTracing: true
+  ddb:
+    data-mapping-table: ${/ddb/data-mapping-table}
 gtv:
   host: ${/gtv/host}
   apiXKey: ${/gtv/api-x-key}}
