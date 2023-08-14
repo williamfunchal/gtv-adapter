@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public abstract class AddressBase {
+public class AddressBase {
 
     protected AddressType addressType;
     protected String purpose;
