@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
 
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
+import java.util.Optional;
 import java.util.UUID;
 
-
-@Data
+@SuperBuilder
+@Data 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

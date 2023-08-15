@@ -1,4 +1,7 @@
 aws:
+  s3:
+    bucketName: isp-gtv-integration
+    prefix: ISPPOWER.ISPCUSTOMER
   sqs:
     isp-data-ready:
       queueUrl: ${/sqs/adapter-isp-data-ready-url}

@@ -1,0 +1,9 @@
+{
+    "bucketName": "${ccsi-local.aws.env}-${application.namespace}-isp-gtv-integration-${ccsi-local.aws.regionCode}",
+    "files": [
+        {
+          "localFilePath": "ISPPOWER.ISPCUSTOMER/20230803-020642755.csv",
+          "s3Path": "ISPPOWER.ISPCUSTOMER/20230803-020642755.csv"
+        }
+    ]
+  }

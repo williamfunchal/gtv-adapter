@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.consensus</groupId>
         <artifactId>consensus-platform-spring-boot-2.7-parent</artifactId>
@@ -36,6 +36,11 @@
             <artifactId>ccsi-common</artifactId>
             <version>2.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.8</version>
+        </dependency>
 
         <!-- Local development dependencies -->
         <dependency>
@@ -44,6 +49,7 @@
             <version>${ccsi-local-infra.version}</version>
             <scope>runtime</scope>
         </dependency>
+        
     </dependencies>
 
 </project>
