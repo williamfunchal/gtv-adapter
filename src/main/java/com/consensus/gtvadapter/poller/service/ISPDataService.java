@@ -22,7 +22,7 @@ public class ISPDataService {
 
     final ISPDataPublishService ispDataPublishService;
 
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     public void fetchISPData(){
         log.info("New ISP data found");
         ispDataPublishService.publishMessageToQueue("New data event", getMessageAttributes());
