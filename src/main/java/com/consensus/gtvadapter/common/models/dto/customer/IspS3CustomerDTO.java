@@ -2,11 +2,18 @@ package com.consensus.gtvadapter.common.models.dto.customer;
 
 import com.opencsv.bean.CsvBindByName;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
 public class IspS3CustomerDTO {
     @CsvBindByName(column = "Op")
     private String op;

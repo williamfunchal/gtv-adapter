@@ -38,8 +38,8 @@ public class ISPDataService {
         log.info("New ISP data found");
         
         //Read CSV Customer content from S3
-        // List<IspS3CustomerDTO> ispS3CustomerDTO = s3ReaderService.readCsvFromS3(IspS3CustomerDTO.class);
-        List<IspS3CustomerDTO> ispS3CustomerDTO = s3ReaderService.readCsvFromLocalResource(IspS3CustomerDTO.class);
+        List<IspS3CustomerDTO> ispS3CustomerDTO = s3ReaderService.readCsvFromS3(IspS3CustomerDTO.class);
+        // List<IspS3CustomerDTO> ispS3CustomerDTO = s3ReaderService.readCsvFromLocalResource(IspS3CustomerDTO.class);
 
          for(IspS3CustomerDTO customerDTO : ispS3CustomerDTO){
             log.info("CustomerDTO: {}", customerDTO);

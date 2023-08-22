@@ -1,6 +1,6 @@
 aws:
   s3:
-    bucketName: isp-gtv-integration
+    bucketName: local-billplatform-isp-gtv-integration-usw2
     prefix: ISPPOWER.ISPCUSTOMER
   sqs:
     isp-data-ready:

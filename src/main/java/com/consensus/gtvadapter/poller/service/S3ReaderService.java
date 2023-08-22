@@ -3,11 +3,6 @@ package com.consensus.gtvadapter.poller.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,20 +27,59 @@ import lombok.extern.slf4j.Slf4j;
 public class S3ReaderService<T> {
     private final AmazonS3 s3Client;
     private final AwsS3Properties awsS3Properties;
-    private final String resourceFolder = "local-infra/aws/billplatform/projects/s3/initial-data/__files/ISPPOWER.ISPCUSTOMER";
-
+    
     public List<T> readCsvFromS3(Class<T> type) throws IOException {
         List<T> objects = new ArrayList<>();
+        this.createArchiveFolder();
 
+        List<S3ObjectSummary> s3ObjectSummaries = this.readS3WithSortedObjects(type); 
+        for (S3ObjectSummary s3ObjectSummary : s3ObjectSummaries) {            
+            CsvToBean<T> csvToBean = this.mapS3ObjectSummaryToCsvToBean(s3ObjectSummary, type);
+            objects.addAll(csvToBean.parse());
+        }
+
+        return objects;
+    }    
+
+    // Read S3 bucket and return a list of objects sorted by name
+    private List<S3ObjectSummary> readS3WithSortedObjects(Class<T> type) throws IOException {
         List<S3ObjectSummary> s3ObjectSummaries = s3Client.listObjects(
-                awsS3Properties.getBucketName(), 
+                awsS3Properties.getBucketName(),
                 awsS3Properties.getPrefix())
             .getObjectSummaries();
         s3ObjectSummaries.sort(Comparator.comparing(S3ObjectSummary::getKey));
         
-        for (S3ObjectSummary s3ObjectSummary : s3ObjectSummaries) {
-            String key = s3ObjectSummary.getKey();
+        return s3ObjectSummaries;
+    }
 
+    private void createArchiveFolder(){
+        //verify if Archive folder exists. If not, create it
+        try{
+            if (!s3Client.doesObjectExist(awsS3Properties.getBucketName(), awsS3Properties.getPrefix() + "Archive/")) {
+                s3Client.putObject(awsS3Properties.getBucketName(), awsS3Properties.getPrefix() + "Archive/", "");
+            }
+        }
+        catch(Exception e){
+            log.error("Error creating Archive folder: " + e.getMessage());
+        }
+    }
+
+    // move S3 file read to Archive folder
+    public void archiveS3Object(S3ObjectSummary s3ObjectSummary) { 
+        try{
+            String key = s3ObjectSummary.getKey();
+            s3Client.copyObject(awsS3Properties.getBucketName(), key, awsS3Properties.getBucketName(), key.replace(awsS3Properties.getPrefix(), awsS3Properties.getPrefix() + "Archive/"));
+            s3Client.deleteObject(awsS3Properties.getBucketName(), key);
+        }
+        catch(Exception e){
+            log.error("Error moving file to Archive folder: " + e.getMessage());
+        }
+    }
+
+    //Map S3ObjectSummary to CsvToBean
+    public CsvToBean<T> mapS3ObjectSummaryToCsvToBean(S3ObjectSummary s3ObjectSummary, Class<T> type) {
+        try{
+            String key = s3ObjectSummary.getKey();
             S3Object s3Object = s3Client.getObject(new GetObjectRequest(awsS3Properties.getBucketName(), key));
             S3ObjectInputStream inputStream = s3Object.getObjectContent();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -53,38 +87,12 @@ public class S3ReaderService<T> {
                     .withType(type)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-            objects.addAll(csvToBean.parse());
-
+            return csvToBean;
         }
-
-        return objects;
+        catch(Exception e){
+            log.error("Error mapping S3ObjectSummary to CsvToBean: " + e.getMessage());
+            return null;
+        }    
     }
 
-    public List<T> readCsvFromLocalResource (Class<T> type) throws IOException, URISyntaxException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL directoryUrl = classLoader.getResource(resourceFolder);
-        if (directoryUrl == null) {
-            throw new IllegalArgumentException("Directory not found: " + resourceFolder);
-        }
-        Path directoryPath = Paths.get(directoryUrl.toURI());
-        List<T> objects = new ArrayList<>();
-        Files.walk(directoryPath)
-            .filter(Files::isRegularFile)
-            .sorted()
-            .forEach(file -> {
-                try {
-                    log.info("Reading file: {}", file);
-                    BufferedReader reader = Files.newBufferedReader(Paths.get(file.toUri()));
-                    CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader)
-                            .withType(type)
-                            .withIgnoreLeadingWhiteSpace(true)
-                            .build();
-                    objects.addAll(csvToBean.parse());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        
-        return objects;
-    }
 }
