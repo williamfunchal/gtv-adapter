@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.consensus</groupId>
             <artifactId>ccsi-common</artifactId>
-            <version>2.0.0</version>
+            <version>${ccsi-common.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
@@ -48,13 +48,6 @@
             <version>${ccsi-local-infra.version}</version>
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>io.findify</groupId>
-            <artifactId>s3mock_2.13</artifactId>
-            <version>0.2.6</version>
-            <scope>test</scope>
-       </dependency>
         
     </dependencies>
 
