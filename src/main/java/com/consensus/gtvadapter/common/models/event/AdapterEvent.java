@@ -16,7 +16,8 @@ import java.util.UUID;
         property = "event_type",
         visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = DataMappingStoreEvent.class, name = DataMappingStoreEvent.TYPE)
+        @JsonSubTypes.Type(value = DataMappingStoreEvent.class, name = DataMappingStoreEvent.TYPE),
+        @JsonSubTypes.Type(value = GtvAccountCreationEvent.class, name = GtvAccountCreationEvent.TYPE)
 })
 public abstract class AdapterEvent {
     private String eventType;

@@ -1,0 +1,100 @@
+{
+  "id": "4104951",
+  "account_num": "183",
+  "external_account_num": null,
+  "bill_type": "NONE",
+  "bill_cycle": {
+    "bill_cycle_type": "monthly",
+    "id": "1425379",
+    "status": "ACTIVE",
+    "name": "Monthly",
+    "start_date": "2023-08-01T00:00:00Z",
+    "end_date": "2023-09-01T00:00:00Z",
+    "internal_render": true,
+    "auto_bill": false,
+    "include_external_charges": false,
+    "currency_code": "USD",
+    "current_bill_cycle_run": {
+      "bill_run_type": "cycle",
+      "id": "1613912"
+    },
+    "generate_invoice_artifacts": false,
+    "day_of_month": 1
+  },
+  "responsible_party": {
+    "party_type": "organization",
+    "id": "4347316",
+    "addresses": [
+      {
+        "address_type": "postal",
+        "id": "9214156",
+        "purpose": "BILLING",
+        "country": "USA",
+        "city": "Austin",
+        "line1": "620 Congress Ave.",
+        "line2": "Suite 100",
+        "region_or_state": "TX",
+        "postal_code": "78701"
+      },
+      {
+        "address_type": "email",
+        "id": "9214157",
+        "purpose": "PRIMARY",
+        "email": "test@email.com"
+      }
+    ],
+    "customer_num": "185",
+    "external_customer_num": "7777",
+    "organization_name": "LR Test 01",
+    "tax_id_validated": false
+  },
+  "recurring_payments": [],
+  "billing_account_category": {
+    "id": "178",
+    "description": "300000003339008",
+    "status": "ACTIVE",
+    "code": "Corporate Fax-VwUmm",
+    "name": "corporate_fax",
+    "auto_pay_offset": 0,
+    "preferred_language_code": null,
+    "minimum_invoice_thresholds": [],
+    "addresses": [],
+    "custom_field_values": [
+      {
+        "custom_field_value_type": "billing-account-category",
+        "id": "53489903",
+        "value": "Create test ",
+        "custom_field": {
+          "custom_field_type": "billing-account-category",
+          "id": "479",
+          "name": "Billing Account category custom field 5",
+          "code": "Billing Account category custom field 5-OLzBZ"
+        }
+      }
+    ]
+  },
+  "auto_payment_authorized": false,
+  "status": "ACTIVE",
+  "pending_charges_total": 0.00,
+  "balance": 0.00,
+  "start_date": "2023-08-15T00:00:00Z",
+  "custom_field_values": [],
+  "contacts": [],
+  "payment_term": {
+    "id": "113",
+    "name": "Net 15"
+  },
+  "tax_exempt": false,
+  "currency_code": "USD",
+  "next_invoice_date": "2023-05-01T00:00:00Z",
+  "responsible_account": {
+    "id": "4104951",
+    "account_num": "183",
+    "external_account_num": null
+  },
+  "background_allocation": false,
+  "preferred_language_code": null,
+  "minimum_invoice_amount": null,
+  "billing_schedules": [],
+  "calculate_kpi_async": false
+}
