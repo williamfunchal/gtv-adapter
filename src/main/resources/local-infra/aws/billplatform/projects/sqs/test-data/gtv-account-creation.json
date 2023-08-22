@@ -1,0 +1,43 @@
+{
+  "event_type": "gtv-account-creation",
+  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
+  "method": "POST",
+  "api": "/billing/2/accounts",
+  "body": {
+    "responsible_party": {
+      "party_type": "organization",
+      "external_customer_num": "7777",
+      "organization_name": "LR Test 01",
+      "addresses": [
+        {
+          "address_type": "postal",
+          "purpose": "BILLING",
+          "country": "USA",
+          "city": "Austin",
+          "line1": "620 Congress Ave.",
+          "line2": "Suite 100",
+          "region_or_state": "TX",
+          "postal_code": "78701"
+        },
+        {
+          "address_type": "email",
+          "purpose": "PRIMARY",
+          "email": "test@email.com"
+        }
+      ]
+    },
+    "start_date": "2023-08-15T00:00:00Z",
+    "currency_code": "USD",
+    "bill_cycle": {
+      "id": "1425379",
+      "bill_cycle_type": "monthly"
+    },
+    "bill_type": "NONE",
+    "billing_account_category": {
+      "id": "178"
+    },
+    "payment_term":{
+      "id": "113"
+    }
+  }
+}

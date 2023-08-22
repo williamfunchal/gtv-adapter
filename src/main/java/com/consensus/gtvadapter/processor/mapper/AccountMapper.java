@@ -1,18 +1,18 @@
 package com.consensus.gtvadapter.processor.mapper;
 
-import com.consensus.gtvadapter.common.models.gtv.AccountCreationRequestBody;
-import com.consensus.gtvadapter.common.models.gtv.BillCycle;
-import com.consensus.gtvadapter.common.models.gtv.BillCycleType;
-import com.consensus.gtvadapter.common.models.gtv.BillType;
-import com.consensus.gtvadapter.common.models.gtv.BillingAccountCategory;
-import com.consensus.gtvadapter.common.models.gtv.CurrencyCode;
-import com.consensus.gtvadapter.common.models.gtv.CustomField;
-import com.consensus.gtvadapter.common.models.gtv.CustomFieldType;
-import com.consensus.gtvadapter.common.models.gtv.CustomFieldValue;
-import com.consensus.gtvadapter.common.models.gtv.EmailAddress;
-import com.consensus.gtvadapter.common.models.gtv.PartyType;
-import com.consensus.gtvadapter.common.models.gtv.PostalAddress;
-import com.consensus.gtvadapter.common.models.gtv.ResponsibleParty;
+import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationRequestBody;
+import com.consensus.gtvadapter.common.models.gtv.account.BillCycle;
+import com.consensus.gtvadapter.common.models.gtv.account.BillCycleType;
+import com.consensus.gtvadapter.common.models.gtv.account.BillType;
+import com.consensus.gtvadapter.common.models.gtv.account.BillingAccountCategory;
+import com.consensus.gtvadapter.common.models.gtv.account.CurrencyCode;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomField;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldType;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldValue;
+import com.consensus.gtvadapter.common.models.gtv.account.EmailAddress;
+import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
+import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
+import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustumerData;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +30,7 @@ public class AccountMapper {
 
     public static final String ISP_DATE_PATTERN = "yyyy-MM-dd";
 
+    //TODO CUP-68 Missing mappings
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustumerData ispCustumerData){
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustumerData));
@@ -52,7 +53,7 @@ public class AccountMapper {
 
     private BillingAccountCategory getBillingAccountCategory(){
         final BillingAccountCategory billingAccountCategory = new BillingAccountCategory();
-        billingAccountCategory.setId("178"); //TODO Map to GTV account category Id
+        billingAccountCategory.setId("178");
         return billingAccountCategory;
     }
 
@@ -87,9 +88,9 @@ public class AccountMapper {
         customFieldValues.add(getCustomFieldValue("CCSI_offer_code_name", ispCustumerData.getOfferCode()));
         customFieldValues.add(getCustomFieldValue("CCSI_legacy_billing_system", ispCustumerData.getOfferCode()));
         customFieldValues.add(getCustomFieldValue("CCSI_account_start_date", Instant.now().toString()));
-        customFieldValues.add(getCustomFieldValue("CCSI_min_commitment_subscription", "TBD"));//TODO define value
-        customFieldValues.add(getCustomFieldValue("CCSI_marketplace_id", "TBD"));//TODO define value
-        customFieldValues.add(getCustomFieldValue("CCSI_business_unit", "TBD"));//TODO define value
+        customFieldValues.add(getCustomFieldValue("CCSI_min_commitment_subscription", "TBD"));
+        customFieldValues.add(getCustomFieldValue("CCSI_marketplace_id", "TBD"));
+        customFieldValues.add(getCustomFieldValue("CCSI_business_unit", "TBD"));
         return customFieldValues;
     }
 
