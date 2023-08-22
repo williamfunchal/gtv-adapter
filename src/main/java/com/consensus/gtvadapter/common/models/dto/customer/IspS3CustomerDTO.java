@@ -5,13 +5,8 @@ import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 public class IspS3CustomerDTO {
@@ -314,4 +309,5 @@ public class IspS3CustomerDTO {
 
     @CsvBindByName(column = "ACCOUNTCLOSERULE")
     private String accountCloseRule;
+    
 }

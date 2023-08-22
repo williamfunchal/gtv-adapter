@@ -36,6 +36,7 @@ public class S3ReaderService<T> {
         for (S3ObjectSummary s3ObjectSummary : s3ObjectSummaries) {            
             CsvToBean<T> csvToBean = this.mapS3ObjectSummaryToCsvToBean(s3ObjectSummary, type);
             objects.addAll(csvToBean.parse());
+            this.archiveS3Object(s3ObjectSummary);
         }
 
         return objects;
