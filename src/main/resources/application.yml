@@ -71,3 +71,6 @@ aws:
 gtv:
   host: ${/gtv/host}
   apiXKey: ${/gtv/api-x-key}}
+
+scheduler:
+  delay: 10000
