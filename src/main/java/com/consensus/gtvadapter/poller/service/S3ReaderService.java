@@ -46,7 +46,7 @@ public class S3ReaderService<T> {
     private List<S3ObjectSummary> readS3WithSortedObjects(Class<T> type) throws IOException {
         List<S3ObjectSummary> s3ObjectSummaries = s3Client.listObjects(
                 awsS3Properties.getBucketName(),
-                awsS3Properties.getPrefix())
+                awsS3Properties.getCustomerPrefix())
                 .getObjectSummaries();
         s3ObjectSummaries.sort(Comparator.comparing(S3ObjectSummary::getKey));
 
@@ -56,8 +56,8 @@ public class S3ReaderService<T> {
     private void createArchiveFolder() {
         // verify if Archive folder exists. If not, create it
         try {
-            if (!s3Client.doesObjectExist(awsS3Properties.getBucketName(), awsS3Properties.getPrefix() + "Archive/")) {
-                s3Client.putObject(awsS3Properties.getBucketName(), awsS3Properties.getPrefix() + "Archive/", "");
+            if (!s3Client.doesObjectExist(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + "Archive/")) {
+                s3Client.putObject(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + "Archive/", "");
             }
         } catch (Exception e) {
             log.error("Error creating Archive folder: " + e.getMessage());
@@ -69,7 +69,7 @@ public class S3ReaderService<T> {
         try {
             String key = s3ObjectSummary.getKey();
             s3Client.copyObject(awsS3Properties.getBucketName(), key, awsS3Properties.getBucketName(),
-                    key.replace(awsS3Properties.getPrefix(), awsS3Properties.getPrefix() + "Archive/"));
+                    key.replace(awsS3Properties.getCustomerPrefix(), awsS3Properties.getCustomerPrefix() + "Archive/"));
             s3Client.deleteObject(awsS3Properties.getBucketName(), key);
         } catch (Exception e) {
             log.error("Error moving file to Archive folder: " + e.getMessage());

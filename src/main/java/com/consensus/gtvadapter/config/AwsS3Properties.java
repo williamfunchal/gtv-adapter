@@ -10,5 +10,5 @@ import lombok.Data;
 @Configuration
 public class AwsS3Properties {
     private String bucketName;
-    private String prefix;
+    private String customerPrefix;
 }

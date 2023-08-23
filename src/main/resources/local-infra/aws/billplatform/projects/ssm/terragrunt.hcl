@@ -12,6 +12,8 @@ inputs = {
         "sqs/adapter-gtv-response-received-url"= "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-response-received"
         "gtv/host"                             = "http://localhost:${ccsi-local.wiremock.port}"
         "ddb/data-mapping-table"               = "local_gtv_adapter_data_mapping"
+        "s3/bucket-name"                       = "local-billplatform-isp-gtv-integration-usw2"
+        "s3/customer-prefix"                   = "ISPPOWER.ISPCUSTOMER"
     }
   }
 

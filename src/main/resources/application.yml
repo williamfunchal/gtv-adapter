@@ -1,7 +1,7 @@
 aws:
   s3:
-    bucketName: local-billplatform-isp-gtv-integration-usw2
-    prefix: ISPPOWER.ISPCUSTOMER
+    bucketName: ${/s3/bucket-name}
+    customerPrefix: ${/s3/customer-prefix}
   sqs:
     isp-data-ready:
       queueUrl: ${/sqs/adapter-isp-data-ready-url}
