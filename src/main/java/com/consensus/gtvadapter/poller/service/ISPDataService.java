@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
-import com.consensus.common.util.CCSIUUIDUtils;
 import com.consensus.gtvadapter.common.models.dto.customer.IspS3CustomerDTO;
 import com.consensus.gtvadapter.common.models.rawdata.IspRawDataCustomer;
 import com.consensus.gtvadapter.poller.mapper.ISPDataReadyMapper;
@@ -45,13 +44,13 @@ public class ISPDataService {
             log.info("CustomerDTO: {}", customerDTO);
             IspRawDataCustomer ispRawDataCustomer = ispDataReadyMapper.map(customerDTO);
             String message = objectMapper.writeValueAsString(ispRawDataCustomer);
-            ispDataPublishService.publishMessageToQueue(message, getMessageAttributes());
+            ispDataPublishService.publishMessageToQueue(message, getMessageAttributes(ispRawDataCustomer.getCorrelationId()));
         }             
     }
 
-    private Map<String, MessageAttributeValue> getMessageAttributes(){
+    private Map<String, MessageAttributeValue> getMessageAttributes(String correlationId){
         Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(CCSIUUIDUtils.generateUUID());
+        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(correlationId);
         attributes.put(CORRELATION_ID, correlationIdAttribute);
         return attributes;
     }

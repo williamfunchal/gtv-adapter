@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @SuperBuilder
 @Data 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -21,7 +18,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = IspRawDataCustomer.class, name = "customer")
 })
 public abstract class IspRawData {
-    private UUID correlationId;
+    private String correlationId;
     private String tableName;
     private DataOperation operation;
 }

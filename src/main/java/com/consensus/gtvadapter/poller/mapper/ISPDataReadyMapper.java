@@ -1,9 +1,8 @@
 package com.consensus.gtvadapter.poller.mapper;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Component;
 
+import com.consensus.common.util.CCSIUUIDUtils;
 import com.consensus.gtvadapter.common.models.dto.customer.IspS3CustomerDTO;
 import com.consensus.gtvadapter.common.models.rawdata.DataOperation;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustumerData;
@@ -13,9 +12,10 @@ import com.consensus.gtvadapter.common.models.rawdata.IspRawDataCustomer;
 public class ISPDataReadyMapper {
 
     public IspRawDataCustomer map(IspS3CustomerDTO ispS3CustomerDTO){
+        String correlationId = CCSIUUIDUtils.generateUUID();
 
         IspRawDataCustomer ispRawDataCustomer = IspRawDataCustomer.builder()
-            .correlationId(UUID.randomUUID())
+            .correlationId(correlationId)
             .tableName("customer")
             .operation(DataOperation.get(ispS3CustomerDTO.getOp()))
             .data(IspCustumerData.builder()
