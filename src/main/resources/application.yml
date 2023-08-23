@@ -72,5 +72,6 @@ gtv:
   host: ${/gtv/host}
   apiXKey: ${/gtv/api-x-key}}
 
-scheduler:
-  delay: 10000
+app:
+  scheduler:
+    isp-data-delay: 10000

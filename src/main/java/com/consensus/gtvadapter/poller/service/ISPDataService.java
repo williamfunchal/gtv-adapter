@@ -34,7 +34,7 @@ public class ISPDataService {
     private final ISPDataReadyMapper ispDataReadyMapper;
     private ObjectMapper objectMapper;
 
-    @Scheduled(fixedDelayString = "${scheduler.delay}")
+    @Scheduled(fixedDelayString = "${app.scheduler.isp-data-delay}")
     public void fetchISPData() throws IOException, URISyntaxException{
         log.info("New ISP data found");
         
