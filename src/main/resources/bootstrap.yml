@@ -95,14 +95,12 @@ ccsi-local:
     accessKey: ${AWS_SECRET_KEY}
     region: ${REGION}
     regionCode: ${REGION_CODE}
-    port: 8810
     resources-root-path: classpath:local-infra/aws
     namespaces: ${application.namespace}
   wiremock:
     enabled: true
     post-startwait-time: 0
     stubs-path: classpath:local-infra/wiremock
-    port: 8820
   postgres:
     enabled: false
 

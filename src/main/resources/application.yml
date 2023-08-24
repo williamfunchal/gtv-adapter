@@ -1,4 +1,7 @@
 aws:
+  s3:
+    bucketName: ${/s3/bucket-name}
+    customerPrefix: ${/s3/customer-prefix}
   sqs:
     isp-data-ready:
       queueUrl: ${/sqs/adapter-isp-data-ready-url}
@@ -67,4 +70,8 @@ aws:
     data-mapping-table: ${/ddb/data-mapping-table}
 gtv:
   host: ${/gtv/host}
-  apiXKey: ${/gtv/api-x-key}}
+  apiXKey: ${/gtv/api-x-key}
+
+app:
+  scheduler:
+    isp-data-delay: ${/scheduler/isp-data-delay}
