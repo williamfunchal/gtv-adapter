@@ -1,16 +1,5 @@
 package com.consensus.gtvadapter.processor.sqs;
 
-import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
-
-import java.time.DateTimeException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-
-import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
@@ -26,9 +15,13 @@ import com.consensus.gtvadapter.processor.mapper.ProcessorMapper;
 import com.consensus.gtvadapter.util.SqsUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.time.DateTimeException;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -86,18 +79,11 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
         ispGtvMapping.setCorrelationId(correlationId);
 
         final String message = createMessage(ispGtvMapping, UUID.fromString(ispRawData.getCorrelationId()));
-        storeDataPublishService.publishMessageToQueue(message, getMessageAttributes(correlationId));
+        storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();
-    }
-
-    private Map<String, MessageAttributeValue> getMessageAttributes(String correlationId){
-        Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(correlationId);
-        attributes.put(CORRELATION_ID, correlationIdAttribute);
-        return attributes;
     }
 
     private IspRawData parseMessageBody(String messageBody) throws JsonProcessingException {

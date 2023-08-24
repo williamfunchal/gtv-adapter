@@ -12,7 +12,7 @@ aws:
     enabled: true
 
 application:
-  namespace: billplatform
+  namespace: bill-ptf
   project: gtv-adapter
   validation:
     fipsModeEnabled: false
@@ -73,7 +73,10 @@ aws:
   endpoint:
     localstack: http://localhost:${ccsi-local.aws.port}
 
-logback.opensearch.enabled: false
+logback:
+  opensearch.enabled: false
+  console:
+    format.json.enabled: false
 
 AWS_ACCOUNT: 000000000000
 AWS_ACCESS_KEY_ID: accessKey

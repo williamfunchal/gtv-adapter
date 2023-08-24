@@ -27,7 +27,7 @@ import com.consensus.gtvadapter.poller.service.S3ReaderService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-public class S3ReaderServiceTest {
+class S3ReaderServiceTest {
     private S3ReaderService<TestObject> s3ReaderService;
 
     @Mock
@@ -46,7 +46,7 @@ public class S3ReaderServiceTest {
     }
 
     @Test
-    public void testReadCsvFromS3() throws IOException {
+    void testReadCsvFromS3() throws IOException {
         // Mock S3ObjectSummaries
         List<S3ObjectSummary> s3ObjectSummaries = new ArrayList<>();
         S3ObjectSummary s3ObjectSummary1 = new S3ObjectSummary();

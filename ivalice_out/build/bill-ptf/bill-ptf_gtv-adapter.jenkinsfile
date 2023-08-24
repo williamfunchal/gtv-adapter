@@ -1,12 +1,12 @@
 // Jenkins Job naming specification
 // [region_code]_[job_env]_[product]_[project]_[job_type]
 //
-// ex: usw2_dev_billplatform_myproject_build
+// ex: usw2_dev_bill-ptf_myproject_build
 
 node {
     // This is a map of the default pipeline values. If no override is provided, these will be used for every pipeline executed.
     def pipeline_defaults = [
-        product: 'billplatform',
+        product: 'bill-ptf',
         branch: 'develop',
         slack_channel: 'GP0EAHT8W',
         gh_repo: 'billplatform-gtv-adapter',
