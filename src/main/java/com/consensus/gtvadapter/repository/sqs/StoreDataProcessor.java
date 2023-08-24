@@ -50,7 +50,7 @@ public class StoreDataProcessor implements CCSIQueueMessageProcessor {
         try {
             final AdapterEvent adapterEvent = parseMessage(ccsiQueueMessageContext.getMessage().getBody());
             repositoryService.saveIspGtvMapping(adapterEvent);
-            dataStoredPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
+            dataStoredPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
         }catch (JsonProcessingException jpe){
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
             return CCSIQueueMessageResult.builder()
@@ -72,13 +72,6 @@ public class StoreDataProcessor implements CCSIQueueMessageProcessor {
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();
-    }
-
-    private Map<String, MessageAttributeValue> getMessageAttributes(String correlationId){
-        Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(correlationId);
-        attributes.put(CORRELATION_ID, correlationIdAttribute);
-        return attributes;
     }
 
     private AdapterEvent parseMessage(String message) throws JsonProcessingException {

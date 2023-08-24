@@ -1,6 +1,5 @@
 package com.consensus.gtvadapter.processor.sqs;
 
-import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
@@ -10,11 +9,6 @@ import com.consensus.gtvadapter.config.QueueProperties;
 import com.consensus.gtvadapter.util.SqsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
 
 @Slf4j
 @Component
@@ -37,16 +31,9 @@ public class DataStoredProcessor implements CCSIQueueMessageProcessor {
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
         log.info("Data-Stored event received with correlationId: {}", correlationId);
-        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), getMessageAttributes(correlationId));
+        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();
-    }
-
-    private Map<String, MessageAttributeValue> getMessageAttributes(String correlationId){
-        Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(correlationId);
-        attributes.put(CORRELATION_ID, correlationIdAttribute);
-        return attributes;
     }
 }

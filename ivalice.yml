@@ -6,7 +6,7 @@
 
   ### Required params
   project:                  gtv-adapter      # Project name (Please use dashes in place of underscores here)
-  namespace:                billplatform      # Synonym for 'product' - describes the family this app lives under (e.g. usr, ccs)
+  namespace:                bill-ptf      # Synonym for 'product' - describes the family this app lives under (e.g. usr, ccs)
   #product:                  MY_PRODUCT      # Supported as alternate to namespace. If both are present, namespace will be used.
 
   ### Optional params (Uncomment to use as needed)
