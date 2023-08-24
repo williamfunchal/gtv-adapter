@@ -1,24 +1,6 @@
 package com.consensus.gtvadapter.processor.sqs;
 
-import com.amazonaws.services.sqs.model.MessageAttributeValue;
-import com.consensus.common.sqs.CCSIQueueListenerProperties;
-import com.consensus.common.sqs.CCSIQueueMessageContext;
-import com.consensus.common.sqs.CCSIQueueMessageProcessor;
-import com.consensus.common.sqs.CCSIQueueMessageResult;
-import com.consensus.common.sqs.CCSIQueueMessageStatus;
-import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
-import com.consensus.gtvadapter.common.models.IspGtvMapping;
-import com.consensus.gtvadapter.common.models.MappedData;
-import com.consensus.gtvadapter.common.models.rawdata.IspRawData;
-import com.consensus.gtvadapter.common.models.request.GtvRequest;
-import com.consensus.gtvadapter.config.QueueProperties;
-import com.consensus.gtvadapter.processor.mapper.ProcessorMapper;
-import com.consensus.gtvadapter.util.SqsUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
 
 import java.time.DateTimeException;
 import java.util.HashMap;
@@ -26,7 +8,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
+import org.springframework.stereotype.Component;
+
+import com.amazonaws.services.sqs.model.MessageAttributeValue;
+import com.consensus.common.sqs.CCSIQueueListenerProperties;
+import com.consensus.common.sqs.CCSIQueueMessageContext;
+import com.consensus.common.sqs.CCSIQueueMessageProcessor;
+import com.consensus.common.sqs.CCSIQueueMessageResult;
+import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.gtvadapter.common.models.IspGtvMapping;
+import com.consensus.gtvadapter.common.models.MappedData;
+import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
+import com.consensus.gtvadapter.common.models.rawdata.IspRawData;
+import com.consensus.gtvadapter.common.models.request.GtvRequest;
+import com.consensus.gtvadapter.config.QueueProperties;
+import com.consensus.gtvadapter.processor.mapper.ProcessorMapper;
+import com.consensus.gtvadapter.util.SqsUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -83,7 +85,7 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
         ispGtvMapping.setMappedData(mappedData);
         ispGtvMapping.setCorrelationId(correlationId);
 
-        final String message = createMessage(ispGtvMapping, ispRawData.getCorrelationId());
+        final String message = createMessage(ispGtvMapping, UUID.fromString(ispRawData.getCorrelationId()));
         storeDataPublishService.publishMessageToQueue(message, getMessageAttributes(correlationId));
 
         return CCSIQueueMessageResult.builder()

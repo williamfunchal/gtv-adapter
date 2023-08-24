@@ -10,8 +10,11 @@ inputs = {
         "sqs/adapter-data-stored-url"          = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-data-stored"
         "sqs/adapter-gtv-data-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-data-ready"
         "sqs/adapter-gtv-response-received-url"= "${ccsi-local.aws.endpoint}/000000000000/local-billplatform-adapter-gtv-response-received"
-        "gtv/host"                             = "http://localhost:8820"
+        "gtv/host"                             = "http://localhost:${ccsi-local.wiremock.port}"
         "ddb/data-mapping-table"               = "local_gtv_adapter_data_mapping"
+        "s3/bucket-name"                       = "local-billplatform-isp-gtv-integration-usw2"
+        "s3/customer-prefix"                   = "ISPPOWER.ISPCUSTOMER"
+        "scheduler/isp-data-delay"             = "10000"
     }
   }
 

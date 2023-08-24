@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
-
-
-@Data
+@SuperBuilder
+@Data 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -18,7 +18,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = IspRawDataCustomer.class, name = "customer")
 })
 public abstract class IspRawData {
-    private UUID correlationId;
+    private String correlationId;
     private String tableName;
     private DataOperation operation;
 }
