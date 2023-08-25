@@ -24,7 +24,7 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
     private final GtvResponsePublishService gtvResponsePublishService;
 
     public GtvRequestProcessor(final QueueProperties queueProperties, final ObjectMapper objectMapper, final GtvService gtvService, final GtvResponsePublishService gtvResponsePublishService) {
-        this.properties = queueProperties.getGtvRequest();
+        this.properties = queueProperties.getGtvDataReady();
         this.objectMapper = objectMapper;
         this.gtvService = gtvService;
         this.gtvResponsePublishService = gtvResponsePublishService;

@@ -1,20 +1,21 @@
 package com.consensus.gtvadapter.common.models.dto.customer;
-
 import com.opencsv.bean.CsvBindByName;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class IspS3CustomerDTO {
     @CsvBindByName(column = "Op")
     private String op;
 
     @CsvBindByName(column = "CUSTOMERKEY")
-    private String customerkey;
+    private String customerKey;
 
     @CsvBindByName(column = "CUSTOMERID")
     private String customerId;
@@ -309,5 +310,4 @@ public class IspS3CustomerDTO {
 
     @CsvBindByName(column = "ACCOUNTCLOSERULE")
     private String accountCloseRule;
-    
 }

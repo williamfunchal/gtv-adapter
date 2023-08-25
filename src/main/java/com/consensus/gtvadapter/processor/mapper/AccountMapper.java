@@ -1,6 +1,18 @@
 package com.consensus.gtvadapter.processor.mapper;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import org.springframework.stereotype.Component;
+
 import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationRequestBody;
+import com.consensus.gtvadapter.common.models.gtv.account.AddressType;
 import com.consensus.gtvadapter.common.models.gtv.account.BillCycle;
 import com.consensus.gtvadapter.common.models.gtv.account.BillCycleType;
 import com.consensus.gtvadapter.common.models.gtv.account.BillType;
@@ -14,23 +26,14 @@ import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
 import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
 import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
-import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.consensus.gtvadapter.util.GtvConstants;
 
 @Component
 class AccountMapper {
 
     private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 
-    //TODO CUP-68 Missing mappings
+    // TODO CUP-68 Missing mappings
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
@@ -62,15 +65,22 @@ class AccountMapper {
         responsibleParty.setPartyType(PartyType.ORGANIZATION);
         responsibleParty.setExternalCustomerNum(ispCustomerData.getCustomerkey());
         responsibleParty.setOrganizationName(ispCustomerData.getCompany());
-        final PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setCountry(new Locale("en", ispCustomerData.getCountry()).getISO3Country());
-        postalAddress.setLine1(ispCustomerData.getAddressLine1());
-        postalAddress.setLine2(ispCustomerData.getAddressLine2());
-        postalAddress.setCity(ispCustomerData.getCity());
-        postalAddress.setRegionOrState(ispCustomerData.getMailRegion());
-        postalAddress.setPostalCode(ispCustomerData.getMailCode());
-        final EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail(ispCustomerData.getEmailAddress());
+        final PostalAddress postalAddress = PostalAddress.builder()
+                .addressType(AddressType.POSTAL)
+                .purpose(GtvConstants.BILLING_PURPOSE)
+                .country(new Locale("en", ispCustomerData.getCountry()).getISO3Country())
+                .line1(ispCustomerData.getAddressLine1())
+                .line2(ispCustomerData.getAddressLine2())
+                .city(ispCustomerData.getCity())
+                .regionOrState(ispCustomerData.getMailRegion())
+                .postalCode(ispCustomerData.getMailCode())
+                .build();
+        final EmailAddress emailAddress = EmailAddress.builder()
+                .addressType(AddressType.EMAIL)
+                .purpose(GtvConstants.PRIMARY_PURPOSE)
+                .email(ispCustomerData.getEmailAddress())
+                .addressType(AddressType.EMAIL)
+                .build();
         responsibleParty.setAddresses(List.of(postalAddress, emailAddress));
         return responsibleParty;
     }

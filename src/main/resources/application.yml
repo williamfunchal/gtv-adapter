@@ -88,7 +88,7 @@ aws:
       emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
-    gtv-request:
+    gtv-data-ready:
       queueUrl: ${/sqs/adapter-gtv-data-ready-url}
       queueShortName: adapter-gtv-data-ready
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}

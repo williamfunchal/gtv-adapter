@@ -4,8 +4,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeInfo(
@@ -19,6 +25,6 @@ import lombok.Data;
 })
 public abstract class AddressBase {
 
-    protected AddressType addressType;
-    protected String purpose;
+    private AddressType addressType;
+    private String purpose;
 }

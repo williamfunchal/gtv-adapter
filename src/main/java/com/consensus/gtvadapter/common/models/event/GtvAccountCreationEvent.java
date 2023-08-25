@@ -1,11 +1,21 @@
 package com.consensus.gtvadapter.common.models.event;
 
+import java.util.UUID;
+
+import org.springframework.http.HttpMethod;
+
 import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationRequestBody;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
-import org.springframework.http.HttpMethod;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GtvAccountCreationEvent extends AdapterEvent {
@@ -16,7 +26,11 @@ public class GtvAccountCreationEvent extends AdapterEvent {
     private String api;
     private AccountCreationRequestBody body;
 
-    public GtvAccountCreationEvent() {
-        this.eventType = TYPE;
+    @Builder
+    public GtvAccountCreationEvent(String eventType, UUID correlationId, HttpMethod method, String api, AccountCreationRequestBody body) {
+        super(eventType, correlationId);
+        this.method = method;
+        this.api = api;
+        this.body = body;
     }
 }
