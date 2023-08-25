@@ -17,9 +17,10 @@ import java.util.UUID;
         visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = DataMappingStoreEvent.class, name = DataMappingStoreEvent.TYPE),
-        @JsonSubTypes.Type(value = GtvAccountCreationEvent.class, name = GtvAccountCreationEvent.TYPE)
+        @JsonSubTypes.Type(value = GtvAccountCreationEvent.class, name = GtvAccountCreationEvent.TYPE),
+        @JsonSubTypes.Type(value = IspNewCustomerEvent.class, name = IspNewCustomerEvent.TYPE)
 })
 public abstract class AdapterEvent {
-    private String eventType;
-    private UUID correlationId;
+    protected String eventType;
+    protected UUID correlationId;
 }

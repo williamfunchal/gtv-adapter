@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.consensus.gtvadapter.common.models.event.IspNewCustomerEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -42,16 +43,9 @@ public class ISPDataService {
 
          for(IspS3CustomerDTO customerDTO : ispS3CustomerDTO){
             log.info("CustomerDTO: {}", customerDTO);
-            IspRawDataCustomer ispRawDataCustomer = ispDataReadyMapper.map(customerDTO);
-            String message = objectMapper.writeValueAsString(ispRawDataCustomer);
-            ispDataPublishService.publishMessageToQueue(message, getMessageAttributes(ispRawDataCustomer.getCorrelationId()));
+             final IspNewCustomerEvent newCustomerEvent = ispDataReadyMapper.map(customerDTO);
+             String message = objectMapper.writeValueAsString(newCustomerEvent);
+            ispDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(newCustomerEvent.getCorrelationId().toString()));
         }             
-    }
-
-    private Map<String, MessageAttributeValue> getMessageAttributes(String correlationId){
-        Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = SqsUtils.createAttribute(correlationId);
-        attributes.put(CORRELATION_ID, correlationIdAttribute);
-        return attributes;
     }
 }

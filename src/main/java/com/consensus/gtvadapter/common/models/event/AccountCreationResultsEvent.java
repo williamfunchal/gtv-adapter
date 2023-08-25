@@ -18,4 +18,7 @@ public class AccountCreationResultsEvent extends AdapterEvent{
     private AccountCreationRequestBody body;
     private GtvRequestDetails result;
 
+    public AccountCreationResultsEvent() {
+        this.eventType = TYPE;
+    }
 }

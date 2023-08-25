@@ -46,11 +46,14 @@ public class StoreDataProcessor implements CCSIQueueMessageProcessor {
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        log.info("Add-Data event received with correlationId: {}", correlationId);
+        final String messageBody = ccsiQueueMessageContext.getMessage().getBody();
+        log.info("Store data event received with correlationId {} and body {}", correlationId, messageBody);
         try {
-            final AdapterEvent adapterEvent = parseMessage(ccsiQueueMessageContext.getMessage().getBody());
+
+            final AdapterEvent adapterEvent = parseMessage(messageBody);
             repositoryService.saveIspGtvMapping(adapterEvent);
-            dataStoredPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+            dataStoredPublishService.publishMessageToQueue(messageBody, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+            log.info("Data stored event published {}", messageBody);
         }catch (JsonProcessingException jpe){
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
             return CCSIQueueMessageResult.builder()

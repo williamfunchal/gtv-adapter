@@ -15,4 +15,8 @@ public class GtvAccountCreationEvent extends AdapterEvent{
     private HttpMethod method;
     private String api;
     private AccountCreationRequestBody body;
+
+    public GtvAccountCreationEvent() {
+        this.eventType = TYPE;
+    }
 }

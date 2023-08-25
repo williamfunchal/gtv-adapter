@@ -13,7 +13,7 @@ import com.consensus.gtvadapter.common.models.gtv.account.EmailAddress;
 import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
 import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
 import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
-import com.consensus.gtvadapter.common.models.rawdata.IspCustumerData;
+import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -31,15 +31,15 @@ public class AccountMapper {
     public static final String ISP_DATE_PATTERN = "yyyy-MM-dd";
 
     //TODO CUP-68 Missing mappings
-    public AccountCreationRequestBody toAccountCreationRequestBody(IspCustumerData ispCustumerData){
+    public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData){
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
-        accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustumerData));
-        accountCreationRequestBody.setStartDate(convertToInstant(ispCustumerData.getStartDate()));
-        accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustumerData.getCurrencyCode()));
+        accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
+        accountCreationRequestBody.setStartDate(convertToInstant(ispCustomerData.getStartDate()));
+        accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustomerData.getCurrencyCode()));
         accountCreationRequestBody.setBillCycle(getBillCycle());
         accountCreationRequestBody.setBillType(BillType.NONE);
         accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory());
-        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustumerData));
+        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData));
 
         return accountCreationRequestBody;
     }
@@ -57,20 +57,20 @@ public class AccountMapper {
         return billingAccountCategory;
     }
 
-    private ResponsibleParty getResponsibleParty(IspCustumerData ispCustumerData){
+    private ResponsibleParty getResponsibleParty(IspCustomerData ispCustomerData){
         final ResponsibleParty responsibleParty = new ResponsibleParty();
         responsibleParty.setPartyType(PartyType.ORGANIZATION);
-        responsibleParty.setExternalCustomerNum(ispCustumerData.getCustomerkey());
-        responsibleParty.setOrganizationName(ispCustumerData.getCompany());
+        responsibleParty.setExternalCustomerNum(ispCustomerData.getCustomerkey());
+        responsibleParty.setOrganizationName(ispCustomerData.getCompany());
         final PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setCountry(new Locale("en", ispCustumerData.getCountry()).getISO3Country());
-        postalAddress.setLine1(ispCustumerData.getAddressLine1());
-        postalAddress.setLine2(ispCustumerData.getAddressLine2());
-        postalAddress.setCity(ispCustumerData.getCity());
-        postalAddress.setRegionOrState(ispCustumerData.getMailRegion());
-        postalAddress.setPostalCode(ispCustumerData.getMailCode());
+        postalAddress.setCountry(new Locale("en", ispCustomerData.getCountry()).getISO3Country());
+        postalAddress.setLine1(ispCustomerData.getAddressLine1());
+        postalAddress.setLine2(ispCustomerData.getAddressLine2());
+        postalAddress.setCity(ispCustomerData.getCity());
+        postalAddress.setRegionOrState(ispCustomerData.getMailRegion());
+        postalAddress.setPostalCode(ispCustomerData.getMailCode());
         final EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail(ispCustumerData.getEmailAddress());
+        emailAddress.setEmail(ispCustomerData.getEmailAddress());
         responsibleParty.setAddresses(List.of(postalAddress, emailAddress));
         return responsibleParty;
     }
@@ -82,11 +82,11 @@ public class AccountMapper {
         return localDateTime.toInstant(ZoneOffset.UTC);
     }
 
-    private List<CustomFieldValue> getCustomFiledValues(IspCustumerData ispCustumerData){
+    private List<CustomFieldValue> getCustomFiledValues(IspCustomerData ispCustomerData){
         List<CustomFieldValue> customFieldValues = new ArrayList<>();
-        customFieldValues.add(getCustomFieldValue("CCSI_corp_id", ispCustumerData.getResellerId()));
-        customFieldValues.add(getCustomFieldValue("CCSI_offer_code_name", ispCustumerData.getOfferCode()));
-        customFieldValues.add(getCustomFieldValue("CCSI_legacy_billing_system", ispCustumerData.getOfferCode()));
+        customFieldValues.add(getCustomFieldValue("CCSI_corp_id", ispCustomerData.getResellerId()));
+        customFieldValues.add(getCustomFieldValue("CCSI_offer_code_name", ispCustomerData.getOfferCode()));
+        customFieldValues.add(getCustomFieldValue("CCSI_legacy_billing_system", ispCustomerData.getOfferCode()));
         customFieldValues.add(getCustomFieldValue("CCSI_account_start_date", Instant.now().toString()));
         customFieldValues.add(getCustomFieldValue("CCSI_min_commitment_subscription", "TBD"));
         customFieldValues.add(getCustomFieldValue("CCSI_marketplace_id", "TBD"));

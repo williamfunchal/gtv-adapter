@@ -1,7 +1,7 @@
 {
+  "event_type": "isp-new-customer",
   "operation": "CREATE",
   "table_name": "ispcustomer",
-  "type": "customer",
   "data":{
     "customerkey": 2,
     "company": "Test account",
