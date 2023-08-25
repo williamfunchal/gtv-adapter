@@ -1,6 +1,7 @@
 package com.consensus.gtvadapter.repository.service;
 
 import com.consensus.gtvadapter.common.models.IspGtvMapping;
+import com.consensus.gtvadapter.common.models.dto.IspGtvMappingDTO;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
 import com.consensus.gtvadapter.repository.DataMappingRepository;
@@ -20,7 +21,11 @@ public class RepositoryService {
         if(DataMappingStoreEvent.TYPE.equals(adapterEvent.getEventType())) {
             final DataMappingStoreEvent dataMappingStoreEvent = (DataMappingStoreEvent) adapterEvent;
             final IspGtvMapping ispGtvMapping = dataMappingStoreEvent.getIspGtvMapping();
-            dataMappingRepository.saveDataMapping(ispGtvMapping);
+            final IspGtvMappingDTO ispGtvMappingDTO = new IspGtvMappingDTO();
+            ispGtvMappingDTO.setMappedData(ispGtvMapping.getMappedData());
+            ispGtvMappingDTO.setRawData(ispGtvMapping.getRawData());
+            ispGtvMappingDTO.setCorrelationId(dataMappingStoreEvent.getCorrelationId());
+            dataMappingRepository.saveDataMapping(ispGtvMappingDTO);
         }
     }
 

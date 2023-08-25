@@ -10,5 +10,4 @@ import lombok.Data;
 public class IspGtvMapping {
     private IspRawData rawData;
     private MappedData mappedData;
-    private String correlationId;
 }

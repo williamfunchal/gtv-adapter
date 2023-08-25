@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
+
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonTypeName("customer")
+@JsonTypeName("isp-customer-data")
 public class IspRawDataCustomer extends IspRawData{
-    private IspCustumerData data;
+    private IspCustomerData data;
 }

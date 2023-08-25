@@ -2,22 +2,23 @@ package com.consensus.gtvadapter.poller.mapper;
 
 import com.consensus.common.util.CCSIUUIDUtils;
 import com.consensus.gtvadapter.common.models.dto.customer.IspS3CustomerDTO;
+import com.consensus.gtvadapter.common.models.event.IspNewCustomerEvent;
 import com.consensus.gtvadapter.common.models.rawdata.DataOperation;
-import com.consensus.gtvadapter.common.models.rawdata.IspCustumerData;
-import com.consensus.gtvadapter.common.models.rawdata.IspRawDataCustomer;
+import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class ISPDataReadyMapper {
 
-    public IspRawDataCustomer map(IspS3CustomerDTO ispS3CustomerDTO){
+    public IspNewCustomerEvent map(IspS3CustomerDTO ispS3CustomerDTO){
         String correlationId = CCSIUUIDUtils.generateUUID();
-
-        return IspRawDataCustomer.builder()
-            .correlationId(correlationId)
-            .tableName("customer")
-            .operation(DataOperation.get(ispS3CustomerDTO.getOp()))
-            .data(IspCustumerData.builder()
+        final IspNewCustomerEvent ispNewCustomerEvent = new IspNewCustomerEvent();
+        ispNewCustomerEvent.setCorrelationId(UUID.fromString(correlationId));
+        ispNewCustomerEvent.setTableName("ISPCUSTOMER");
+        ispNewCustomerEvent.setOperation(DataOperation.get(ispS3CustomerDTO.getOp()));
+        ispNewCustomerEvent.setData(IspCustomerData.builder()
                 .customerkey(ispS3CustomerDTO.getCustomerkey())
                 .company(ispS3CustomerDTO.getCompany())
                 .country(ispS3CustomerDTO.getCountry())
@@ -32,8 +33,8 @@ public class ISPDataReadyMapper {
                 //.paymentTerms(ispS3CustomerDTO.getPaymentTerms()) TODO - check if this is needed
                 .resellerId(ispS3CustomerDTO.getResellerId())
                 .offerCode(ispS3CustomerDTO.getOfferCode())
-                .build())
-            .build();
-    }
+                .build());
 
+        return ispNewCustomerEvent;
+    }
 }

@@ -12,4 +12,8 @@ public class DataMappingStoreEvent extends AdapterEvent {
     public static final String TYPE = "save-data-mapping";
 
     private IspGtvMapping ispGtvMapping;
+
+    public DataMappingStoreEvent() {
+        this.eventType = TYPE;
+    }
 }

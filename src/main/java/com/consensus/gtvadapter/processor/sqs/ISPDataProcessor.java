@@ -7,6 +7,7 @@ import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.IspGtvMapping;
 import com.consensus.gtvadapter.common.models.MappedData;
+import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
 import com.consensus.gtvadapter.common.models.rawdata.IspRawData;
 import com.consensus.gtvadapter.common.models.request.GtvRequest;
@@ -47,12 +48,13 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        log.info("ISP-Data change event received with correlationId: {}", correlationId);
+        final String messageBody = ccsiQueueMessageContext.getMessage().getBody();
+        log.info("ISP-Data change event received with correlationId: {} and message body {}", correlationId, messageBody);
 
-        final IspRawData ispRawData;
+        final AdapterEvent adapterEvent;
+
         try{
-            ispRawData = parseMessageBody(ccsiQueueMessageContext.getMessage().getBody());
-            log.debug("ISP-Data event payload: {}", ispRawData);
+            adapterEvent = parseMessageBody(messageBody);
         }catch (JsonProcessingException jpe){
             log.error("Unable to parse message body: {}", jpe.getMessage());
             return CCSIQueueMessageResult.builder()
@@ -61,10 +63,9 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
                     .build();
         }
 
-        final MappedData mappedData = new MappedData();
+        AdapterEvent nextEvent;
         try {
-            final List<GtvRequest> gtvRequests = processorMapper.mapGtvRequest(ispRawData);
-            mappedData.setRequests(gtvRequests);
+            nextEvent = processorMapper.mapGtvRequest(adapterEvent);
         }catch (DateTimeException dte){
             log.error("Failed when trying to parse date: {}", dte.getMessage());
             return CCSIQueueMessageResult.builder()
@@ -73,29 +74,24 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
                     .build();
         }
 
-        final IspGtvMapping ispGtvMapping = new IspGtvMapping();
-        ispGtvMapping.setRawData(ispRawData);
-        ispGtvMapping.setMappedData(mappedData);
-        ispGtvMapping.setCorrelationId(correlationId);
+        final String message = createMessage(nextEvent);
 
-        final String message = createMessage(ispGtvMapping, UUID.fromString(ispRawData.getCorrelationId()));
-        storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+        if(nextEvent.getEventType().equals(DataMappingStoreEvent.TYPE)){
+            storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+            log.info("Data Mapping Store Event published {}", message);
+        }
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();
     }
 
-    private IspRawData parseMessageBody(String messageBody) throws JsonProcessingException {
-        return objectMapper.readValue(messageBody, IspRawData.class);
+    private AdapterEvent parseMessageBody(String messageBody) throws JsonProcessingException {
+        return objectMapper.readValue(messageBody, AdapterEvent.class);
     }
 
     @SneakyThrows
-    private String createMessage(IspGtvMapping ispGtvMapping, UUID correlationId){
-        final DataMappingStoreEvent dataMappingStoreEvent = new DataMappingStoreEvent();
-        dataMappingStoreEvent.setCorrelationId(correlationId);
-        dataMappingStoreEvent.setEventType(DataMappingStoreEvent.TYPE);
-        dataMappingStoreEvent.setIspGtvMapping(ispGtvMapping);
-        return objectMapper.writeValueAsString(dataMappingStoreEvent);
+    private String createMessage(AdapterEvent adapterEvent){
+        return objectMapper.writeValueAsString(adapterEvent);
     }
 }
