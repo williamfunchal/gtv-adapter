@@ -2,7 +2,7 @@
   "id": "05d01322-e0ac-4c71-8079-7104ab0c5c78",
   "request": {
     "method": "POST",
-    "urlPattern": "/billing/2/accounts"
+    "urlPattern": "/billing/2/billing-accounts"
   },
   "response": {
     "status": 200,

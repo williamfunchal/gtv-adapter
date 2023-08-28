@@ -2,12 +2,12 @@
   "event_type": "gtv-account-creation",
   "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
   "method": "POST",
-  "api": "/billing/2/accounts",
+  "api": "/billing/2/billing-accounts",
   "body": {
     "responsible_party": {
       "party_type": "organization",
-      "external_customer_num": "7777",
-      "organization_name": "LR Test 01",
+      "external_customer_num": "7778",
+      "organization_name": "LR Test 02",
       "addresses": [
         {
           "address_type": "postal",
@@ -22,7 +22,7 @@
         {
           "address_type": "email",
           "purpose": "PRIMARY",
-          "email": "test@email.com"
+          "email": "test02@email.com"
         }
       ]
     },
