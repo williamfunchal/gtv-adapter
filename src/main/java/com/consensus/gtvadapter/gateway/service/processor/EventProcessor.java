@@ -1,8 +1,8 @@
-package com.consensus.gtvadapter.processor.mapper;
+package com.consensus.gtvadapter.gateway.service.processor;
 
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 
-interface ProcessorMapper<T extends AdapterEvent> {
+public interface EventProcessor<T extends AdapterEvent> {
 
     String eventType();
 
