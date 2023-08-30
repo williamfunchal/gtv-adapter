@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeName("account-creation")
-public class GtvRequestAccountCreation extends GtvRequest{
+public class GtvRequestAccountCreation extends GtvRequest {
     private AccountCreationRequestBody body;
     private IspCustomerData ispData;
 }

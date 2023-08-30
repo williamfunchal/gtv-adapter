@@ -5,14 +5,10 @@ import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
-import com.consensus.gtvadapter.common.models.IspGtvMapping;
-import com.consensus.gtvadapter.common.models.MappedData;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
-import com.consensus.gtvadapter.common.models.rawdata.IspRawData;
-import com.consensus.gtvadapter.common.models.request.GtvRequest;
 import com.consensus.gtvadapter.config.QueueProperties;
-import com.consensus.gtvadapter.processor.mapper.ProcessorMapper;
+import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
 import com.consensus.gtvadapter.util.SqsUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -31,13 +25,14 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     private final CCSIQueueListenerProperties properties;
     private final StoreDataPublishService storeDataPublishService;
     private final ObjectMapper objectMapper;
-    private final ProcessorMapper processorMapper;
+    private final ProcessorMapperService processorMapperService;
 
-    public ISPDataProcessor(final QueueProperties queueProperties, final StoreDataPublishService storeDataPublishService, final ObjectMapper objectMapper, final ProcessorMapper processorMapper) {
+    public ISPDataProcessor(QueueProperties queueProperties, StoreDataPublishService storeDataPublishService,
+            ObjectMapper objectMapper, ProcessorMapperService processorMapperService) {
         this.properties = queueProperties.getIspDataReady();
         this.storeDataPublishService = storeDataPublishService;
         this.objectMapper = objectMapper;
-        this.processorMapper = processorMapper;
+        this.processorMapperService = processorMapperService;
     }
 
     @Override
@@ -47,15 +42,15 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
 
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
-        final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        final String messageBody = ccsiQueueMessageContext.getMessage().getBody();
+        String correlationId = ccsiQueueMessageContext.getCorrelationId();
+        String messageBody = ccsiQueueMessageContext.getMessage().getBody();
         log.info("ISP-Data change event received with correlationId: {} and message body {}", correlationId, messageBody);
 
         final AdapterEvent adapterEvent;
 
-        try{
+        try {
             adapterEvent = parseMessageBody(messageBody);
-        }catch (JsonProcessingException jpe){
+        } catch (JsonProcessingException jpe) {
             log.error("Unable to parse message body: {}", jpe.getMessage());
             return CCSIQueueMessageResult.builder()
                     .logMessage("Message body parsing failed")
@@ -65,8 +60,8 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
 
         AdapterEvent nextEvent;
         try {
-            nextEvent = processorMapper.mapGtvRequest(adapterEvent);
-        }catch (DateTimeException dte){
+            nextEvent = processorMapperService.mapGtvRequest(adapterEvent);
+        } catch (DateTimeException dte) {
             log.error("Failed when trying to parse date: {}", dte.getMessage());
             return CCSIQueueMessageResult.builder()
                     .logMessage("Date parsing failed")
@@ -76,7 +71,7 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
 
         final String message = createMessage(nextEvent);
 
-        if(nextEvent.getEventType().equals(DataMappingStoreEvent.TYPE)){
+        if (nextEvent.getEventType().equals(DataMappingStoreEvent.TYPE)) {
             storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
             log.info("Data Mapping Store Event published {}", message);
         }
@@ -91,7 +86,7 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
     }
 
     @SneakyThrows
-    private String createMessage(AdapterEvent adapterEvent){
+    private String createMessage(AdapterEvent adapterEvent) {
         return objectMapper.writeValueAsString(adapterEvent);
     }
 }

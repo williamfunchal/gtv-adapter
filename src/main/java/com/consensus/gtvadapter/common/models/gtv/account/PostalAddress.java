@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PostalAddress extends AddressBase{
+public class PostalAddress extends AddressBase {
     public static final String BILLING_PURPOSE = "BILLING";
 
     private String country;
