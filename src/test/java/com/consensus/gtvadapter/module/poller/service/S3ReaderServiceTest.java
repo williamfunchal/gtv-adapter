@@ -22,7 +22,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.consensus.gtvadapter.config.AwsS3Properties;
+import com.consensus.gtvadapter.config.properties.AwsS3Properties;
 import com.consensus.gtvadapter.poller.service.S3ReaderService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;

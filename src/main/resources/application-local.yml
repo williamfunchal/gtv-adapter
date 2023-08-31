@@ -1,0 +1,9 @@
+security:
+  paths:
+    permit:
+      - "/health"
+      - "/status"
+      - "/status/**"
+      - "/docs/**"
+      - "/local-infra/**"
+      - "/billing/**"

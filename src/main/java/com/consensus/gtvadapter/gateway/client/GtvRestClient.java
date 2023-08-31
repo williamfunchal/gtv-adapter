@@ -1,19 +1,18 @@
 package com.consensus.gtvadapter.gateway.client;
 
 
+import com.consensus.common.web.DownstreamWebClient;
 import com.consensus.gtvadapter.common.models.event.GtvAccountCreationEvent;
-import com.consensus.gtvadapter.config.GtvProperties;
 import com.consensus.gtvadapter.common.models.request.GtvRequestDetails;
+import com.consensus.gtvadapter.config.properties.GtvProperties;
+import com.consensus.gtvadapter.util.GtvConstants;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
@@ -22,35 +21,36 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class GtvRestClient {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    @Qualifier("gtvWebClient")
+    private final DownstreamWebClient gtvWebClient;
     private final GtvProperties gtvProperties;
 
     public GtvRequestDetails createAccount(GtvAccountCreationEvent accountCreationEvent){
-        final GtvRequestDetails gtvRequestDetails = new GtvRequestDetails();
-        final String url = gtvProperties.getHost() + accountCreationEvent.getApi();
+        GtvRequestDetails gtvRequestDetails = new GtvRequestDetails();
         try {
-            HttpEntity<String> request =
-                    new HttpEntity<>(objectMapper.writeValueAsString(accountCreationEvent.getBody()), getHeaders());
-
             gtvRequestDetails.setRequestDateTime(Instant.now());
-            final ResponseEntity<JsonNode> response = restTemplate.postForEntity(url, request, JsonNode.class);
+
+            ResponseEntity<JsonNode> response = gtvWebClient.getWebClient()
+                    .method(HttpMethod.POST)
+                    .uri(accountCreationEvent.getApi())
+                    .bodyValue(accountCreationEvent.getBody())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(GtvConstants.HttpHeaders.GTV_API_KEY, gtvProperties.getApiXKey())
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())
+                    .toEntity(JsonNode.class)
+                    //.retryWhen(gtvRetry) Retries can be added automatically
+                    .block();
+
             gtvRequestDetails.setResponseDateTime(Instant.now());
             gtvRequestDetails.setStatusCode(response.getStatusCode().value());
             gtvRequestDetails.setPayload(response.getBody());
-            final long executionTime = gtvRequestDetails.getResponseDateTime().toEpochMilli() - gtvRequestDetails.getRequestDateTime().toEpochMilli();
+            long executionTime = gtvRequestDetails.getResponseDateTime().toEpochMilli() - gtvRequestDetails.getRequestDateTime().toEpochMilli();
 
             log.info("GTV Request - Method:[{}] API:[{}] Status:[{}] Execution Time:[{}ms]", accountCreationEvent.getMethod(), accountCreationEvent.getApi(), gtvRequestDetails.getStatusCode(), executionTime);
         } catch (Exception ex) {
             log.error("GTV Account creation failed {}", ex.getMessage());
         }
         return gtvRequestDetails;
-    }
-
-    private HttpHeaders getHeaders(){
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Api-Key", gtvProperties.getApiXKey());
-        return headers;
     }
 }

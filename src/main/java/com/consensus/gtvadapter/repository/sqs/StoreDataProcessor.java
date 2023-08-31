@@ -1,26 +1,19 @@
 package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
-import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
-import com.consensus.gtvadapter.config.QueueProperties;
+import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.repository.service.RepositoryService;
 import com.consensus.gtvadapter.util.SqsUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
 
 @Slf4j
 @Component

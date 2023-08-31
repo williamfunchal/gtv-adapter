@@ -1,3 +1,39 @@
+spring:
+  cloud:
+    discovery.enabled: false
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  jpa:
+    open-in-view: false
+
+webflux:
+  enabled: true
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web.base-path: /
+  endpoint:
+    health:
+      enabled: true
+      show-details: never
+      status:
+        http-mapping:
+          UP: 200
+          DOWN: 200
+          OUT_OF_SERVICE: 500
+        order: OUT_OF_SERVICE,DOWN,UP,UNKNOWN
+    metrics.enabled: true
+    custom:
+      status:
+        enabled: true
+  health:
+    defaults.enabled: false
+    diskspace.enabled: true
+  metrics:
+    enabled: true
+
 aws:
   s3:
     bucketName: ${/s3/bucket-name}
@@ -75,3 +111,12 @@ gtv:
 app:
   scheduler:
     isp-data-delay: ${/scheduler/isp-data-delay}
+
+security:
+  paths:
+    permit:
+      - "/health"
+      - "/status"
+      - "/status/**"
+      - "/docs/**"
+      - "/billing/**"

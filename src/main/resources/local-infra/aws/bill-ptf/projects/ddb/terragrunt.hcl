@@ -1,6 +1,6 @@
 inputs = {
   ddb_tables = {
-    "${ccsi-local.aws.env}_gtv_adapter_account_mapping" = {
+    "${ccsi-local.aws.env}_bill-ptf_account_mapping" = {
       billing_mode   = "PAY_PER_REQUEST"
       read_capacity  = 1
       write_capacity = 1
@@ -13,7 +13,7 @@ inputs = {
       ttl                      = null
     }
 
-    "${ccsi-local.aws.env}_gtv_adapter_service_resource_mapping" = {
+    "${ccsi-local.aws.env}_bill-ptf_service_resource_mapping" = {
       billing_mode   = "PAY_PER_REQUEST"
       read_capacity  = 1
       write_capacity = 1
@@ -29,7 +29,7 @@ inputs = {
       ttl                      = null
     }
 
-    "${ccsi-local.aws.env}_gtv_adapter_data_mapping" = {
+    "${ccsi-local.aws.env}_bill-ptf_data_mapping" = {
       billing_mode   = "PAY_PER_REQUEST"
       read_capacity  = 1
       write_capacity = 1
@@ -42,7 +42,7 @@ inputs = {
       ttl                      = null
     }
 
-    "${ccsi-local.aws.env}_gtv_adapter_gtv_api_calls" = {
+    "${ccsi-local.aws.env}_bill-ptf_gtv_api_calls" = {
       billing_mode   = "PAY_PER_REQUEST"
       read_capacity  = 1
       write_capacity = 1
