@@ -7,7 +7,7 @@ import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
-import com.consensus.gtvadapter.config.QueueProperties;
+import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
 import com.consensus.gtvadapter.util.SqsUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;

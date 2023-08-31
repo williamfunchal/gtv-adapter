@@ -1,44 +1,55 @@
 package com.consensus.gtvadapter.config;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.consensus.gtvadapter.config.properties.SecurityPathsProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
-@Slf4j
+import java.util.stream.Collectors;
+
 @Configuration
-@Order(SecurityProperties.BASIC_AUTH_ORDER - 10)
-@RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableWebFlux
+@EnableWebFluxSecurity
+@EnableConfigurationProperties(SecurityPathsProperties.class)
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http = http
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
+            ServerWebExchangeMatcher permitAllMatcher) {
+        http
                 .csrf().disable()
                 .cors()
-                .and();
+                .and()
 
-        http = http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
+                // stateless sessions
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
 
-        http.authorizeRequests()
-            .antMatchers("/health", "/status/**", "/status", "/docs/**","/billing/**")
-            .permitAll()
-            .and()
-            //.addFilterBefore(tokenAuthorizationFilter, BasicAuthenticationFilter.class)
-            .authorizeRequests()
-            .anyRequest()
-            .authenticated().and().httpBasic();
+                .authorizeExchange()
+                .matchers(permitAllMatcher)
+                .permitAll()
+                .and()
+
+                .authorizeExchange()
+                .anyExchange()
+                .authenticated();
+
         return http.build();
 
+    }
+
+    @Bean
+    public ServerWebExchangeMatcher permitAllMatcher(SecurityPathsProperties pathsProperties) {
+        return new OrServerWebExchangeMatcher(pathsProperties.getPermit()
+                .stream()
+                .map(PathPatternParserServerWebExchangeMatcher::new)
+                .collect(Collectors.toList()));
     }
 }
