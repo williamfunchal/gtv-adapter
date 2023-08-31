@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.consensus.common.reactive.config.WebFluxConfig, \
+  com.consensus.common.config.CorrelationIdConfig, \
+  com.consensus.common.config.WebClientTLSConfig

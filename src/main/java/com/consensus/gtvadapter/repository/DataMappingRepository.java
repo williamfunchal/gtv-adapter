@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.consensus.gtvadapter.common.models.IspGtvMapping;
-import com.consensus.gtvadapter.config.DynamoDBProperties;
+import com.consensus.gtvadapter.config.properties.DynamoDBProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
