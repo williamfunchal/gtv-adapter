@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class DynamoDBConfig {
 
     @Bean
-    public DynamoDBMapper getDynamoDBMapper(final AmazonDynamoDB amazonDynamoDB){
+    public DynamoDBMapper getDynamoDBMapper(AmazonDynamoDB amazonDynamoDB){
         return new DynamoDBMapper(amazonDynamoDB);
     }
 
