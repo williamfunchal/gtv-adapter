@@ -8,7 +8,7 @@ import org.springframework.http.HttpMethod;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class GtvAccountCreationEvent extends AdapterEvent{
+public class GtvAccountCreationEvent extends AdapterEvent {
 
     public static final String TYPE = "gtv-account-creation";
 

@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AccountCreationResultsEvent extends AdapterEvent{
+public class AccountCreationResultsEvent extends AdapterEvent {
 
     public static final String TYPE = "account-creation-result";
 
