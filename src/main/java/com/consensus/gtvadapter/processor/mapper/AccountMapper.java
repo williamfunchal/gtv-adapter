@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Locale;
 
 @Component
-public class AccountMapper {
+class AccountMapper {
 
-    public static final String ISP_DATE_PATTERN = "yyyy-MM-dd";
+    private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 
     //TODO CUP-68 Missing mappings
-    public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData){
+    public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
         accountCreationRequestBody.setStartDate(convertToInstant(ispCustomerData.getStartDate()));
@@ -44,20 +44,20 @@ public class AccountMapper {
         return accountCreationRequestBody;
     }
 
-    private BillCycle getBillCycle(){
+    private BillCycle getBillCycle() {
         final BillCycle billCycle = new BillCycle();
         billCycle.setId("1425379");
         billCycle.setBillCycleType(BillCycleType.MONTHLY);
         return billCycle;
     }
 
-    private BillingAccountCategory getBillingAccountCategory(){
+    private BillingAccountCategory getBillingAccountCategory() {
         final BillingAccountCategory billingAccountCategory = new BillingAccountCategory();
         billingAccountCategory.setId("178");
         return billingAccountCategory;
     }
 
-    private ResponsibleParty getResponsibleParty(IspCustomerData ispCustomerData){
+    private ResponsibleParty getResponsibleParty(IspCustomerData ispCustomerData) {
         final ResponsibleParty responsibleParty = new ResponsibleParty();
         responsibleParty.setPartyType(PartyType.ORGANIZATION);
         responsibleParty.setExternalCustomerNum(ispCustomerData.getCustomerkey());
@@ -75,14 +75,12 @@ public class AccountMapper {
         return responsibleParty;
     }
 
-    private Instant convertToInstant(String date){
-        String pattern = ISP_DATE_PATTERN;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern, Locale.US);
-        LocalDateTime localDateTime = LocalDate.parse(date, dateTimeFormatter).atStartOfDay();
+    private Instant convertToInstant(String date) {
+        LocalDateTime localDateTime = LocalDate.parse(date, ISP_DATE_PATTERN).atStartOfDay();
         return localDateTime.toInstant(ZoneOffset.UTC);
     }
 
-    private List<CustomFieldValue> getCustomFiledValues(IspCustomerData ispCustomerData){
+    private List<CustomFieldValue> getCustomFiledValues(IspCustomerData ispCustomerData) {
         List<CustomFieldValue> customFieldValues = new ArrayList<>();
         customFieldValues.add(getCustomFieldValue("CCSI_corp_id", ispCustomerData.getResellerId()));
         customFieldValues.add(getCustomFieldValue("CCSI_offer_code_name", ispCustomerData.getOfferCode()));
@@ -94,14 +92,14 @@ public class AccountMapper {
         return customFieldValues;
     }
 
-    private CustomField getCustomField(String fieldName){
+    private CustomField getCustomField(String fieldName) {
         final CustomField customField = new CustomField();
         customField.setCustomFieldType(CustomFieldType.BILLING_ACCOUNT);
         customField.setName(fieldName);
         return customField;
     }
 
-    private CustomFieldValue getCustomFieldValue(String fieldName, String fieldValue){
+    private CustomFieldValue getCustomFieldValue(String fieldName, String fieldValue) {
         final CustomFieldValue customFieldValue = new CustomFieldValue();
         customFieldValue.setCustomFieldValueType(CustomFieldType.BILLING_ACCOUNT);
         customFieldValue.setCustomField(getCustomField(fieldName));

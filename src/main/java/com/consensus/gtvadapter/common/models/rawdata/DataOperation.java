@@ -8,17 +8,16 @@ public enum DataOperation {
     UPDATE("U"),
     DELETE("D");
 
-    private String operation;
+    private final String operation;
 
     DataOperation(String operation) {
         this.operation = operation;
     }
 
-    
     public static String getValueString(DataOperation dataOperation) {
         return dataOperation.operation;
     }
- 
+
     public static DataOperation get(String operation) {
         for (DataOperation dataOperation : DataOperation.values()) {
             if (dataOperation.getOperation().equals(operation)) {
