@@ -6,6 +6,13 @@ spring:
     web-application-type: reactive
   jpa:
     open-in-view: false
+    database-platform: org.hibernate.dialect.Oracle10gDialect
+  datasource:
+    url: ${/coredb/url}
+    username: ${/coredb/username}
+    password: ${/coredb/password}
+    driver-class-name: oracle.jdbc.OracleDriver
+
 
 webflux:
   enabled: true
