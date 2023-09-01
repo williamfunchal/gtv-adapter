@@ -15,6 +15,8 @@ inputs = {
         "s3/bucket-name"                       = "local-bill-ptf-isp-gtv-integration-usw2"
         "s3/customer-prefix"                   = "ISPPOWER.ISPCUSTOMER"
         "scheduler/isp-data-delay"             = "10000"
+        "coredb/url"                           = "jdbc:oracle:thin:@//coredev1-serv-usw2.czoqxvus1z1f.us-west-2.rds.amazonaws.com:1521/SERV"
+        "coredb/username"                      = "gtvadapter"
     }
   }
 
@@ -32,7 +34,8 @@ inputs = {
 
   durable_project_parameters_local_values = {
     gtv-adapter = {
-        "gtv/api-x-key" = "changeme"
+        "gtv/api-x-key"   = "changeme"
+        "coredb/password" = "changeme"
     }
   }
 }
