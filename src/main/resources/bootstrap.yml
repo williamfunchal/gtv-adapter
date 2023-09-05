@@ -12,8 +12,8 @@ aws:
     enabled: true
 
 application:
-  namespace: bill-ptf
-  project: gtv-adapter
+  namespace: ${NAMESPACE}
+  project: ${PROJECT}
   validation:
     fipsModeEnabled: false
   status:
@@ -83,6 +83,8 @@ AWS_ACCESS_KEY_ID: accessKey
 AWS_SECRET_KEY: secretKey
 REGION: us-west-2
 REGION_CODE: usw2
+NAMESPACE: bill-ptf
+PROJECT: gtv-adapter
 
 ccsi-local:
   embedded: true
@@ -99,7 +101,7 @@ ccsi-local:
     region: ${REGION}
     regionCode: ${REGION_CODE}
     resources-root-path: classpath:local-infra/aws
-    namespaces: ${application.namespace}
+    namespaces: ${NAMESPACE}
   wiremock:
     enabled: true
     post-startwait-time: 0
