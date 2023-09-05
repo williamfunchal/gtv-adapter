@@ -1,12 +1,10 @@
 package com.consensus.gtvadapter;
 
-import com.consensus.gtvadapter.config.properties.DynamoDBProperties;
 import com.consensus.gtvadapter.config.properties.GtvProperties;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
@@ -19,11 +17,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.consensus.common.dynamo.db",
         "com.consensus.common.health"
 })
-@EnableConfigurationProperties({QueueProperties.class, GtvProperties.class, DynamoDBProperties.class})
-public class GtvAdapter {
-    
+@EnableConfigurationProperties({QueueProperties.class, GtvProperties.class})
+public class GtvAdapterService {
+
     public static void main(String[] args) {
-        SpringApplication.run(GtvAdapter.class, args);
+        SpringApplication.run(GtvAdapterService.class, args);
     }
 }
 

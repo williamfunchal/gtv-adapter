@@ -1,32 +1,38 @@
 package com.consensus.gtvadapter.repository.service;
 
-import com.consensus.gtvadapter.common.models.IspGtvMapping;
-import com.consensus.gtvadapter.common.models.dto.IspGtvMappingDTO;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
-import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
-import com.consensus.gtvadapter.repository.DataMappingRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class RepositoryService {
 
-    private final DataMappingRepository dataMappingRepository;
+    private final Map<String, RepositoryProcessor<? extends AdapterEvent>> repositoryProcessors;
 
-    public void saveIspGtvMapping (AdapterEvent adapterEvent){
+    public RepositoryService(List<RepositoryProcessor<? extends AdapterEvent>> repositoryProcessors) {
+        this.repositoryProcessors = repositoryProcessors.stream()
+                .collect(Collectors.toMap(
+                        RepositoryProcessor::eventType,
+                        Function.identity())
+                );
+    }
 
-        if(DataMappingStoreEvent.TYPE.equals(adapterEvent.getEventType())) {
-            final DataMappingStoreEvent dataMappingStoreEvent = (DataMappingStoreEvent) adapterEvent;
-            final IspGtvMapping ispGtvMapping = dataMappingStoreEvent.getIspGtvMapping();
-            final IspGtvMappingDTO ispGtvMappingDTO = new IspGtvMappingDTO();
-            ispGtvMappingDTO.setMappedData(ispGtvMapping.getMappedData());
-            ispGtvMappingDTO.setRawData(ispGtvMapping.getRawData());
-            ispGtvMappingDTO.setCorrelationId(dataMappingStoreEvent.getCorrelationId());
-            dataMappingRepository.saveDataMapping(ispGtvMappingDTO);
+    public AdapterEvent process(AdapterEvent adapterEvent) {
+        String eventType = adapterEvent.getEventType();
+        @SuppressWarnings("unchecked")
+        RepositoryProcessor<AdapterEvent> processorMapper = (RepositoryProcessor<AdapterEvent>) repositoryProcessors.get(eventType);
+        if (isNull(processorMapper)) {
+            throw new IllegalArgumentException("Unable to process event of unknown type: " + eventType);
         }
+        return processorMapper.process(adapterEvent);
     }
 
 }
