@@ -47,7 +47,8 @@ public class StoreDataProcessor implements CCSIQueueMessageProcessor {
             AdapterEvent adapterEvent = parseMessage(messageBody);
             AdapterEvent storedEvent = repositoryService.process(adapterEvent);
             dataStoredPublishService.publishMessageToQueue(objectMapper.writeValueAsString(storedEvent),
-                    SqsUtils.createMessageAttributesWithCorrelationId(correlationId)
+                    SqsUtils.createMessageAttributesWithCorrelationId(correlationId),
+                    "repository"
             );
             log.info("Data stored event published {}", messageBody);
         } catch (JsonProcessingException jpe) {

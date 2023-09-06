@@ -7,53 +7,78 @@ import com.consensus.gtvadapter.common.models.gtv.account.BillType;
 import com.consensus.gtvadapter.common.models.gtv.account.BillingAccountCategory;
 import com.consensus.gtvadapter.common.models.gtv.account.CurrencyCode;
 import com.consensus.gtvadapter.common.models.gtv.account.CustomField;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldIds;
 import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldType;
 import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldValue;
 import com.consensus.gtvadapter.common.models.gtv.account.EmailAddress;
 import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
+import com.consensus.gtvadapter.common.models.gtv.account.PaymentTerm;
 import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
 import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
+import com.consensus.gtvadapter.config.properties.IspGtvMapsProperties;
+import com.consensus.gtvadapter.processor.persistence.model.J2CorpProfile;
+import com.consensus.gtvadapter.processor.persistence.model.JbcBillingEntity;
+import com.consensus.gtvadapter.processor.persistence.repository.BillingEntityRepository;
+import com.consensus.gtvadapter.processor.persistence.repository.CorpProfileRepository;
+import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_BILLING_SYSTEM;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_OFFER_CODES;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CORP_AUTO_PREFIX;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.RED_PEPPER_BILLING_SYSTEM;
 
 @Component
+@RequiredArgsConstructor
 class AccountMapper {
 
     private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    private static final DateTimeFormatter CUSTOM_FIELD_DATE_PATTERN = DateTimeFormatter.ofPattern("MM/dd/yyyy").withZone(ZoneId.of("UTC"));
+    private final IspGtvMapsProperties mappingProperties;
+    private final BillingEntityRepository billingEntityRepository;
+    private final CorpProfileRepository corpProfileRepository;
 
-    //TODO CUP-68 Missing mappings
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
+        final JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
+        final J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
-        accountCreationRequestBody.setStartDate(convertToInstant(ispCustomerData.getStartDate()));
+        final Instant startDate = convertToInstant(ispCustomerData.getStartDate());
+        accountCreationRequestBody.setStartDate(startDate);
         accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustomerData.getCurrencyCode()));
         accountCreationRequestBody.setBillCycle(getBillCycle());
         accountCreationRequestBody.setBillType(BillType.NONE);
-        accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory());
-        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData));
+        accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory(billingEntity));
+        accountCreationRequestBody.setPaymentTerm(getPaymentTerms(corpProfile.getPaymentTerms()));
+        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData.getResellerId(), CUSTOM_FIELD_DATE_PATTERN.format(startDate), billingEntity.getOrgId(), corpProfile.getOfferCode()));
 
         return accountCreationRequestBody;
     }
 
     private BillCycle getBillCycle() {
         final BillCycle billCycle = new BillCycle();
-        billCycle.setId("1425379");
+        billCycle.setId(mappingProperties.getBillCycleId());
         billCycle.setBillCycleType(BillCycleType.MONTHLY);
         return billCycle;
     }
 
-    private BillingAccountCategory getBillingAccountCategory() {
+    private BillingAccountCategory getBillingAccountCategory(JbcBillingEntity billingEntity) {
         final BillingAccountCategory billingAccountCategory = new BillingAccountCategory();
-        billingAccountCategory.setId("178");
+        final Map<String, String> accountCategories = mappingProperties.getAccountCategories();
+        billingAccountCategory.setId(accountCategories.get(billingEntity.getCategoriesMappingKey()));
         return billingAccountCategory;
     }
 
@@ -80,30 +105,49 @@ class AccountMapper {
         return localDateTime.toInstant(ZoneOffset.UTC);
     }
 
-    private List<CustomFieldValue> getCustomFiledValues(IspCustomerData ispCustomerData) {
+    private List<CustomFieldValue> getCustomFiledValues(String resellerId, String startDate, Long orgId, String offerCode) {
         List<CustomFieldValue> customFieldValues = new ArrayList<>();
-        customFieldValues.add(getCustomFieldValue("CCSI_corp_id", ispCustomerData.getResellerId()));
-        customFieldValues.add(getCustomFieldValue("CCSI_offer_code_name", ispCustomerData.getOfferCode()));
-        customFieldValues.add(getCustomFieldValue("CCSI_legacy_billing_system", ispCustomerData.getOfferCode()));
-        customFieldValues.add(getCustomFieldValue("CCSI_account_start_date", Instant.now().toString()));
-        customFieldValues.add(getCustomFieldValue("CCSI_min_commitment_subscription", "TBD"));
-        customFieldValues.add(getCustomFieldValue("CCSI_marketplace_id", "TBD"));
-        customFieldValues.add(getCustomFieldValue("CCSI_business_unit", "TBD"));
+        final CustomFieldIds customFieldIds = mappingProperties.getCustomFieldIds();
+        final Map<Long, String> businessUnits = mappingProperties.getBusinessUnits();
+        customFieldValues.add(getCustomFieldValue("CCSI CorpID", customFieldIds.getCorpId(), resellerId));
+        customFieldValues.add(getCustomFieldValue("CCSI Offer Code Name", customFieldIds.getOfferCode(), offerCode));
+        customFieldValues.add(getCustomFieldValue("CCSI Legacy Billing System", customFieldIds.getLegacyBillingSystem(), getLegacyBillingSystem(offerCode)));
+        customFieldValues.add(getCustomFieldValue("CCSI Account Start Date", customFieldIds.getAccountStartDate(), startDate));
+        customFieldValues.add(getCustomFieldValue("DNE Minimum Commitment", customFieldIds.getMinCommitmentSubs(), corpProfileRepository.findMinCommitmentSubscription(resellerId).toString()));
+        customFieldValues.add(getCustomFieldValue("CCSI Marketplace ID", customFieldIds.getMarketplaceId(), "TBD"));
+        customFieldValues.add(getCustomFieldValue("CCSI Business Unit", customFieldIds.getBusinessUnit(), businessUnits.get(orgId)));
         return customFieldValues;
     }
 
-    private CustomField getCustomField(String fieldName) {
+    private CustomField getCustomField(String fieldName, String fieldId) {
         final CustomField customField = new CustomField();
         customField.setCustomFieldType(CustomFieldType.BILLING_ACCOUNT);
         customField.setName(fieldName);
+        customField.setId(fieldId);
         return customField;
     }
 
-    private CustomFieldValue getCustomFieldValue(String fieldName, String fieldValue) {
+    private CustomFieldValue getCustomFieldValue(String fieldName, String fieldId, String fieldValue) {
         final CustomFieldValue customFieldValue = new CustomFieldValue();
         customFieldValue.setCustomFieldValueType(CustomFieldType.BILLING_ACCOUNT);
-        customFieldValue.setCustomField(getCustomField(fieldName));
+        customFieldValue.setCustomField(getCustomField(fieldName, fieldId));
         customFieldValue.setValue(fieldValue);
         return customFieldValue;
+    }
+
+    private PaymentTerm getPaymentTerms(String paymentTerm){
+        final String paymentTermKey = paymentTerm.replace(" ", "");
+        final String paymentTermsId = mappingProperties.getPaymentTerms().get(paymentTermKey);
+        return new PaymentTerm(paymentTermsId);
+    }
+
+    private String getLegacyBillingSystem(String offerCode){
+        if (null == offerCode ){
+            return Strings.EMPTY;
+        }else if (offerCode.startsWith(CORP_AUTO_PREFIX) || CIA_OFFER_CODES.contains(offerCode)){
+            return CIA_BILLING_SYSTEM;
+        }else{
+            return RED_PEPPER_BILLING_SYSTEM;
+        }
     }
 }

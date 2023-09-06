@@ -1,9 +1,11 @@
 {
   "event_type": "isp-new-customer",
+  "event_id": "e5a1eb55-d0d6-48e5-83ce-00db173d0a37",
+  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
   "operation": "CREATE",
   "table_name": "ispcustomer",
   "data":{
-    "customerkey": 2,
+    "customerkey": 8983539,
     "company": "Test account",
     "country": "US",
     "address_line1": "620 Congress Ave.",
@@ -15,8 +17,7 @@
     "start_date": "2015-04-21",
     "currency_code": "USD",
     "payment_terms": "Upon Receipt",
-    "reseller_id": 423452,
+    "reseller_id": 31907,
     "offer_code": "CORP_10DID_1495_NOTRI_NOACT_25PGIFT_1000SEND"
-  },
-  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71"
+  }
 }

@@ -31,7 +31,7 @@ public class DataStoredProcessor implements CCSIQueueMessageProcessor {
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         final String correlationId = ccsiQueueMessageContext.getCorrelationId();
         log.info("Data-Stored event received with correlationId: {}", correlationId);
-        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId), "processor");
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

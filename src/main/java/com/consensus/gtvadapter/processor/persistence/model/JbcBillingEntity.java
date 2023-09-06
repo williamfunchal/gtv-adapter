@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.processor.parsistence.model;
+package com.consensus.gtvadapter.processor.persistence.model;
 
 import lombok.Data;
 
@@ -18,4 +18,8 @@ public class JbcBillingEntity {
 
     @Column(name = "orgid")
     private Long orgId;
+
+    public String getCategoriesMappingKey(){
+        return jcEntityKey + String.valueOf(orgId);
+    }
 }

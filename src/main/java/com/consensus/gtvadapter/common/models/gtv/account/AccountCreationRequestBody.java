@@ -17,4 +17,5 @@ public class AccountCreationRequestBody {
     private BillType billType;
     private BillingAccountCategory billingAccountCategory;
     private List<CustomFieldValue> customFieldValues;
+    private PaymentTerm paymentTerm;
 }

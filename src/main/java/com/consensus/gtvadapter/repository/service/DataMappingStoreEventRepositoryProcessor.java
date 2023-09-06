@@ -28,6 +28,7 @@ class DataMappingStoreEventRepositoryProcessor implements RepositoryProcessor<Da
         ispGtvMappingDTO.setMappedData(ispGtvMapping.getMappedData());
         ispGtvMappingDTO.setRawData(ispGtvMapping.getRawData());
         ispGtvMappingDTO.setCorrelationId(event.getCorrelationId());
+        ispGtvMappingDTO.setEventId(event.getEventId());
         customerEventsRepository.save(ispGtvMappingDTO);
         return event;
     }

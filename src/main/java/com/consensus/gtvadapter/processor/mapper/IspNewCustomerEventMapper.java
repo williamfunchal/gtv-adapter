@@ -38,7 +38,6 @@ class IspNewCustomerEventMapper implements ProcessorMapper<IspNewCustomerEvent> 
         GtvRequestAccountCreation gtvRequestAccountCreation = new GtvRequestAccountCreation();
         gtvRequestAccountCreation.setApi(ACCOUNT_CREATE_API);
         gtvRequestAccountCreation.setMethod(HttpMethod.POST);
-        gtvRequestAccountCreation.setIspData(ispRawDataCustomer.getData());
         gtvRequestAccountCreation.setBody(accountMapper.toAccountCreationRequestBody(ispRawDataCustomer.getData()));
 
         MappedData mappedData = new MappedData();
@@ -51,6 +50,7 @@ class IspNewCustomerEventMapper implements ProcessorMapper<IspNewCustomerEvent> 
         DataMappingStoreEvent dataMappingStoreEvent = new DataMappingStoreEvent();
         dataMappingStoreEvent.setIspGtvMapping(ispGtvMapping);
         dataMappingStoreEvent.setCorrelationId(event.getCorrelationId());
+        dataMappingStoreEvent.setEventId(event.getEventId());
 
         return dataMappingStoreEvent;
     }

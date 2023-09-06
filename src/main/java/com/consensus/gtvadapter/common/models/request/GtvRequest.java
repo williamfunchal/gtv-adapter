@@ -11,9 +11,9 @@ import org.springframework.http.HttpMethod;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        property = "type")
+        property = "request_type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = GtvRequestAccountCreation.class, name = "account creation")
+        @JsonSubTypes.Type(value = GtvRequestAccountCreation.class, name = "account-creation")
 })
 public abstract class GtvRequest {
     private HttpMethod method;
