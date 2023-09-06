@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CustomField {
+    private String id;
     private String name;
     private CustomFieldType customFieldType;
 }

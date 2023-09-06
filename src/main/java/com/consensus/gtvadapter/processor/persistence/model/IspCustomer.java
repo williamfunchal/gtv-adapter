@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.processor.parsistence.model;
+package com.consensus.gtvadapter.processor.persistence.model;
 
 import lombok.Data;
 

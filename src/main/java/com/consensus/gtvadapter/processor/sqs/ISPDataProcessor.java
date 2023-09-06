@@ -67,12 +67,18 @@ public class ISPDataProcessor implements CCSIQueueMessageProcessor {
                     .logMessage("Date parsing failed")
                     .status(CCSIQueueMessageStatus.NOOP)
                     .build();
+        }catch (Exception e){
+            log.error("GTV request mapping failed: {}", e.getMessage());
+            return CCSIQueueMessageResult.builder()
+                    .logMessage("GTV request mapping failed")
+                    .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
+                    .build();
         }
 
         final String message = createMessage(nextEvent);
 
         if (nextEvent.getEventType().equals(DataMappingStoreEvent.TYPE)) {
-            storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+            storeDataPublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId), "processor");
             log.info("Data Mapping Store Event published {}", message);
         }
 

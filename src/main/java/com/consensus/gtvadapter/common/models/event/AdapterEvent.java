@@ -22,5 +22,6 @@ import java.util.UUID;
 })
 public abstract class AdapterEvent {
     protected String eventType;
+    protected String eventId;
     protected UUID correlationId;
 }

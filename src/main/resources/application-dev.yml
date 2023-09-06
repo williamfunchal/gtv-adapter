@@ -1,0 +1,31 @@
+app:
+  isp-gtv-maps:
+    account-categories:
+      1681: 178
+      13478: 179
+      14256: 180
+      1787: 181
+      1587: 182
+    business-units:
+      81: Corporate_Fax
+      478: Corporate_Fax_AU
+      256: Corporate_Fax_CA
+      87: Corporate_Fax_IE
+    payment-terms:
+      Net15: 113
+      Net30: 103
+      Net45: 114
+      Net60: 115
+      Net75: 116
+      Net90: 117
+      UponReceipt: 112
+      CreditCard: 112
+    bill-cycle-id: 1425379
+    custom-field-ids:
+      business-unit: 472
+      corp-id: 474
+      offer-code: 455
+      legacy-billing-system: 471
+      account-start-date: 473
+      min-commitment-subs: 467
+      marketplace-id: 478

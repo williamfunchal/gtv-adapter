@@ -44,7 +44,7 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
             final AdapterEvent adapterEvent = parseMessage(messageReceived);
             final AdapterEvent resultEvent = gtvService.processEvent(adapterEvent);
             final String message = objectMapper.writeValueAsString(resultEvent);
-            gtvResponsePublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId));
+            gtvResponsePublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId), "gateway");
             log.info("GTV response event published {}", message);
         }catch (JsonProcessingException jpe){
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());

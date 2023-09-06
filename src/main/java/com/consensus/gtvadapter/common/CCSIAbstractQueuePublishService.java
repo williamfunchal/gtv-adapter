@@ -19,12 +19,16 @@ public abstract class CCSIAbstractQueuePublishService implements CCSIQueuePublis
     private final AmazonSQS amazonSQS;
 
     @Override
-    public SendMessageResult publishMessageToQueue(String message,  Map<String, MessageAttributeValue> attributes){
+    public SendMessageResult publishMessageToQueue(String message,  Map<String, MessageAttributeValue> attributes, String messageGroupId){
         Assert.hasText(message, "Message is empty");
 
         log.debug("Publishing message to SQS {}", message);
         final CCSIQueueProperties queueProperties = getQueueProperties();
-        final SendMessageRequest sendMessageRequest = new SendMessageRequest().withQueueUrl(queueProperties.getQueueUrl()).withMessageBody(message).withMessageAttributes(attributes);
+        final SendMessageRequest sendMessageRequest = new SendMessageRequest()
+                .withQueueUrl(queueProperties.getQueueUrl())
+                .withMessageBody(message)
+                .withMessageAttributes(attributes)
+                .withMessageGroupId(messageGroupId);
 
         return amazonSQS.sendMessage(sendMessageRequest);
     }

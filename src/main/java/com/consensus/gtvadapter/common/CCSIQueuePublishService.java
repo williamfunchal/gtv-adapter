@@ -10,5 +10,5 @@ public interface CCSIQueuePublishService {
 
     CCSIQueueProperties getQueueProperties();
 
-    SendMessageResult publishMessageToQueue(String message, Map<String, MessageAttributeValue> attributes);
+    SendMessageResult publishMessageToQueue(String message, Map<String, MessageAttributeValue> attributes, String messageGroupId);
 }
