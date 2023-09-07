@@ -16,4 +16,9 @@ public class AccountCreationResultsEvent extends ResultsEvent {
     public AccountCreationResultsEvent() {
         this.eventType = TYPE;
     }
+
+    @Override
+    public String getGroupId() {
+        return TYPE;
+    }
 }

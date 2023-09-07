@@ -26,7 +26,7 @@ public class GtvRestClient {
     private final DownstreamWebClient gtvWebClient;
     private final GtvProperties gtvProperties;
 
-    public GtvRequestDetails createAccount(GtvAccountCreationEvent accountCreationEvent){
+    public GtvRequestDetails createAccount(GtvAccountCreationEvent accountCreationEvent) {
         GtvRequestDetails gtvRequestDetails = new GtvRequestDetails();
         try {
             gtvRequestDetails.setRequestDateTime(Instant.now());
@@ -40,18 +40,22 @@ public class GtvRestClient {
                     .retrieve()
                     .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())
                     .toEntity(JsonNode.class)
-                    //.retryWhen(gtvRetry) Retries can be added automatically
+                    //.retryWhen(gtvRetry) Retries can be added automatically later
                     .block();
 
-            gtvRequestDetails.setResponseDateTime(Instant.now());
-            gtvRequestDetails.setStatusCode(response.getStatusCode().value());
-            gtvRequestDetails.setPayload(response.getBody());
+            // It will never happen as WebClient never returns 'null' as response entity
+            if (response == null) {
+                throw new IllegalArgumentException("WebClient returned nullable response entity.");
+            }
 
-        }catch (WebClientRequestException wcre){
+            gtvRequestDetails.setStatusCode(response.getStatusCode().value());
+            gtvRequestDetails.setResponseDateTime(Instant.now());
+            gtvRequestDetails.setPayload(response.getBody());
+        } catch (WebClientRequestException wcre) {
             log.error("Web client error - Method[{}] URI[{}]: {}", wcre.getMethod(), wcre.getUri(), wcre.getMessage());
             gtvRequestDetails.setResponseDateTime(Instant.now());
             gtvRequestDetails.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("GTV Account creation failed {}", ex.getMessage());
         }
 

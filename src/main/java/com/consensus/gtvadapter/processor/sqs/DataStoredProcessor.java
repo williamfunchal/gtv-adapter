@@ -1,12 +1,10 @@
 package com.consensus.gtvadapter.processor.sqs;
 
-import com.consensus.common.sqs.CCSIQueueListenerProperties;
-import com.consensus.common.sqs.CCSIQueueMessageContext;
-import com.consensus.common.sqs.CCSIQueueMessageProcessor;
-import com.consensus.common.sqs.CCSIQueueMessageResult;
-import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.common.sqs.*;
+import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
-import com.consensus.gtvadapter.util.SqsUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataStoredProcessor implements CCSIQueueMessageProcessor {
 
+    private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties properties;
     private final GtvRequestPublishService gtvRequestPublishService;
 
-    public DataStoredProcessor(final QueueProperties queueProperties, final GtvRequestPublishService gtvRequestPublishService) {
+    public DataStoredProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
+            GtvRequestPublishService gtvRequestPublishService) {
+        this.objectMapper = objectMapper;
         this.properties = queueProperties.getDataStored();
         this.gtvRequestPublishService = gtvRequestPublishService;
     }
@@ -29,11 +30,19 @@ public class DataStoredProcessor implements CCSIQueueMessageProcessor {
 
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
-        final String correlationId = ccsiQueueMessageContext.getCorrelationId();
+        String correlationId = ccsiQueueMessageContext.getCorrelationId();
+        String messageBody = ccsiQueueMessageContext.getMessage().getBody();
         log.info("Data-Stored event received with correlationId: {}", correlationId);
-        gtvRequestPublishService.publishMessageToQueue(ccsiQueueMessageContext.getMessage().getBody(), SqsUtils.createMessageAttributesWithCorrelationId(correlationId), "processor");
+
+        AdapterEvent adapterEvent = parseMessage(messageBody);
+        gtvRequestPublishService.publishMessage(adapterEvent);
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();
+    }
+
+    @SneakyThrows
+    private AdapterEvent parseMessage(String message) {
+        return objectMapper.readValue(message, AdapterEvent.class);
     }
 }

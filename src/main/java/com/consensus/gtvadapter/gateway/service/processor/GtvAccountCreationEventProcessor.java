@@ -24,12 +24,13 @@ public class GtvAccountCreationEventProcessor implements EventProcessor<GtvAccou
     @Override
     public AdapterEvent process(GtvAccountCreationEvent event) {
         GtvRequestDetails requestDetails = gtvRestClient.createAccount(event);
-        AccountCreationResultsEvent accountCreationResultsEvent = new AccountCreationResultsEvent();
-        accountCreationResultsEvent.setApi(event.getApi());
-        accountCreationResultsEvent.setMethod(event.getMethod());
-        accountCreationResultsEvent.setBody(event.getBody());
-        accountCreationResultsEvent.setResult(requestDetails);
-        accountCreationResultsEvent.setCorrelationId(event.getCorrelationId());
-        return accountCreationResultsEvent;
+        AccountCreationResultsEvent resultEvent = new AccountCreationResultsEvent();
+        resultEvent.setEventId(event.getEventId());
+        resultEvent.setCorrelationId(event.getCorrelationId());
+        resultEvent.setApi(event.getApi());
+        resultEvent.setMethod(event.getMethod());
+        resultEvent.setBody(event.getBody());
+        resultEvent.setResult(requestDetails);
+        return resultEvent;
     }
 }
