@@ -19,4 +19,9 @@ public class GtvAccountCreationEvent extends AdapterEvent {
     public GtvAccountCreationEvent() {
         this.eventType = TYPE;
     }
+
+    @Override
+    public String getGroupId() {
+        return TYPE;
+    }
 }

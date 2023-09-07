@@ -7,6 +7,7 @@ import java.time.Instant;
 
 @Data
 public class GtvRequestDetails {
+
     private Instant requestDateTime;
     private Instant responseDateTime;
     private Integer statusCode;

@@ -1,23 +1,16 @@
 package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.consensus.common.sqs.CCSIQueueProperties;
+import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.sqs.AbstractQueuePublishService;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
-import com.consensus.gtvadapter.common.CCSIAbstractQueuePublishService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DataUpdatedPublishService extends CCSIAbstractQueuePublishService {
+public class DataUpdatedPublishService<T extends AdapterEvent> extends AbstractQueuePublishService<T> {
 
-    private final CCSIQueueProperties queueProperties;
-
-    public DataUpdatedPublishService(final AmazonSQS amazonSQS, final QueueProperties queueProperties) {
-        super(amazonSQS);
-        this.queueProperties = queueProperties.getDataUpdated();
-    }
-
-    @Override
-    public CCSIQueueProperties getQueueProperties() {
-        return this.queueProperties;
+    public DataUpdatedPublishService(AmazonSQS amazonSQS, ObjectMapper objectMapper, QueueProperties queueProperties) {
+        super(amazonSQS, objectMapper, queueProperties.getDataUpdated());
     }
 }

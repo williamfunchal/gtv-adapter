@@ -1,24 +1,10 @@
 package com.consensus.gtvadapter.processor.mapper;
 
-import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationRequestBody;
-import com.consensus.gtvadapter.common.models.gtv.account.BillCycle;
-import com.consensus.gtvadapter.common.models.gtv.account.BillCycleType;
-import com.consensus.gtvadapter.common.models.gtv.account.BillType;
-import com.consensus.gtvadapter.common.models.gtv.account.BillingAccountCategory;
-import com.consensus.gtvadapter.common.models.gtv.account.CurrencyCode;
-import com.consensus.gtvadapter.common.models.gtv.account.CustomField;
-import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldIds;
-import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldType;
-import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldValue;
-import com.consensus.gtvadapter.common.models.gtv.account.EmailAddress;
-import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
-import com.consensus.gtvadapter.common.models.gtv.account.PaymentTerm;
-import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
-import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
+import com.consensus.gtvadapter.common.models.gtv.account.*;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import com.consensus.gtvadapter.config.properties.IspGtvMapsProperties;
-import com.consensus.gtvadapter.processor.persistence.model.J2CorpProfile;
-import com.consensus.gtvadapter.processor.persistence.model.JbcBillingEntity;
+import com.consensus.gtvadapter.processor.persistence.entities.J2CorpProfile;
+import com.consensus.gtvadapter.processor.persistence.entities.JbcBillingEntity;
 import com.consensus.gtvadapter.processor.persistence.repository.BillingEntityRepository;
 import com.consensus.gtvadapter.processor.persistence.repository.CorpProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,25 +14,22 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_BILLING_SYSTEM;
-import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_OFFER_CODES;
-import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CORP_AUTO_PREFIX;
-import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.RED_PEPPER_BILLING_SYSTEM;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.*;
+import static java.time.ZoneOffset.UTC;
 
 @Component
 @RequiredArgsConstructor
 class AccountMapper {
 
     private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
-    private static final DateTimeFormatter CUSTOM_FIELD_DATE_PATTERN = DateTimeFormatter.ofPattern("MM/dd/yyyy").withZone(ZoneId.of("UTC"));
+    private static final DateTimeFormatter CUSTOM_FIELD_DATE_PATTERN = DateTimeFormatter.ofPattern("MM/dd/yyyy").withZone(UTC);
+
     private final IspGtvMapsProperties mappingProperties;
     private final BillingEntityRepository billingEntityRepository;
     private final CorpProfileRepository corpProfileRepository;
@@ -102,7 +85,7 @@ class AccountMapper {
 
     private Instant convertToInstant(String date) {
         LocalDateTime localDateTime = LocalDate.parse(date, ISP_DATE_PATTERN).atStartOfDay();
-        return localDateTime.toInstant(ZoneOffset.UTC);
+        return localDateTime.toInstant(UTC);
     }
 
     private List<CustomFieldValue> getCustomFiledValues(String resellerId, String startDate, Long orgId, String offerCode) {
