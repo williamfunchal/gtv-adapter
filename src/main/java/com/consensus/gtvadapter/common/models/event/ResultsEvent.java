@@ -8,7 +8,7 @@ import org.springframework.http.HttpMethod;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public abstract class ResultsEvent extends AdapterEvent{
+public abstract class ResultsEvent extends AdapterEvent {
 
     private HttpMethod method;
     private String api;

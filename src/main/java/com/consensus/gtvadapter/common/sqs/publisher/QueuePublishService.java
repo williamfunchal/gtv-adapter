@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs;
+package com.consensus.gtvadapter.common.sqs.publisher;
 
 import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
