@@ -34,9 +34,10 @@ class AccountMapper {
     private final BillingEntityRepository billingEntityRepository;
     private final CorpProfileRepository corpProfileRepository;
 
+    //TODO: Remove comments once DEV environments has RDS connection
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
-        final JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
-        final J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
+        //final JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
+        //final J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
         final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
         final Instant startDate = convertToInstant(ispCustomerData.getStartDate());
@@ -44,9 +45,9 @@ class AccountMapper {
         accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustomerData.getCurrencyCode()));
         accountCreationRequestBody.setBillCycle(getBillCycle());
         accountCreationRequestBody.setBillType(BillType.NONE);
-        accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory(billingEntity));
-        accountCreationRequestBody.setPaymentTerm(getPaymentTerms(corpProfile.getPaymentTerms()));
-        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData.getResellerId(), CUSTOM_FIELD_DATE_PATTERN.format(startDate), billingEntity.getOrgId(), corpProfile.getOfferCode()));
+        //accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory(billingEntity));
+        //accountCreationRequestBody.setPaymentTerm(getPaymentTerms(corpProfile.getPaymentTerms()));
+        //accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData.getResellerId(), CUSTOM_FIELD_DATE_PATTERN.format(startDate), billingEntity.getOrgId(), corpProfile.getOfferCode()));
 
         return accountCreationRequestBody;
     }
