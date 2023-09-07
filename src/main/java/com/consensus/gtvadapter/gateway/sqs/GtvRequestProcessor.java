@@ -6,6 +6,7 @@ import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.models.event.ResultsEvent;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.gateway.service.GtvService;
 import com.consensus.gtvadapter.util.SqsUtils;
@@ -42,11 +43,16 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
         log.info("GTV Data Ready event received with correlationId {} and body {}", correlationId, messageReceived);
         try {
             final AdapterEvent adapterEvent = parseMessage(messageReceived);
-            final AdapterEvent resultEvent = gtvService.processEvent(adapterEvent);
-            final String message = objectMapper.writeValueAsString(resultEvent);
+            final ResultsEvent resultsEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
+            final String message = objectMapper.writeValueAsString(resultsEvent);
             gtvResponsePublishService.publishMessageToQueue(message, SqsUtils.createMessageAttributesWithCorrelationId(correlationId), "gateway");
             log.info("GTV response event published {}", message);
-        }catch (JsonProcessingException jpe){
+            if(resultsEvent.getResult().getStatusCode() > 499){
+                return CCSIQueueMessageResult.builder()
+                        .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
+                        .build();
+            }
+        }catch (JsonProcessingException jpe) {
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
             return CCSIQueueMessageResult.builder()
                     .status(CCSIQueueMessageStatus.NON_RECOVERABLE_ERROR)
@@ -57,7 +63,6 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
                     .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                     .build();
         }
-
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)

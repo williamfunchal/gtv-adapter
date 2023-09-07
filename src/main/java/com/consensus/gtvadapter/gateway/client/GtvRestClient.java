@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -45,12 +46,18 @@ public class GtvRestClient {
             gtvRequestDetails.setResponseDateTime(Instant.now());
             gtvRequestDetails.setStatusCode(response.getStatusCode().value());
             gtvRequestDetails.setPayload(response.getBody());
-            long executionTime = gtvRequestDetails.getResponseDateTime().toEpochMilli() - gtvRequestDetails.getRequestDateTime().toEpochMilli();
 
-            log.info("GTV Request - Method:[{}] API:[{}] Status:[{}] Execution Time:[{}ms]", accountCreationEvent.getMethod(), accountCreationEvent.getApi(), gtvRequestDetails.getStatusCode(), executionTime);
-        } catch (Exception ex) {
+        }catch (WebClientRequestException wcre){
+            log.error("Web client error - Method[{}] URI[{}]: {}", wcre.getMethod(), wcre.getUri(), wcre.getMessage());
+            gtvRequestDetails.setResponseDateTime(Instant.now());
+            gtvRequestDetails.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
+        }catch (Exception ex) {
             log.error("GTV Account creation failed {}", ex.getMessage());
         }
+
+        long executionTime = gtvRequestDetails.getResponseDateTime().toEpochMilli() - gtvRequestDetails.getRequestDateTime().toEpochMilli();
+        log.info("GTV Request - Method:[{}] API:[{}] Status:[{}] Execution Time:[{}ms]", accountCreationEvent.getMethod(), accountCreationEvent.getApi(), gtvRequestDetails.getStatusCode(), executionTime);
+
         return gtvRequestDetails;
     }
 }
