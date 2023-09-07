@@ -1,15 +1,10 @@
 package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
-import com.consensus.common.sqs.CCSIQueueListenerProperties;
-import com.consensus.common.sqs.CCSIQueueMessageContext;
-import com.consensus.common.sqs.CCSIQueueMessageProcessor;
-import com.consensus.common.sqs.CCSIQueueMessageResult;
-import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.repository.service.RepositoryService;
-import com.consensus.gtvadapter.util.SqsUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class StoreDataProcessor implements CCSIQueueMessageProcessor {
 
+    private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties properties;
     private final DataStoredPublishService dataStoredPublishService;
-    private final ObjectMapper objectMapper;
     private final RepositoryService repositoryService;
 
-    public StoreDataProcessor(QueueProperties queueProperties, DataStoredPublishService dataStoredPublishService,
-            ObjectMapper objectMapper, RepositoryService repositoryService) {
+    public StoreDataProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
+            DataStoredPublishService dataStoredPublishService, RepositoryService repositoryService) {
+        this.objectMapper = objectMapper;
         this.properties = queueProperties.getStoreData();
         this.dataStoredPublishService = dataStoredPublishService;
-        this.objectMapper = objectMapper;
         this.repositoryService = repositoryService;
     }
 
@@ -43,13 +38,9 @@ public class StoreDataProcessor implements CCSIQueueMessageProcessor {
         String messageBody = ccsiQueueMessageContext.getMessage().getBody();
         log.info("Store data event received with correlationId {} and body {}", correlationId, messageBody);
         try {
-
             AdapterEvent adapterEvent = parseMessage(messageBody);
             AdapterEvent storedEvent = repositoryService.process(adapterEvent);
-            dataStoredPublishService.publishMessageToQueue(objectMapper.writeValueAsString(storedEvent),
-                    SqsUtils.createMessageAttributesWithCorrelationId(correlationId),
-                    "repository"
-            );
+            dataStoredPublishService.publishMessage(storedEvent);
             log.info("Data stored event published {}", messageBody);
         } catch (JsonProcessingException jpe) {
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
