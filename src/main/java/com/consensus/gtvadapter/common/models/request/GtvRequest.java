@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
         @JsonSubTypes.Type(value = GtvRequestAccountCreation.class, name = "account-creation")
 })
 public abstract class GtvRequest {
+
     private HttpMethod method;
     private String api;
 }

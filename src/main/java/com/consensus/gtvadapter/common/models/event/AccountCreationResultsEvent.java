@@ -21,4 +21,9 @@ public class AccountCreationResultsEvent extends AdapterEvent {
     public AccountCreationResultsEvent() {
         this.eventType = TYPE;
     }
+
+    @Override
+    public String getGroupId() {
+        return TYPE;
+    }
 }

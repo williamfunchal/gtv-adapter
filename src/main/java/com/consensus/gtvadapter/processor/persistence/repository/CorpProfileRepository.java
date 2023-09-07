@@ -1,6 +1,6 @@
 package com.consensus.gtvadapter.processor.persistence.repository;
 
-import com.consensus.gtvadapter.processor.persistence.model.J2CorpProfile;
+import com.consensus.gtvadapter.processor.persistence.entities.J2CorpProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +12,7 @@ public interface CorpProfileRepository extends JpaRepository<J2CorpProfile, Stri
 
     J2CorpProfile findByResellerId(String resellerId);
 
-    final String MIN_COMMITMENT_SUBSCRIPTION_QUERY = "select (select distinct jpi.currency_amount " +
+    String MIN_COMMITMENT_SUBSCRIPTION_QUERY = "select (select distinct jpi.currency_amount " +
             " from isppower.offer_code_rules ocr, ISPPOWER.JFAX_PRICE_ITEM jpi " +
             " where ocr.offer_code = prof.offercode " +
             " and OCR.PRICE_CODE = jpi.price_code " +

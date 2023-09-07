@@ -16,4 +16,9 @@ public class DataMappingStoreEvent extends AdapterEvent {
     public DataMappingStoreEvent() {
         this.eventType = TYPE;
     }
+
+    @Override
+    public String getGroupId() {
+        return TYPE;
+    }
 }

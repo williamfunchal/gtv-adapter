@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Data
 public class IspGtvMappingDTO extends IspGtvMapping {
-    private UUID correlationId;
+
+    private String correlationId;
     private String eventId;
 }
