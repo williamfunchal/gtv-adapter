@@ -2,6 +2,7 @@ package com.consensus.gtvadapter.gateway.sqs;
 
 import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.models.event.ResultsEvent;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.gateway.service.GtvService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,9 +39,14 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
         log.info("GTV Data Ready event received with correlationId {} and body {}", correlationId, messageReceived);
         try {
             AdapterEvent adapterEvent = parseMessage(messageReceived);
-            AdapterEvent resultEvent = gtvService.processEvent(adapterEvent);
+            ResultsEvent resultEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
             gtvResponsePublishService.publishMessage(resultEvent);
             log.info("GTV response event published {}", resultEvent);
+            if(resultEvent.getResult().getStatusCode() > 499){
+                return CCSIQueueMessageResult.builder()
+                        .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
+                        .build();
+            }
         } catch (JsonProcessingException jpe) {
             log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
             return CCSIQueueMessageResult.builder()
