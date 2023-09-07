@@ -3,7 +3,6 @@ package com.consensus.gtvadapter.processor.mapper;
 import com.consensus.gtvadapter.common.models.gtv.account.*;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import com.consensus.gtvadapter.config.properties.IspGtvMapsProperties;
-import com.consensus.gtvadapter.processor.persistence.entities.J2CorpProfile;
 import com.consensus.gtvadapter.processor.persistence.entities.JbcBillingEntity;
 import com.consensus.gtvadapter.processor.persistence.repository.BillingEntityRepository;
 import com.consensus.gtvadapter.processor.persistence.repository.CorpProfileRepository;
@@ -36,11 +35,11 @@ class AccountMapper {
 
     //TODO: Remove comments once DEV environments has RDS connection
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
-        //final JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
-        //final J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
-        final AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
+        //JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
+        //J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
+        AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
-        final Instant startDate = convertToInstant(ispCustomerData.getStartDate());
+        Instant startDate = convertToInstant(ispCustomerData.getStartDate());
         accountCreationRequestBody.setStartDate(startDate);
         accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustomerData.getCurrencyCode()));
         accountCreationRequestBody.setBillCycle(getBillCycle());
@@ -53,32 +52,32 @@ class AccountMapper {
     }
 
     private BillCycle getBillCycle() {
-        final BillCycle billCycle = new BillCycle();
+        BillCycle billCycle = new BillCycle();
         billCycle.setId(mappingProperties.getBillCycleId());
         billCycle.setBillCycleType(BillCycleType.MONTHLY);
         return billCycle;
     }
 
     private BillingAccountCategory getBillingAccountCategory(JbcBillingEntity billingEntity) {
-        final BillingAccountCategory billingAccountCategory = new BillingAccountCategory();
-        final Map<String, String> accountCategories = mappingProperties.getAccountCategories();
+        BillingAccountCategory billingAccountCategory = new BillingAccountCategory();
+        Map<String, String> accountCategories = mappingProperties.getAccountCategories();
         billingAccountCategory.setId(accountCategories.get(billingEntity.getCategoriesMappingKey()));
         return billingAccountCategory;
     }
 
     private ResponsibleParty getResponsibleParty(IspCustomerData ispCustomerData) {
-        final ResponsibleParty responsibleParty = new ResponsibleParty();
+        ResponsibleParty responsibleParty = new ResponsibleParty();
         responsibleParty.setPartyType(PartyType.ORGANIZATION);
         responsibleParty.setExternalCustomerNum(ispCustomerData.getCustomerkey());
         responsibleParty.setOrganizationName(ispCustomerData.getCompany());
-        final PostalAddress postalAddress = new PostalAddress();
+        PostalAddress postalAddress = new PostalAddress();
         postalAddress.setCountry(new Locale("en", ispCustomerData.getCountry()).getISO3Country());
         postalAddress.setLine1(ispCustomerData.getAddressLine1());
         postalAddress.setLine2(ispCustomerData.getAddressLine2());
         postalAddress.setCity(ispCustomerData.getCity());
         postalAddress.setRegionOrState(ispCustomerData.getMailRegion());
         postalAddress.setPostalCode(ispCustomerData.getMailCode());
-        final EmailAddress emailAddress = new EmailAddress();
+        EmailAddress emailAddress = new EmailAddress();
         emailAddress.setEmail(ispCustomerData.getEmailAddress());
         responsibleParty.setAddresses(List.of(postalAddress, emailAddress));
         return responsibleParty;
@@ -89,10 +88,11 @@ class AccountMapper {
         return localDateTime.toInstant(UTC);
     }
 
-    private List<CustomFieldValue> getCustomFiledValues(String resellerId, String startDate, Long orgId, String offerCode) {
+    private List<CustomFieldValue> getCustomFiledValues(String resellerId, String startDate, Long orgId,
+            String offerCode) {
         List<CustomFieldValue> customFieldValues = new ArrayList<>();
-        final CustomFieldIds customFieldIds = mappingProperties.getCustomFieldIds();
-        final Map<Long, String> businessUnits = mappingProperties.getBusinessUnits();
+        CustomFieldIds customFieldIds = mappingProperties.getCustomFieldIds();
+        Map<Long, String> businessUnits = mappingProperties.getBusinessUnits();
         customFieldValues.add(getCustomFieldValue("CCSI CorpID", customFieldIds.getCorpId(), resellerId));
         customFieldValues.add(getCustomFieldValue("CCSI Offer Code Name", customFieldIds.getOfferCode(), offerCode));
         customFieldValues.add(getCustomFieldValue("CCSI Legacy Billing System", customFieldIds.getLegacyBillingSystem(), getLegacyBillingSystem(offerCode)));
@@ -104,7 +104,7 @@ class AccountMapper {
     }
 
     private CustomField getCustomField(String fieldName, String fieldId) {
-        final CustomField customField = new CustomField();
+        CustomField customField = new CustomField();
         customField.setCustomFieldType(CustomFieldType.BILLING_ACCOUNT);
         customField.setName(fieldName);
         customField.setId(fieldId);
@@ -112,25 +112,25 @@ class AccountMapper {
     }
 
     private CustomFieldValue getCustomFieldValue(String fieldName, String fieldId, String fieldValue) {
-        final CustomFieldValue customFieldValue = new CustomFieldValue();
+        CustomFieldValue customFieldValue = new CustomFieldValue();
         customFieldValue.setCustomFieldValueType(CustomFieldType.BILLING_ACCOUNT);
         customFieldValue.setCustomField(getCustomField(fieldName, fieldId));
         customFieldValue.setValue(fieldValue);
         return customFieldValue;
     }
 
-    private PaymentTerm getPaymentTerms(String paymentTerm){
-        final String paymentTermKey = paymentTerm.replace(" ", "");
-        final String paymentTermsId = mappingProperties.getPaymentTerms().get(paymentTermKey);
+    private PaymentTerm getPaymentTerms(String paymentTerm) {
+        String paymentTermKey = paymentTerm.replace(" ", "");
+        String paymentTermsId = mappingProperties.getPaymentTerms().get(paymentTermKey);
         return new PaymentTerm(paymentTermsId);
     }
 
-    private String getLegacyBillingSystem(String offerCode){
-        if (null == offerCode ){
+    private String getLegacyBillingSystem(String offerCode) {
+        if (null == offerCode) {
             return Strings.EMPTY;
-        }else if (offerCode.startsWith(CORP_AUTO_PREFIX) || CIA_OFFER_CODES.contains(offerCode)){
+        } else if (offerCode.startsWith(CORP_AUTO_PREFIX) || CIA_OFFER_CODES.contains(offerCode)) {
             return CIA_BILLING_SYSTEM;
-        }else{
+        } else {
             return RED_PEPPER_BILLING_SYSTEM;
         }
     }

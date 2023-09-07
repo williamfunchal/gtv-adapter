@@ -39,10 +39,10 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
         log.info("GTV Data Ready event received with correlationId {} and body {}", correlationId, messageReceived);
         try {
             AdapterEvent adapterEvent = parseMessage(messageReceived);
-            ResultsEvent resultEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
-            gtvResponsePublishService.publishMessage(resultEvent);
-            log.info("GTV response event published {}", resultEvent);
-            if(resultEvent.getResult().getStatusCode() > 499){
+            ResultsEvent resultsEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
+            gtvResponsePublishService.publishMessage(resultsEvent);
+            log.info("GTV response event published {}", resultsEvent);
+            if(resultsEvent.getResult().getStatusCode() > 499){
                 return CCSIQueueMessageResult.builder()
                         .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                         .build();
