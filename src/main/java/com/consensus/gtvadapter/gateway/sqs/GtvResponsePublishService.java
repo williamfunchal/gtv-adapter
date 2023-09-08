@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class GtvResponsePublishService<T extends AdapterEvent> extends AbstractQueuePublishService<T> {
 
     public GtvResponsePublishService(AmazonSQS amazonSQS, ObjectMapper objectMapper, QueueProperties queueProperties) {
-        super(amazonSQS, objectMapper, queueProperties.getGtvResponse());
+        super(amazonSQS, objectMapper, queueProperties.getGtvResponseReceived());
     }
 }
