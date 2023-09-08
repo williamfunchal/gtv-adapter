@@ -9,10 +9,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class QueueProperties {
 
     private CCSIQueueListenerProperties ispDataReady;
-    private CCSIQueueListenerProperties updateData;
+    private CCSIQueueListenerProperties adapterDataReadyToUpdate;
     private CCSIQueueListenerProperties dataUpdated;
     private CCSIQueueListenerProperties storeData;
     private CCSIQueueListenerProperties dataStored;
     private CCSIQueueListenerProperties gtvRequest;
-    private CCSIQueueListenerProperties gtvResponse;
+    private CCSIQueueListenerProperties gtvResponseReceived;
 }
