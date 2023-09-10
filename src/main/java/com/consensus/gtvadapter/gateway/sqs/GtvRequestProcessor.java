@@ -1,8 +1,12 @@
 package com.consensus.gtvadapter.gateway.sqs;
 
-import com.consensus.common.sqs.*;
+import com.consensus.common.sqs.CCSIQueueListenerProperties;
+import com.consensus.common.sqs.CCSIQueueMessageContext;
+import com.consensus.common.sqs.CCSIQueueMessageResult;
+import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.ResultsEvent;
+import com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.gateway.service.GtvService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,24 +16,24 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
+public class GtvRequestProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
-    private final CCSIQueueListenerProperties properties;
+    private final CCSIQueueListenerProperties queueProperties;
     private final GtvResponsePublishService gtvResponsePublishService;
     private final GtvService gtvService;
 
     public GtvRequestProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
             GtvResponsePublishService gtvResponsePublishService, GtvService gtvService) {
         this.objectMapper = objectMapper;
-        this.properties = queueProperties.getGtvRequest();
+        this.queueProperties = queueProperties.getGtvRequest();
         this.gtvResponsePublishService = gtvResponsePublishService;
         this.gtvService = gtvService;
     }
 
     @Override
-    public CCSIQueueListenerProperties getQueueListenerProperties() {
-        return this.properties;
+    public CCSIQueueListenerProperties getQueueProperties() {
+        return this.queueProperties;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class GtvRequestProcessor implements CCSIQueueMessageProcessor {
             ResultsEvent resultsEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
             gtvResponsePublishService.publishMessage(resultsEvent);
             log.info("GTV response event published {}", resultsEvent);
-            if(resultsEvent.getResult().getStatusCode() > 499){
+            if (resultsEvent.getResult().getStatusCode() > 499) {
                 return CCSIQueueMessageResult.builder()
                         .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                         .build();
