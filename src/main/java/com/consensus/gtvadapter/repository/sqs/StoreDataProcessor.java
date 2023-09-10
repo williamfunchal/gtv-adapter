@@ -1,8 +1,12 @@
 package com.consensus.gtvadapter.repository.sqs;
 
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
-import com.consensus.common.sqs.*;
+import com.consensus.common.sqs.CCSIQueueListenerProperties;
+import com.consensus.common.sqs.CCSIQueueMessageContext;
+import com.consensus.common.sqs.CCSIQueueMessageResult;
+import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.repository.service.RepositoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,24 +16,24 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class StoreDataProcessor implements CCSIQueueMessageProcessor {
+public class StoreDataProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
-    private final CCSIQueueListenerProperties properties;
+    private final CCSIQueueListenerProperties queueProperties;
     private final DataStoredPublishService dataStoredPublishService;
     private final RepositoryService repositoryService;
 
     public StoreDataProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
             DataStoredPublishService dataStoredPublishService, RepositoryService repositoryService) {
         this.objectMapper = objectMapper;
-        this.properties = queueProperties.getStoreData();
+        this.queueProperties = queueProperties.getStoreData();
         this.dataStoredPublishService = dataStoredPublishService;
         this.repositoryService = repositoryService;
     }
 
     @Override
-    public CCSIQueueListenerProperties getQueueListenerProperties() {
-        return this.properties;
+    public CCSIQueueListenerProperties getQueueProperties() {
+        return this.queueProperties;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.consensus.gtvadapter.util;
 
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
-import com.consensus.common.sqs.CCSIQueueConstants;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import lombok.experimental.UtilityClass;
 import org.springframework.util.StringUtils;
@@ -12,9 +11,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.consensus.gtvadapter.util.GtvConstants.SqsMessageAttributes.*;
+import static org.apache.commons.lang3.StringUtils.endsWithIgnoreCase;
 
 @UtilityClass
 public class SqsUtils {
+
+    private static final String FIFO_QUEUE_SUFFIX = ".fifo";
 
     public static MessageAttributeValue createAttribute(Object value) {
         return new MessageAttributeValue()
@@ -28,18 +30,15 @@ public class SqsUtils {
                 .filter(StringUtils::hasText).orElse("null");
     }
 
-    public static Map<String, MessageAttributeValue> createMessageAttributesWithCorrelationId(String correlationId) {
-        Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = createAttribute(correlationId);
-        attributes.put(CCSIQueueConstants.MessageAttributes.CORRELATION_ID, correlationIdAttribute);
-        return attributes;
-    }
-
     public static Map<String, MessageAttributeValue> createMessageAttributes(AdapterEvent sqsEvent) {
         Map<String, MessageAttributeValue> attributes = new HashMap<>();
         attributes.put(EVENT_ID, createAttribute(sqsEvent.getEventId()));
         attributes.put(EVENT_TYPE, createAttribute(sqsEvent.getEventType()));
         attributes.put(CORRELATION_ID, createAttribute(sqsEvent.getCorrelationId()));
         return attributes;
+    }
+
+    public static boolean isFifo(String queueUrl) {
+        return endsWithIgnoreCase(queueUrl, FIFO_QUEUE_SUFFIX);
     }
 }

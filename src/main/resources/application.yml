@@ -49,7 +49,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     update-data:
@@ -58,7 +58,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     data-updated:
@@ -67,7 +67,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     store-data:
@@ -76,7 +76,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     data-stored:
@@ -85,7 +85,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     gtv-request:
@@ -94,7 +94,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
     gtv-response:
@@ -103,7 +103,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
 
@@ -119,3 +119,8 @@ security:
       - "/status/**"
       - "/docs/**"
       - "/billing/**"
+
+logging:
+  level:
+    com.amazonaws: INFO
+    com.consensus: DEBUG

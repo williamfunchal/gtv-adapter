@@ -1,43 +1,40 @@
-package com.consensus.gtvadapter.processor.sqs;
+package com.consensus.gtvadapter.processor.sqs.isp_data_ready;
 
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
-import com.consensus.common.sqs.CCSIQueueMessageProcessor;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
+import com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
-import com.consensus.gtvadapter.util.SqsUtils;
+import com.consensus.gtvadapter.processor.sqs.StoreDataPublishService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
 
 @Slf4j
-@Component
-public class IspDataReadyProcessor implements CCSIQueueMessageProcessor {
+public class CustomerDataReadyProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
-    private final CCSIQueueListenerProperties properties;
+    private final CCSIQueueListenerProperties queueProperties;
     private final StoreDataPublishService storeDataPublishService;
     private final ProcessorMapperService processorMapperService;
 
-    public IspDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties, StoreDataPublishService storeDataPublishService,
-            ProcessorMapperService processorMapperService) {
+    public CustomerDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
+            StoreDataPublishService storeDataPublishService, ProcessorMapperService processorMapperService) {
         this.objectMapper = objectMapper;
-        this.properties = queueProperties.getIspDataReady();
+        this.queueProperties = queueProperties.getIspDataReady();
         this.storeDataPublishService = storeDataPublishService;
         this.processorMapperService = processorMapperService;
     }
 
     @Override
-    public CCSIQueueListenerProperties getQueueListenerProperties() {
-        return this.properties;
+    public CCSIQueueListenerProperties getQueueProperties() {
+        return this.queueProperties;
     }
 
     @Override
