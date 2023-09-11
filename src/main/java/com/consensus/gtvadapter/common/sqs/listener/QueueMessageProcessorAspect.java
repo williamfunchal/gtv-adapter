@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs.consumer;
+package com.consensus.gtvadapter.common.sqs.listener;
 
 import com.consensus.common.logging.LoggingTraceProperties;
 import com.consensus.common.sqs.*;
@@ -32,7 +32,7 @@ public class QueueMessageProcessorAspect {
     @Autowired
     private LoggingTraceProperties loggingTraceProperties;
 
-    @Pointcut("execution(public * com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor.process(*))")
+    @Pointcut("execution(public * com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor.process(..))")
     public void messageProcessor() {
         // pointcut
     }

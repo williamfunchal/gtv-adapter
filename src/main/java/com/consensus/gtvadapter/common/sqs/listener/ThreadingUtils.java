@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs.consumer;
+package com.consensus.gtvadapter.common.sqs.listener;
 
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import lombok.experimental.UtilityClass;

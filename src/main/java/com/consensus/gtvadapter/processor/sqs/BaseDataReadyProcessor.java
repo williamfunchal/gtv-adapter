@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.processor.sqs.isp_data_ready;
+package com.consensus.gtvadapter.processor.sqs;
 
 import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
@@ -6,10 +6,9 @@ import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
-import com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor;
+import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
-import com.consensus.gtvadapter.processor.sqs.StoreDataPublishService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.DateTimeException;
 
 @Slf4j
-public class CustomerDataReadyProcessor implements QueueMessageProcessor {
+public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
 
-    private final ObjectMapper objectMapper;
-    private final CCSIQueueListenerProperties queueProperties;
-    private final StoreDataPublishService storeDataPublishService;
-    private final ProcessorMapperService processorMapperService;
+    protected final ObjectMapper objectMapper;
+    protected final CCSIQueueListenerProperties queueProperties;
+    protected final StoreDataPublishService storeDataPublishService;
+    protected final ProcessorMapperService processorMapperService;
 
-    public CustomerDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
+    public BaseDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
             StoreDataPublishService storeDataPublishService, ProcessorMapperService processorMapperService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getIspDataReady();
@@ -41,7 +40,7 @@ public class CustomerDataReadyProcessor implements QueueMessageProcessor {
     public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
         String correlationId = ccsiQueueMessageContext.getCorrelationId();
         String messageBody = ccsiQueueMessageContext.getMessage().getBody();
-        log.info("ISP-Data change event received with correlationId: {} and message body {}", correlationId, messageBody);
+        log.debug("ISP-Data change event received with correlationId: {} and message body {}", correlationId, messageBody);
 
         AdapterEvent adapterEvent;
         try {

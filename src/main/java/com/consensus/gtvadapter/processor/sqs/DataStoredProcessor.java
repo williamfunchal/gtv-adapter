@@ -2,7 +2,7 @@ package com.consensus.gtvadapter.processor.sqs;
 
 import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
-import com.consensus.gtvadapter.common.sqs.consumer.QueueMessageProcessor;
+import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
