@@ -50,7 +50,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     update-data:
       queueUrl: ${/sqs/adapter-data-ready-to-update-url}
@@ -59,7 +59,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     data-updated:
       queueUrl: ${/sqs/adapter-data-updated-url}
@@ -68,7 +68,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     store-data:
       queueUrl: ${/sqs/adapter-data-ready-to-store-url}
@@ -77,7 +77,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     data-stored:
       queueUrl: ${/sqs/adapter-data-stored-url}
@@ -86,7 +86,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     gtv-request:
       queueUrl: ${/sqs/adapter-gtv-data-ready-url}
@@ -95,7 +95,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
     gtv-response:
       queueUrl: ${/sqs/adapter-gtv-response-received-url}
@@ -104,7 +104,7 @@ aws:
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
-      concurrency: 10
+      concurrency: ${/sqs/concurrency:10}
       enableTracing: true
 
 gtv:

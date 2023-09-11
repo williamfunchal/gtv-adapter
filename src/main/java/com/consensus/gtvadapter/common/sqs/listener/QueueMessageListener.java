@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs.consumer;
+package com.consensus.gtvadapter.common.sqs.listener;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
@@ -19,10 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
-import static com.amazonaws.services.sqs.model.MessageSystemAttributeName.MessageDeduplicationId;
-import static com.amazonaws.services.sqs.model.MessageSystemAttributeName.MessageGroupId;
-import static com.consensus.gtvadapter.common.sqs.consumer.ThreadingUtils.queueTaskListener;
-import static com.consensus.gtvadapter.common.sqs.consumer.ThreadingUtils.queueTaskProcessor;
+import static com.consensus.gtvadapter.common.sqs.listener.ThreadingUtils.queueTaskListener;
+import static com.consensus.gtvadapter.common.sqs.listener.ThreadingUtils.queueTaskProcessor;
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.*;
@@ -137,8 +135,8 @@ public class QueueMessageListener implements DisposableBean, SmartLifecycle {
         var dlqRequest = new SendMessageRequest()
                 .withQueueUrl(deadLetterQueueUrl)
                 .withMessageBody(jsonBody)
-                .withMessageGroupId(messageGroupId(message))
-                .withMessageDeduplicationId(messageDeduplicationId(message))
+                .withMessageGroupId(messageProcessor.messageGroupId(message))
+                .withMessageDeduplicationId(messageProcessor.messageDeduplicationId(message))
                 .withMessageAttributes(message.getMessageAttributes());
 
         amazonSQS.sendMessage(dlqRequest);
@@ -150,14 +148,6 @@ public class QueueMessageListener implements DisposableBean, SmartLifecycle {
 
     protected void deleteMessage(String receiptHandle) {
         amazonSQS.deleteMessage(new DeleteMessageRequest(queueProperties.getQueueUrl(), receiptHandle));
-    }
-
-    protected static String messageGroupId(Message message) {
-        return message.getAttributes().get(MessageGroupId.toString());
-    }
-
-    protected static String messageDeduplicationId(Message message) {
-        return message.getAttributes().get(MessageDeduplicationId.toString());
     }
 
     protected class AsyncMessageListener implements Runnable {
@@ -209,9 +199,10 @@ public class QueueMessageListener implements DisposableBean, SmartLifecycle {
         }
 
         protected MessageRunnableGroup groupByMessageGroupId(List<Message> group) {
-            return new MessageRunnableGroup(queueProperties.getQueueShortName(), group.stream()
-                    .collect(groupingBy(QueueMessageListener::messageGroupId,
-                            collectingAndThen(toList(), this::messageGroupHandler)))
+            String queueName = queueProperties.getQueueShortName();
+            return new MessageRunnableGroup(queueName, group.stream()
+                    .collect(groupingBy(messageProcessor::messageGroupId,
+                            collectingAndThen(toList(), messages -> messageGroupHandler(queueName, messages))))
                     .values());
         }
 
@@ -221,12 +212,12 @@ public class QueueMessageListener implements DisposableBean, SmartLifecycle {
                     .collect(collectingAndThen(toList(), list -> new MessageRunnableGroup(queueProperties.getQueueShortName(), list)));
         }
 
-        protected Runnable messageGroupHandler(List<Message> messages) {
+        protected Runnable messageGroupHandler(String groupName, List<Message> messages) {
             return () -> messages.forEach(QueueMessageListener.this::handleMessage);
         }
 
         protected Runnable messageHandler(Message message) {
-            return () -> QueueMessageListener.this.handleMessage(message);
+            return () -> handleMessage(message);
         }
 
         protected ReceiveMessageRequest createMessageRequest() {

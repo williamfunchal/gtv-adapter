@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs.consumer;
+package com.consensus.gtvadapter.common.sqs.listener;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.consensus.common.sqs.CCSIQueueMessage;

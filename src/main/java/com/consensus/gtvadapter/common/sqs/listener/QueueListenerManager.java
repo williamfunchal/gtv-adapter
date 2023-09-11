@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.common.sqs.consumer;
+package com.consensus.gtvadapter.common.sqs.listener;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -34,7 +34,11 @@ public class QueueListenerManager {
 
     protected QueueMessageListener createEventListener(AmazonSQS amazonSQS, QueueMessageProcessor processor,
             QueueMessageContextCreator queueMessageContextCreator) {
-        return new QueueMessageListener(amazonSQS, processor, queueMessageContextCreator);
+        if (processor instanceof QueueMessageBatchProcessor) {
+            return new QueueMessageBatchListener(amazonSQS, (QueueMessageBatchProcessor) processor, queueMessageContextCreator);
+        } else {
+            return new QueueMessageListener(amazonSQS, processor, queueMessageContextCreator);
+        }
     }
 
     @EventListener(ContextRefreshedEvent.class)
