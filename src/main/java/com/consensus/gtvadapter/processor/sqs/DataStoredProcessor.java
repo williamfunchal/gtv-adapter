@@ -2,6 +2,7 @@ package com.consensus.gtvadapter.processor.sqs;
 
 import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -10,22 +11,22 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DataStoredProcessor implements CCSIQueueMessageProcessor {
+public class DataStoredProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
-    private final CCSIQueueListenerProperties properties;
+    private final CCSIQueueListenerProperties queueProperties;
     private final GtvRequestPublishService gtvRequestPublishService;
 
     public DataStoredProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
             GtvRequestPublishService gtvRequestPublishService) {
         this.objectMapper = objectMapper;
-        this.properties = queueProperties.getDataStored();
+        this.queueProperties = queueProperties.getDataStored();
         this.gtvRequestPublishService = gtvRequestPublishService;
     }
 
     @Override
-    public CCSIQueueListenerProperties getQueueListenerProperties() {
-        return this.properties;
+    public CCSIQueueListenerProperties getQueueProperties() {
+        return this.queueProperties;
     }
 
     @Override

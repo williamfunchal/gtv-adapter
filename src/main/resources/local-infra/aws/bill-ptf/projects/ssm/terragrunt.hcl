@@ -22,7 +22,7 @@ inputs = {
     "sqs/message-visibility-timeout-sec"   = "60"
     "sqs/message-wait-time-sec"            = "20"
     "sqs/fetch-size"                       = "10"
-    "sqs/empty-timeout-mills"              = "60000"
+    "sqs/empty-timeout-mills"              = "0"
     "coredb/url"                           = "jdbc:oracle:thin:@coredev1-serv-usw2.czoqxvus1z1f.us-west-2.rds.amazonaws.com:1521:SERV"
     "coredb/username"                      = "gtvadapter"
   }
