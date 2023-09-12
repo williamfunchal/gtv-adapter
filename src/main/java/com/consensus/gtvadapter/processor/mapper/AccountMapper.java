@@ -1,8 +1,23 @@
 package com.consensus.gtvadapter.processor.mapper;
 
-import com.consensus.gtvadapter.common.models.gtv.account.*;
+import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationRequestBody;
+import com.consensus.gtvadapter.common.models.gtv.account.BillCycle;
+import com.consensus.gtvadapter.common.models.gtv.account.BillCycleType;
+import com.consensus.gtvadapter.common.models.gtv.account.BillType;
+import com.consensus.gtvadapter.common.models.gtv.account.BillingAccountCategory;
+import com.consensus.gtvadapter.common.models.gtv.account.CurrencyCode;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomField;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldIds;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldType;
+import com.consensus.gtvadapter.common.models.gtv.account.CustomFieldValue;
+import com.consensus.gtvadapter.common.models.gtv.account.EmailAddress;
+import com.consensus.gtvadapter.common.models.gtv.account.PartyType;
+import com.consensus.gtvadapter.common.models.gtv.account.PaymentTerm;
+import com.consensus.gtvadapter.common.models.gtv.account.PostalAddress;
+import com.consensus.gtvadapter.common.models.gtv.account.ResponsibleParty;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import com.consensus.gtvadapter.config.properties.IspGtvMapsProperties;
+import com.consensus.gtvadapter.processor.persistence.entities.J2CorpProfile;
 import com.consensus.gtvadapter.processor.persistence.entities.JbcBillingEntity;
 import com.consensus.gtvadapter.processor.persistence.repository.BillingEntityRepository;
 import com.consensus.gtvadapter.processor.persistence.repository.CorpProfileRepository;
@@ -19,7 +34,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.*;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_BILLING_SYSTEM;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CIA_OFFER_CODES;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.CORP_AUTO_PREFIX;
+import static com.consensus.gtvadapter.util.GtvConstants.BillingSystems.RED_PEPPER_BILLING_SYSTEM;
 import static java.time.ZoneOffset.UTC;
 
 @Component
@@ -33,10 +51,9 @@ class AccountMapper {
     private final BillingEntityRepository billingEntityRepository;
     private final CorpProfileRepository corpProfileRepository;
 
-    //TODO: Remove comments once DEV environments has RDS connection
     public AccountCreationRequestBody toAccountCreationRequestBody(IspCustomerData ispCustomerData) {
-        //JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
-        //J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
+        JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerkey()));
+        J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
         AccountCreationRequestBody accountCreationRequestBody = new AccountCreationRequestBody();
         accountCreationRequestBody.setResponsibleParty(getResponsibleParty(ispCustomerData));
         Instant startDate = convertToInstant(ispCustomerData.getStartDate());
@@ -44,9 +61,9 @@ class AccountMapper {
         accountCreationRequestBody.setCurrencyCode(CurrencyCode.valueOf(ispCustomerData.getCurrencyCode()));
         accountCreationRequestBody.setBillCycle(getBillCycle());
         accountCreationRequestBody.setBillType(BillType.NONE);
-        //accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory(billingEntity));
-        //accountCreationRequestBody.setPaymentTerm(getPaymentTerms(corpProfile.getPaymentTerms()));
-        //accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData.getResellerId(), CUSTOM_FIELD_DATE_PATTERN.format(startDate), billingEntity.getOrgId(), corpProfile.getOfferCode()));
+        accountCreationRequestBody.setBillingAccountCategory(getBillingAccountCategory(billingEntity));
+        accountCreationRequestBody.setPaymentTerm(getPaymentTerms(corpProfile.getPaymentTerms()));
+        accountCreationRequestBody.setCustomFieldValues(getCustomFiledValues(ispCustomerData.getResellerId(), CUSTOM_FIELD_DATE_PATTERN.format(startDate), billingEntity.getOrgId(), corpProfile.getOfferCode()));
 
         return accountCreationRequestBody;
     }
