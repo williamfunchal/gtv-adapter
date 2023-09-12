@@ -4,6 +4,7 @@ import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
+import com.consensus.gtvadapter.processor.service.EventProcessingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,15 @@ public class DataStoredProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties queueProperties;
-    private final GtvRequestPublishService gtvRequestPublishService;
+    private final EventProcessingService eventProcessingService;
+    private final GtvDataReadyPublishService gtvDataReadyPublishService;
 
-    public DataStoredProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
-            GtvRequestPublishService gtvRequestPublishService) {
+    public DataStoredProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
+            GtvDataReadyPublishService gtvDataReadyPublishService, EventProcessingService eventProcessingService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getDataStored();
-        this.gtvRequestPublishService = gtvRequestPublishService;
+        this.gtvDataReadyPublishService = gtvDataReadyPublishService;
+        this.eventProcessingService = eventProcessingService;
     }
 
     @Override
@@ -30,13 +33,13 @@ public class DataStoredProcessor implements QueueMessageProcessor {
     }
 
     @Override
-    public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
-        String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        String messageBody = ccsiQueueMessageContext.getMessage().getBody();
-        log.info("Data-Stored event received with correlationId: {}", correlationId);
+    public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
+        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
 
-        AdapterEvent adapterEvent = parseMessage(messageBody);
-        gtvRequestPublishService.publishMessage(adapterEvent);
+        AdapterEvent adapterEvent = parseMessage(messageContext.getMessage().getBody());
+        AdapterEvent nextEvent = eventProcessingService.processEvent(adapterEvent);
+        gtvDataReadyPublishService.publishMessage(nextEvent);
+
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

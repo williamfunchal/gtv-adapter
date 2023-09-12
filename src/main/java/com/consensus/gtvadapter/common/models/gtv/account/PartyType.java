@@ -12,6 +12,7 @@ import static java.util.Objects.isNull;
 @Getter
 @RequiredArgsConstructor
 public enum PartyType {
+
     PERSON("person"),
     ORGANIZATION("organization"),
     UNKNOWN("unknown");

@@ -1,34 +1,40 @@
 package com.consensus.gtvadapter.processor.sqs;
 
-import com.consensus.common.sqs.CCSIQueueListenerProperties;
-import com.consensus.common.sqs.CCSIQueueMessageContext;
-import com.consensus.common.sqs.CCSIQueueMessageResult;
-import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
-import com.consensus.gtvadapter.common.models.event.DataMappingStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.ready.BaseIspDataReadyEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.BaseIspDataStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.update.BaseIspDataUpdateEvent;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
-import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
+import com.consensus.gtvadapter.processor.service.EventProcessingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DateTimeException;
+import java.util.Optional;
+
+import static com.consensus.gtvadapter.util.GtvConstants.SqsMessageAttributes.CORRELATION_ID;
+import static com.consensus.gtvadapter.util.GtvConstants.SqsMessageAttributes.EVENT_ID;
 
 @Slf4j
 public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
 
     protected final ObjectMapper objectMapper;
     protected final CCSIQueueListenerProperties queueProperties;
-    protected final StoreDataPublishService storeDataPublishService;
-    protected final ProcessorMapperService processorMapperService;
+    protected final DataReadyToStorePublishService dataReadyToStorePublishService;
+    protected final DataReadyToUpdatePublishService dataReadyToUpdatePublishService;
+    protected final EventProcessingService eventProcessingService;
 
     public BaseDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            StoreDataPublishService storeDataPublishService, ProcessorMapperService processorMapperService) {
+            DataReadyToStorePublishService dataReadyToStorePublishService, DataReadyToUpdatePublishService dataReadyToUpdatePublishService,
+            EventProcessingService eventProcessingService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getIspDataReady();
-        this.storeDataPublishService = storeDataPublishService;
-        this.processorMapperService = processorMapperService;
+        this.dataReadyToStorePublishService = dataReadyToStorePublishService;
+        this.dataReadyToUpdatePublishService = dataReadyToUpdatePublishService;
+        this.eventProcessingService = eventProcessingService;
     }
 
     @Override
@@ -37,42 +43,43 @@ public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
     }
 
     @Override
-    public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
-        String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        String messageBody = ccsiQueueMessageContext.getMessage().getBody();
-        log.debug("ISP-Data change event received with correlationId: {} and message body {}", correlationId, messageBody);
+    public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
+        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
 
-        AdapterEvent adapterEvent;
+        BaseIspDataReadyEvent<?> dataReadyEvent;
         try {
-            adapterEvent = parseMessageBody(messageBody);
-        } catch (JsonProcessingException jpe) {
-            log.error("Unable to parse message body: {}", jpe.getMessage());
+            dataReadyEvent = parseSqsEvent(messageContext.getMessage());
+        } catch (JsonProcessingException jpEx) {
+            log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
             return CCSIQueueMessageResult.builder()
                     .logMessage("Message body parsing failed")
                     .status(CCSIQueueMessageStatus.NOOP)
                     .build();
         }
 
-        AdapterEvent nextEvent;
+        AdapterEvent processedEvent;
         try {
-            nextEvent = processorMapperService.mapGtvRequest(adapterEvent);
-        } catch (DateTimeException dte) {
-            log.error("Failed when trying to parse date: {}", dte.getMessage());
+            processedEvent = eventProcessingService.processEvent(dataReadyEvent);
+        } catch (DateTimeException dtEx) {
+            log.error("Exception parsing date from SQS event: {}", dtEx.getMessage(), dtEx);
             return CCSIQueueMessageResult.builder()
-                    .logMessage("Date parsing failed")
+                    .logMessage("Date parsing failed: " + dtEx.getMessage())
                     .status(CCSIQueueMessageStatus.NOOP)
                     .build();
-        } catch (Exception e) {
-            log.error("GTV request mapping failed: {}", e.getMessage());
+        } catch (Exception ex) {
+            log.error("Exception processing SQS event: {}", ex.getMessage(), ex);
             return CCSIQueueMessageResult.builder()
                     .logMessage("GTV request mapping failed")
                     .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                     .build();
         }
 
-        if (nextEvent.getEventType().equals(DataMappingStoreEvent.TYPE)) {
-            storeDataPublishService.publishMessage(nextEvent);
-            log.info("Data Mapping Store Event published {}", nextEvent);
+        if (processedEvent instanceof BaseIspDataStoreEvent) {
+            dataReadyToStorePublishService.publishMessage(processedEvent);
+            log.debug("Data Mapping Store Event published: {}", processedEvent);
+        } else if (processedEvent instanceof BaseIspDataUpdateEvent) {
+            dataReadyToUpdatePublishService.publishMessage(dataReadyEvent);
+            log.debug("Data Mapping Update Event published: {}", processedEvent);
         }
 
         return CCSIQueueMessageResult.builder()
@@ -80,7 +87,20 @@ public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
                 .build();
     }
 
-    private AdapterEvent parseMessageBody(String messageBody) throws JsonProcessingException {
-        return objectMapper.readValue(messageBody, AdapterEvent.class);
+    protected BaseIspDataReadyEvent<?> parseSqsEvent(CCSIQueueMessage queueMessage) throws JsonProcessingException {
+        var ispReadyEvent = objectMapper.readValue(queueMessage.getBody(), BaseIspDataReadyEvent.class);
+
+        // Need to extract 'eventId' and 'correlationId' from message attributes as Poller will not send them within payload
+        String eventId = Optional.ofNullable(queueMessage.getMessageAttributes())
+                .map(attrs -> attrs.get(EVENT_ID))
+                .orElse(ispReadyEvent.getEventId());
+        ispReadyEvent.setEventId(eventId);
+
+        String correlationId = Optional.ofNullable(queueMessage.getMessageAttributes())
+                .map(attrs -> attrs.get(CORRELATION_ID))
+                .orElse(ispReadyEvent.getCorrelationId());
+        ispReadyEvent.setCorrelationId(correlationId);
+
+        return ispReadyEvent;
     }
 }

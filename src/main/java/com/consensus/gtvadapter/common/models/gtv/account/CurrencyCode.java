@@ -1,6 +1,7 @@
 package com.consensus.gtvadapter.common.models.gtv.account;
 
 public enum CurrencyCode {
+
     USD,
     GBP,
     EUR,
