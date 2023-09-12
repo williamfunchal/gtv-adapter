@@ -1,7 +1,6 @@
 package com.consensus.gtvadapter.repository.storage;
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.consensus.gtvadapter.common.models.IspGtvMapping;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +22,5 @@ public class ServiceResourceEventsRepository {
         this.dynamoDB = dynamoDB;
         this.objectMapper = objectMapper;
         this.tableName = env + "_" + namespace + "_" + SERVICE_RESOURCE_EVENTS_TABLE;
-    }
-
-    @SneakyThrows
-    private String convertToJson(IspGtvMapping ispGtvMapping) {
-        return objectMapper.writeValueAsString(ispGtvMapping);
     }
 }

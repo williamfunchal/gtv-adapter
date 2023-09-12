@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BillCycle {
+
     private String id;
     private BillCycleType billCycleType;
 }

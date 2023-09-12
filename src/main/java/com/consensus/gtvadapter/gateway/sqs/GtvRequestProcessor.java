@@ -4,11 +4,11 @@ import com.consensus.common.sqs.CCSIQueueListenerProperties;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
-import com.consensus.gtvadapter.common.models.event.AdapterEvent;
-import com.consensus.gtvadapter.common.models.event.ResultsEvent;
+import com.consensus.gtvadapter.common.models.event.gtv.request.BaseGtvRequest;
+import com.consensus.gtvadapter.common.models.event.gtv.response.BaseGtvResponse;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
-import com.consensus.gtvadapter.gateway.service.GtvService;
+import com.consensus.gtvadapter.gateway.service.GatewayEventProcessingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +21,14 @@ public class GtvRequestProcessor implements QueueMessageProcessor {
     private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties queueProperties;
     private final GtvResponsePublishService gtvResponsePublishService;
-    private final GtvService gtvService;
+    private final GatewayEventProcessingService gatewayEventProcessingService;
 
     public GtvRequestProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            GtvResponsePublishService gtvResponsePublishService, GtvService gtvService) {
+            GtvResponsePublishService gtvResponsePublishService, GatewayEventProcessingService gatewayEventProcessingService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getGtvRequest();
         this.gtvResponsePublishService = gtvResponsePublishService;
-        this.gtvService = gtvService;
+        this.gatewayEventProcessingService = gatewayEventProcessingService;
     }
 
     @Override
@@ -37,27 +37,24 @@ public class GtvRequestProcessor implements QueueMessageProcessor {
     }
 
     @Override
-    public CCSIQueueMessageResult process(CCSIQueueMessageContext ccsiQueueMessageContext) {
-        final String correlationId = ccsiQueueMessageContext.getCorrelationId();
-        final String messageReceived = ccsiQueueMessageContext.getMessage().getBody();
-        log.info("GTV Data Ready event received with correlationId {} and body {}", correlationId, messageReceived);
+    public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
+        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
         try {
-            AdapterEvent adapterEvent = parseMessage(messageReceived);
-            ResultsEvent resultsEvent = (ResultsEvent) gtvService.processEvent(adapterEvent);
-            gtvResponsePublishService.publishMessage(resultsEvent);
-            log.info("GTV response event published {}", resultsEvent);
-            if (resultsEvent.getResult().getStatusCode() > 499) {
+            BaseGtvRequest<?> request = parseMessage(messageContext.getMessage().getBody());
+            BaseGtvResponse<?> response = gatewayEventProcessingService.processEvent(request);
+            gtvResponsePublishService.publishMessage(response);
+            if (response.getResult().getStatusCode() > 499) {
                 return CCSIQueueMessageResult.builder()
                         .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                         .build();
             }
-        } catch (JsonProcessingException jpe) {
-            log.error("Couldn't parse message body for event with correlationId {} Cause: {}", correlationId, jpe.getMessage());
+        } catch (JsonProcessingException jpEx) {
+            log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
             return CCSIQueueMessageResult.builder()
                     .status(CCSIQueueMessageStatus.NON_RECOVERABLE_ERROR)
                     .build();
-        } catch (Exception e) {
-            log.error("Couldn't process message with correlationId {} Cause: {}", correlationId, e.getMessage());
+        } catch (Exception ex) {
+            log.error("Exception processing SQS event: {}", ex.getMessage(), ex);
             return CCSIQueueMessageResult.builder()
                     .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                     .build();
@@ -68,7 +65,7 @@ public class GtvRequestProcessor implements QueueMessageProcessor {
                 .build();
     }
 
-    private AdapterEvent parseMessage(String message) throws JsonProcessingException {
-        return objectMapper.readValue(message, AdapterEvent.class);
+    private BaseGtvRequest<?> parseMessage(String message) throws JsonProcessingException {
+        return objectMapper.readValue(message, BaseGtvRequest.class);
     }
 }

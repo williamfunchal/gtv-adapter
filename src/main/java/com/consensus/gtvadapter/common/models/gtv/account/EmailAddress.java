@@ -9,6 +9,7 @@ import lombok.Data;
 public class EmailAddress extends AddressBase{
 
     public static final String PURPOSE_PRIMARY = "PRIMARY";
+
     private String email;
 
     public EmailAddress() {

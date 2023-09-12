@@ -2,19 +2,16 @@ package com.consensus.gtvadapter.common.models.rawdata;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class IspCustomerData {
+public class IspCustomerData implements IspData {
 
-    private String customerkey;
+    private String customerKey;
     private String company;
     private String country;
     private String addressLine1;

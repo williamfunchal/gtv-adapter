@@ -7,7 +7,7 @@ import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageBatchProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
-import com.consensus.gtvadapter.processor.mapper.ProcessorMapperService;
+import com.consensus.gtvadapter.processor.service.EventProcessingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,11 +22,12 @@ import static com.consensus.gtvadapter.util.GtvConstants.SqsMessageAttributes.EV
 @Component
 public class IspDataReadyProcessor extends BaseDataReadyProcessor implements QueueMessageBatchProcessor {
 
-    private static final Set<String> MESSAGE_BATCH_GROUPS = Set.of("usage-new");
+    private static final Set<String> MESSAGE_BATCH_GROUPS = Set.of("usage-isp-new");
 
     public IspDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            StoreDataPublishService storeDataPublishService, ProcessorMapperService processorMapperService) {
-        super(objectMapper, queueProperties, storeDataPublishService, processorMapperService);
+            DataReadyToStorePublishService dataReadyToStorePublishService, DataReadyToUpdatePublishService dataReadyToUpdatePublishService,
+            EventProcessingService eventProcessingService) {
+        super(objectMapper, queueProperties, dataReadyToStorePublishService, dataReadyToUpdatePublishService, eventProcessingService);
     }
 
     /**
@@ -37,10 +38,10 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
         log.debug("Processing usage events batch: {}", messages.size());
         // TODO CUP-19: Implement logic to process batch of usage messages from Data-Ready-Queue
         /*
-        * 1) 'messages' - already filtered and contains only usage events
-        * 2) Convert 'messages' into one usage batch event
-        * 3) Send it to store queue
-        * */
+         * 1) 'messages' - already filtered and contains only usage events
+         * 2) Convert 'messages' into one usage batch event
+         * 3) Send it to store queue
+         * */
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)

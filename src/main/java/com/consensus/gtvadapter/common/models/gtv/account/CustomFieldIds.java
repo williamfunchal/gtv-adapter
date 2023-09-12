@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class CustomFieldIds {
+
     private String businessUnit;
     private String corpId;
     private String offerCode;
