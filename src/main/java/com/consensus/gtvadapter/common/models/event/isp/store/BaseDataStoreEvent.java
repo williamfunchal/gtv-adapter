@@ -7,7 +7,7 @@ import com.consensus.gtvadapter.common.models.rawdata.IspData;
 import lombok.Data;
 
 @Data
-public abstract class BaseIspDataStoreEvent<R extends IspData, G extends GtvData> extends AdapterEvent {
+public abstract class BaseDataStoreEvent<R extends IspData, G extends GtvData> extends AdapterEvent {
 
     protected String tableName;
     protected DataOperation operation;

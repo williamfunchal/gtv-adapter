@@ -26,7 +26,7 @@ public class DataReadyToStoreProcessor implements QueueMessageProcessor {
     public DataReadyToStoreProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
             DataStoredPublishService dataStoredPublishService, RepositoryEventProcessingService repositoryEventProcessingService) {
         this.objectMapper = objectMapper;
-        this.queueProperties = queueProperties.getStoreData();
+        this.queueProperties = queueProperties.getDataReadyToStore();
         this.dataStoredPublishService = dataStoredPublishService;
         this.repositoryEventProcessingService = repositoryEventProcessingService;
     }

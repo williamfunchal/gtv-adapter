@@ -16,7 +16,7 @@ public class DataReadyToUpdateProcessor implements QueueMessageProcessor {
     private final CCSIQueueListenerProperties queueProperties;
 
     public DataReadyToUpdateProcessor(QueueProperties queueProperties) {
-        this.queueProperties = queueProperties.getUpdateData();
+        this.queueProperties = queueProperties.getDataReadyToUpdate();
     }
 
     @Override

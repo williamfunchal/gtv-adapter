@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class IspCustomerStoreEvent extends BaseIspDataStoreEvent<IspCustomerData, AccountCreationGtvData> {
+public class CustomerStoreEvent extends BaseDataStoreEvent<IspCustomerData, AccountCreationGtvData> {
 
     public static final String TYPE = "customer-adapter-store";
 
-    public IspCustomerStoreEvent() {
+    public CustomerStoreEvent() {
         this.eventType = TYPE;
     }
 

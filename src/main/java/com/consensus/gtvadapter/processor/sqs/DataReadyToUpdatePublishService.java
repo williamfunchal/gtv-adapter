@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class DataReadyToUpdatePublishService<T extends AdapterEvent> extends AbstractQueuePublishService<T> {
 
     public DataReadyToUpdatePublishService(AmazonSQS amazonSQS, ObjectMapper objectMapper, QueueProperties queueProperties) {
-        super(amazonSQS, objectMapper, queueProperties.getUpdateData());
+        super(amazonSQS, objectMapper, queueProperties.getDataReadyToUpdate());
     }
 }

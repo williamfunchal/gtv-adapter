@@ -3,8 +3,7 @@ package com.consensus.gtvadapter.processor.sqs;
 import com.consensus.common.sqs.*;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.isp.ready.BaseIspDataReadyEvent;
-import com.consensus.gtvadapter.common.models.event.isp.store.BaseIspDataStoreEvent;
-import com.consensus.gtvadapter.common.models.event.isp.update.BaseIspDataUpdateEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.BaseDataStoreEvent;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.processor.service.EventProcessingService;
@@ -23,18 +22,16 @@ public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
 
     protected final ObjectMapper objectMapper;
     protected final CCSIQueueListenerProperties queueProperties;
-    protected final DataReadyToStorePublishService dataReadyToStorePublishService;
-    protected final DataReadyToUpdatePublishService dataReadyToUpdatePublishService;
     protected final EventProcessingService eventProcessingService;
+    protected final DataReadyToStorePublishService dataReadyToStorePublishService;
 
     public BaseDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            DataReadyToStorePublishService dataReadyToStorePublishService, DataReadyToUpdatePublishService dataReadyToUpdatePublishService,
+            DataReadyToStorePublishService dataReadyToStorePublishService,
             EventProcessingService eventProcessingService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getIspDataReady();
-        this.dataReadyToStorePublishService = dataReadyToStorePublishService;
-        this.dataReadyToUpdatePublishService = dataReadyToUpdatePublishService;
         this.eventProcessingService = eventProcessingService;
+        this.dataReadyToStorePublishService = dataReadyToStorePublishService;
     }
 
     @Override
@@ -74,12 +71,9 @@ public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
                     .build();
         }
 
-        if (processedEvent instanceof BaseIspDataStoreEvent) {
+        if (processedEvent instanceof BaseDataStoreEvent) {
             dataReadyToStorePublishService.publishMessage(processedEvent);
             log.debug("Data Mapping Store Event published: {}", processedEvent);
-        } else if (processedEvent instanceof BaseIspDataUpdateEvent) {
-            dataReadyToUpdatePublishService.publishMessage(dataReadyEvent);
-            log.debug("Data Mapping Update Event published: {}", processedEvent);
         }
 
         return CCSIQueueMessageResult.builder()

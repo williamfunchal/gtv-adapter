@@ -1,7 +1,7 @@
 package com.consensus.gtvadapter.repository.service;
 
-import com.consensus.gtvadapter.common.models.event.isp.store.IspCustomerStoreEvent;
-import com.consensus.gtvadapter.common.models.event.isp.stored.IspCustomerStoredEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.stored.CustomerStoredEvent;
 import com.consensus.gtvadapter.repository.storage.CustomerEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-class IspCustomerStoreEventProcessor implements RepositoryEventProcessor<IspCustomerStoreEvent> {
+class IspCustomerStoreEventProcessor implements RepositoryEventProcessor<CustomerStoreEvent> {
 
     private final CustomerEventsRepository customerEventsRepository;
 
     @Override
     public String eventType() {
-        return IspCustomerStoreEvent.TYPE;
+        return CustomerStoreEvent.TYPE;
     }
 
     @Override
-    public IspCustomerStoredEvent process(IspCustomerStoreEvent storeEvent) {
-        IspCustomerStoredEvent storedEvent = new IspCustomerStoredEvent();
+    public CustomerStoredEvent process(CustomerStoreEvent storeEvent) {
+        CustomerStoredEvent storedEvent = new CustomerStoredEvent();
         storedEvent.setEventId(storeEvent.getEventId());
         storedEvent.setCorrelationId(storeEvent.getCorrelationId());
         storedEvent.setOperation(storeEvent.getOperation());
