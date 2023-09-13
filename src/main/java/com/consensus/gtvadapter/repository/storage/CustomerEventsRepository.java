@@ -3,7 +3,7 @@ package com.consensus.gtvadapter.repository.storage;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.consensus.gtvadapter.common.models.event.isp.store.IspCustomerStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class CustomerEventsRepository {
         this.tableName = env + "_" + namespace + "_" + CUSTOMER_EVENTS_TABLE;
     }
 
-    public void save(IspCustomerStoreEvent storeEvent){
+    public void save(CustomerStoreEvent storeEvent){
         final Table table = dynamoDB.getTable(tableName);
         final String value = convertToJson(storeEvent);
         final Item item = Item.fromJSON(value);

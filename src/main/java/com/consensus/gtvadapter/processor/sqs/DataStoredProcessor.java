@@ -17,14 +17,14 @@ public class DataStoredProcessor implements QueueMessageProcessor {
     private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties queueProperties;
     private final EventProcessingService eventProcessingService;
-    private final GtvDataReadyPublishService gtvDataReadyPublishService;
+    private final GtvDataRequestPublishService gtvDataRequestPublishService;
 
     public DataStoredProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            GtvDataReadyPublishService gtvDataReadyPublishService, EventProcessingService eventProcessingService) {
+            GtvDataRequestPublishService gtvDataRequestPublishService, EventProcessingService eventProcessingService) {
         this.objectMapper = objectMapper;
         this.queueProperties = queueProperties.getDataStored();
-        this.gtvDataReadyPublishService = gtvDataReadyPublishService;
         this.eventProcessingService = eventProcessingService;
+        this.gtvDataRequestPublishService = gtvDataRequestPublishService;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DataStoredProcessor implements QueueMessageProcessor {
 
         AdapterEvent adapterEvent = parseMessage(messageContext.getMessage().getBody());
         AdapterEvent nextEvent = eventProcessingService.processEvent(adapterEvent);
-        gtvDataReadyPublishService.publishMessage(nextEvent);
+        gtvDataRequestPublishService.publishMessage(nextEvent);
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)

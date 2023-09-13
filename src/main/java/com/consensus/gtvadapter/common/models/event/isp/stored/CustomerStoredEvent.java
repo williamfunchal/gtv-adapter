@@ -1,6 +1,6 @@
 package com.consensus.gtvadapter.common.models.event.isp.stored;
 
-import com.consensus.gtvadapter.common.models.event.isp.store.BaseIspDataStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.BaseDataStoreEvent;
 import com.consensus.gtvadapter.common.models.gtv.account.AccountCreationGtvData;
 import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class IspCustomerStoredEvent extends BaseIspDataStoreEvent<IspCustomerData, AccountCreationGtvData> {
+public class CustomerStoredEvent extends BaseDataStoreEvent<IspCustomerData, AccountCreationGtvData> {
 
     public static final String TYPE = "customer-adapter-stored";
 
-    public IspCustomerStoredEvent() {
+    public CustomerStoredEvent() {
         this.eventType = TYPE;
     }
 

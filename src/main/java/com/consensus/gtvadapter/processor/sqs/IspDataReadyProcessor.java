@@ -25,9 +25,9 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
     private static final Set<String> MESSAGE_BATCH_GROUPS = Set.of("usage-isp-new");
 
     public IspDataReadyProcessor(ObjectMapper objectMapper, QueueProperties queueProperties,
-            DataReadyToStorePublishService dataReadyToStorePublishService, DataReadyToUpdatePublishService dataReadyToUpdatePublishService,
+            DataReadyToStorePublishService dataReadyToStorePublishService,
             EventProcessingService eventProcessingService) {
-        super(objectMapper, queueProperties, dataReadyToStorePublishService, dataReadyToUpdatePublishService, eventProcessingService);
+        super(objectMapper, queueProperties, dataReadyToStorePublishService, eventProcessingService);
     }
 
     /**
