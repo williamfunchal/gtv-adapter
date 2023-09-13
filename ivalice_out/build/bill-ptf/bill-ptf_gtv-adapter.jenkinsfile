@@ -7,7 +7,7 @@ node {
     // This is a map of the default pipeline values. If no override is provided, these will be used for every pipeline executed.
     def pipeline_defaults = [
         product: 'bill-ptf',
-        branch: 'develop',
+        branch: 'CUP-17_usage-repository',
         slack_channel: 'GP0EAHT8W',
         gh_repo: 'billplatform-gtv-adapter',
         jenkins_agent: 'ecs_java11'
