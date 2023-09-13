@@ -12,6 +12,7 @@ import static java.util.Objects.isNull;
 @Getter
 @RequiredArgsConstructor
 public enum AddressType {
+
     POSTAL("postal"),
     EMAIL("email"),
     TELECOM("telecom"),

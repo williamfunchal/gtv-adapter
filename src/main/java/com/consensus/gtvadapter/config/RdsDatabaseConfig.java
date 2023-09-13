@@ -13,7 +13,6 @@ public class RdsDatabaseConfig {
     private static final String DB_QUERY = "SELECT CURRENT_DATE FROM dual";
 
     @Bean
-    @Profile("local")
     public DataSourceHealthIndicator coreDbHealthIndicator(DataSource dataSource) {
         return new DataSourceHealthIndicator(dataSource, DB_QUERY);
     }

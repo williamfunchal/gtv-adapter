@@ -12,6 +12,7 @@ import static java.util.Objects.isNull;
 @Getter
 @RequiredArgsConstructor
 public enum BillCycleType {
+
     DAILY("daily"),
     MONTHLY("monthly"),
     QUARTERLY("quarterly"),

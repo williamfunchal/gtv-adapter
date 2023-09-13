@@ -12,6 +12,7 @@ import static java.util.Objects.isNull;
 @Getter
 @RequiredArgsConstructor
 public enum CustomFieldType {
+
     BILLING_ACCOUNT("billing-account"),
     BILLING_ACCOUNT_CATEGORY("billing-account-category"),
     ORDER("order"),
