@@ -1,21 +1,25 @@
 package com.consensus.gtvadapter.gateway.client;
 
 
+import com.consensus.common.logging.LogConstants;
 import com.consensus.common.web.DownstreamWebClient;
-import com.consensus.gtvadapter.common.models.event.GtvAccountCreationEvent;
-import com.consensus.gtvadapter.common.models.request.GtvRequestDetails;
+import com.consensus.gtvadapter.common.models.event.gtv.request.BaseGtvRequest;
+import com.consensus.gtvadapter.common.models.event.gtv.response.GtvResponseData;
 import com.consensus.gtvadapter.config.properties.GtvProperties;
 import com.consensus.gtvadapter.util.GtvConstants;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+
+import static com.consensus.common.logging.LogConstants.WebClientKeys.TRACE_RESPONSE_DISABLE_ATTRIBUTE;
 
 @Slf4j
 @Component
@@ -26,21 +30,21 @@ public class GtvRestClient {
     private final DownstreamWebClient gtvWebClient;
     private final GtvProperties gtvProperties;
 
-    public GtvRequestDetails createAccount(GtvAccountCreationEvent accountCreationEvent) {
-        GtvRequestDetails gtvRequestDetails = new GtvRequestDetails();
+    public GtvResponseData executeGtvRequest(BaseGtvRequest<?> gtvRequest) {
+        GtvResponseData gtvResponseData = new GtvResponseData();
         try {
-            gtvRequestDetails.setRequestDateTime(Instant.now());
+            gtvResponseData.setRequestDateTime(Instant.now());
 
-            ResponseEntity<JsonNode> response = gtvWebClient.getWebClient()
-                    .method(HttpMethod.POST)
-                    .uri(accountCreationEvent.getApi())
-                    .bodyValue(accountCreationEvent.getBody())
+            ResponseEntity<String> response = gtvWebClient.getWebClient()
+                    .method(gtvRequest.getMethod())
+                    .uri(gtvRequest.getApi())
+                    .bodyValue(gtvRequest.getBody())
                     .accept(MediaType.APPLICATION_JSON)
                     .header(GtvConstants.HttpHeaders.GTV_API_KEY, gtvProperties.getApiXKey())
+                    .attribute(TRACE_RESPONSE_DISABLE_ATTRIBUTE, true)
                     .retrieve()
                     .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())
-                    .toEntity(JsonNode.class)
-                    //.retryWhen(gtvRetry) Retries can be added automatically later
+                    .toEntity(String.class)
                     .block();
 
             // It will never happen as WebClient never returns 'null' as response entity
@@ -48,20 +52,21 @@ public class GtvRestClient {
                 throw new IllegalArgumentException("WebClient returned nullable response entity.");
             }
 
-            gtvRequestDetails.setStatusCode(response.getStatusCode().value());
-            gtvRequestDetails.setResponseDateTime(Instant.now());
-            gtvRequestDetails.setPayload(response.getBody());
-        } catch (WebClientRequestException wcre) {
-            log.error("Web client error - Method[{}] URI[{}]: {}", wcre.getMethod(), wcre.getUri(), wcre.getMessage());
-            gtvRequestDetails.setResponseDateTime(Instant.now());
-            gtvRequestDetails.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
+            gtvResponseData.setResponseDateTime(Instant.now());
+            gtvResponseData.setStatusCode(response.getStatusCode().value());
+            gtvResponseData.setPayload(response.getBody());
+        } catch (WebClientRequestException wcrEx) {
+            log.error("Web client error - Method[{}] URI[{}]: {}", wcrEx.getMethod(), wcrEx.getUri(), wcrEx.getMessage());
+            gtvResponseData.setResponseDateTime(Instant.now());
+            gtvResponseData.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
         } catch (Exception ex) {
-            log.error("GTV Account creation failed {}", ex.getMessage());
+            log.error("Exception executing GTV request: {}", ex.getMessage(), ex);
         }
 
-        long executionTime = gtvRequestDetails.getResponseDateTime().toEpochMilli() - gtvRequestDetails.getRequestDateTime().toEpochMilli();
-        log.info("GTV Request - Method:[{}] API:[{}] Status:[{}] Execution Time:[{}ms]", accountCreationEvent.getMethod(), accountCreationEvent.getApi(), gtvRequestDetails.getStatusCode(), executionTime);
+        long executionTime = gtvResponseData.getResponseDateTime().toEpochMilli() - gtvResponseData.getRequestDateTime().toEpochMilli();
+        log.info("GTV Request - Method:[{}] API:[{}] Status:[{}] Execution Time:[{}ms]",
+                gtvRequest.getMethod(), gtvRequest.getApi(), gtvResponseData.getStatusCode(), executionTime);
 
-        return gtvRequestDetails;
+        return gtvResponseData;
     }
 }

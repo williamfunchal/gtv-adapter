@@ -52,7 +52,7 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
-    update-data:
+    data-ready-to-update:
       queueUrl: ${/sqs/adapter-data-ready-to-update-url}
       queueShortName: adapter-data-ready-to-update
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
@@ -70,7 +70,7 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
-    store-data:
+    data-ready-to-store:
       queueUrl: ${/sqs/adapter-data-ready-to-store-url}
       queueShortName: adapter-data-ready-to-store
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}

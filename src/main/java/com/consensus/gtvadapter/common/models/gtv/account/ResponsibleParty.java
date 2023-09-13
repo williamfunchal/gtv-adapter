@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ResponsibleParty {
+
     private PartyType partyType;
     private String externalCustomerNum;
     private String organizationName;
