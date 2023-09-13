@@ -15,8 +15,8 @@ public class UpdateDataProcessor implements QueueMessageProcessor {
 
     private final CCSIQueueListenerProperties queueProperties;
 
-    public UpdateDataProcessor(QueueProperties queueProperties) {
-        this.queueProperties = queueProperties.getUpdateData();
+    public UpdateDataProcessor(final QueueProperties queueProperties) {
+        this.queueProperties = queueProperties.getAdapterDataReadyToUpdate();
     }
 
     @Override
