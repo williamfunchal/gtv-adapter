@@ -1,41 +1,11 @@
 package com.consensus.gtvadapter.repository.storage;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.consensus.gtvadapter.repository.entities.CustomerDbEvent;
+import org.springframework.data.repository.Repository;
 
-@Slf4j
-@Component
-public class CustomerEventsRepository {
+public interface CustomerEventsRepository extends Repository<CustomerDbEvent, String> {
 
-    public static final String CUSTOMER_EVENTS_TABLE = "customer_events";
+    CustomerDbEvent findByEventId(String eventId);
 
-    private final DynamoDB dynamoDB;
-    private final ObjectMapper objectMapper;
-    private final String tableName;
-
-    public CustomerEventsRepository(DynamoDB dynamoDB, ObjectMapper objectMapper,
-            @Value("${ENVIRONMENT}") String env, @Value("${NAMESPACE}") String namespace) {
-        this.dynamoDB = dynamoDB;
-        this.objectMapper = objectMapper;
-        this.tableName = env + "_" + namespace + "_" + CUSTOMER_EVENTS_TABLE;
-    }
-
-    public void save(CustomerStoreEvent storeEvent){
-        final Table table = dynamoDB.getTable(tableName);
-        final String value = convertToJson(storeEvent);
-        final Item item = Item.fromJSON(value);
-        table.putItem(item);
-    }
-
-    @SneakyThrows
-    private String convertToJson(Object storeEvent){
-        return objectMapper.writeValueAsString(storeEvent);
-    }
+    void save(CustomerDbEvent customerDbEvent);
 }

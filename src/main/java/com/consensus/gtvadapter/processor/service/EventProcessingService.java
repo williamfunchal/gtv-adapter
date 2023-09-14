@@ -19,8 +19,7 @@ public class EventProcessingService {
         this.processorMappers = processorMappers.stream()
                 .collect(Collectors.toMap(
                         EventProcessor::eventType,
-                        Function.identity(),
-                        (o1, o2) -> o1)
+                        Function.identity())
                 );
     }
 

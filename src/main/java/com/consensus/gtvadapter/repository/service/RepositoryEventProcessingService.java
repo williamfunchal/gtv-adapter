@@ -25,14 +25,14 @@ public class RepositoryEventProcessingService {
                 );
     }
 
-    public AdapterEvent process(AdapterEvent adapterEvent) {
+    public void process(AdapterEvent adapterEvent) {
         String eventType = adapterEvent.getEventType();
         @SuppressWarnings("unchecked")
         RepositoryEventProcessor<AdapterEvent> processorMapper = (RepositoryEventProcessor<AdapterEvent>) repositoryProcessors.get(eventType);
         if (isNull(processorMapper)) {
             throw new IllegalArgumentException("Unable to process event of unknown type: " + eventType);
         }
-        return processorMapper.process(adapterEvent);
+        processorMapper.process(adapterEvent);
     }
 
 }
