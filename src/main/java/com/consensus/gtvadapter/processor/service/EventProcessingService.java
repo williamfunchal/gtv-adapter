@@ -13,9 +13,9 @@ import static java.util.Objects.isNull;
 @Component
 public class EventProcessingService {
 
-    private final Map<String, EventProcessor<? extends AdapterEvent>> processorMappers;
+    private final Map<String, EventProcessor> processorMappers;
 
-    public EventProcessingService(List<EventProcessor<? extends AdapterEvent>> processorMappers) {
+    public EventProcessingService(List<EventProcessor> processorMappers) {
         this.processorMappers = processorMappers.stream()
                 .collect(Collectors.toMap(
                         EventProcessor::eventType,
@@ -27,10 +27,20 @@ public class EventProcessingService {
     public AdapterEvent processEvent(AdapterEvent adapterEvent) {
         String eventType = adapterEvent.getEventType();
         @SuppressWarnings("unchecked")
-        EventProcessor<AdapterEvent> processorMapper = (EventProcessor<AdapterEvent>) processorMappers.get(eventType);
+        SingleEventProcessor<AdapterEvent> processorMapper = (SingleEventProcessor<AdapterEvent>) processorMappers.get(eventType);
         if (isNull(processorMapper)) {
             throw new IllegalArgumentException("Unable to process event of unknown type: " + eventType);
         }
         return processorMapper.process(adapterEvent);
+    }
+
+    public AdapterEvent processEvent(List<AdapterEvent> adapterEvents) {
+        final String eventType = adapterEvents.get(0).getEventType();
+        @SuppressWarnings("unchecked")
+        BatchEventProcessor<AdapterEvent> processorMapper = (BatchEventProcessor<AdapterEvent>) processorMappers.get(eventType);
+        if (isNull(processorMapper)) {
+            throw new IllegalArgumentException("Unable to process event of unknown type: " + eventType);
+        }
+        return processorMapper.process(adapterEvents);
     }
 }

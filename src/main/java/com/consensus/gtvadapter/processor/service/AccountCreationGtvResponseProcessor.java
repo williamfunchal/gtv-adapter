@@ -5,7 +5,7 @@ import com.consensus.gtvadapter.common.models.event.isp.update.CustomerUpdateEve
 import org.springframework.stereotype.Component;
 
 @Component
-class AccountCreationGtvResponseProcessor implements EventProcessor<AccountCreationGtvResponse> {
+class AccountCreationGtvResponseProcessor implements SingleEventProcessor<AccountCreationGtvResponse> {
 
     @Override
     public String eventType() {
