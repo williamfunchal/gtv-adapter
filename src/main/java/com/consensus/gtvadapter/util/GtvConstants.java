@@ -2,7 +2,6 @@ package com.consensus.gtvadapter.util;
 
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
 import java.util.Set;
 
 @UtilityClass
