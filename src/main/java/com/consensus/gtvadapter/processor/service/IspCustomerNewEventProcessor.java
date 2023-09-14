@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class IspCustomerNewEventProcessor implements EventProcessor<IspCustomerNewEvent> {
+class IspCustomerNewEventProcessor implements SingleEventProcessor<IspCustomerNewEvent> {
 
     private final AccountMapper accountMapper;
 
