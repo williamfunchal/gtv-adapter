@@ -2,16 +2,23 @@ package com.consensus.gtvadapter.processor.sqs;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
+import com.consensus.common.sqs.CCSIQueueMessage;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
+import com.consensus.gtvadapter.common.models.event.AdapterEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.BatchDataStoreEvent;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageBatchProcessor;
 import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.processor.service.EventProcessingService;
+import com.consensus.gtvadapter.processor.service.usage.IspUsageNewEventProcessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.DateTimeException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,18 +37,45 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
         super(objectMapper, queueProperties, dataReadyToStorePublishService, eventProcessingService);
     }
 
-    /**
-     * Process usage events in batches and all other types one by one
-     */
     @Override
     public CCSIQueueMessageResult process(String groupName, List<CCSIQueueMessageContext> messages) {
         log.debug("Processing usage events batch: {}", messages.size());
-        // TODO CUP-19: Implement logic to process batch of usage messages from Data-Ready-Queue
-        /*
-         * 1) 'messages' - already filtered and contains only usage events
-         * 2) Convert 'messages' into one usage batch event
-         * 3) Send it to store queue
-         * */
+
+        List<AdapterEvent> adapterEvents = new ArrayList<>();
+
+        for(CCSIQueueMessageContext messageContext: messages){
+            try{
+                adapterEvents.add(parseMessage(messageContext.getMessage()));
+            }catch (JsonProcessingException jpEx){
+                log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
+                return CCSIQueueMessageResult.builder()
+                        .logMessage("Message body parsing failed")
+                        .status(CCSIQueueMessageStatus.NOOP)
+                        .build();
+            }
+        }
+
+        AdapterEvent processedEvent;
+
+        try {
+            processedEvent = eventProcessingService.processEvent(adapterEvents);
+        } catch (DateTimeException dtEx) {
+            log.error("Exception parsing date from SQS event: {}", dtEx.getMessage(), dtEx);
+            return CCSIQueueMessageResult.builder()
+                    .logMessage("Date parsing failed: " + dtEx.getMessage())
+                    .status(CCSIQueueMessageStatus.NOOP)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Exception processing SQS event: {}", ex.getMessage(), ex);
+            return CCSIQueueMessageResult.builder()
+                    .logMessage("GTV request mapping failed")
+                    .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
+                    .build();
+        }
+
+        if(processedEvent instanceof BatchDataStoreEvent) {
+            dataReadyToStorePublishService.publishMessage(processedEvent);
+        }
 
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
@@ -61,4 +95,10 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
                 .filter(MESSAGE_BATCH_GROUPS::contains)
                 .orElseGet(() -> super.messageGroupId(message));
     }
+
+    private AdapterEvent parseMessage(CCSIQueueMessage message) throws JsonProcessingException {
+        return objectMapper.readValue(message.getBody(), AdapterEvent.class);
+    }
+
+
 }

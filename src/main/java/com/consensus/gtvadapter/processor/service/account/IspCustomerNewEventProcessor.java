@@ -1,7 +1,8 @@
-package com.consensus.gtvadapter.processor.service;
+package com.consensus.gtvadapter.processor.service.account;
 
 import com.consensus.gtvadapter.common.models.event.isp.ready.IspCustomerNewEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
+import com.consensus.gtvadapter.processor.service.SingleEventProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

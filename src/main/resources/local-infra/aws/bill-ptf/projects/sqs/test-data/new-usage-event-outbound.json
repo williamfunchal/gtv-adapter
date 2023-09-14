@@ -1,0 +1,18 @@
+{
+  "event_type": "isp-new-usage",
+  "event_id": "1813977721",
+  "correlation_id": "e5f1eb55-d0d6-48e5-83ce-00db173d0a72",
+  "operation": "CREATE",
+  "table_name": "ispjfaxusagelog",
+  "data":{
+    "billing_date_time": "2019-01-17 06:21:01.000",
+    "pages": 1,
+    "duration": 60,
+    "message_id": "senddev1-7B9BE585A81ED022E050C00A90067185",
+    "customerkey": 49226624,
+    "resourceType": "SEND_GENERIC",
+    "service_key": 99321579,
+    "service_type": "SEND",
+    "message_to_email": "13235554063"
+  }
+}
