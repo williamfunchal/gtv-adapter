@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 public class IspUsageData implements IspData{
     private String billingDateTime;
     private String phoneNumber;
-    private String pages;
-    private String duration;
-    private String messageId;
+    private Integer pages;
+    private Integer duration;
+    private String msgId;
     private String customerkey;
     private String resourceType;
     private String currencyCode;
