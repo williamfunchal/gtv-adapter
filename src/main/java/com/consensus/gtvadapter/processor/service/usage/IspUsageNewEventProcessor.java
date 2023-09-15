@@ -1,9 +1,9 @@
 package com.consensus.gtvadapter.processor.service.usage;
 
 import com.consensus.common.util.CCSIUUIDUtils;
+import com.consensus.gtvadapter.common.models.event.UsageAdapterEvent;
 import com.consensus.gtvadapter.common.models.event.isp.ready.IspUsageNewEvent;
-import com.consensus.gtvadapter.common.models.event.isp.store.EventBatch;
-import com.consensus.gtvadapter.common.models.event.isp.store.UsageStoreEvent;
+import com.consensus.gtvadapter.common.models.event.isp.store.UsageBatchStoreEvent;
 import com.consensus.gtvadapter.common.models.gtv.usage.UsageCreationGtvData;
 import com.consensus.gtvadapter.common.models.rawdata.IspUsageData;
 import com.consensus.gtvadapter.processor.service.BatchEventProcessor;
@@ -21,29 +21,35 @@ public class IspUsageNewEventProcessor implements BatchEventProcessor<IspUsageNe
     private final UsageMapper usageMapper;
 
     @Override
-    public UsageStoreEvent process(List<IspUsageNewEvent> ispUsageNewEvents) {
-        final List<EventBatch> usageEvents = new ArrayList<>();
+    public UsageBatchStoreEvent process(List<IspUsageNewEvent> ispUsageNewEvents) {
+
+        final List<UsageAdapterEvent> usageEvents = new ArrayList<>();
         ispUsageNewEvents.forEach(ispUsageNewEvent -> {
             final IspUsageData ispUsageData = ispUsageNewEvent.getData();
             final UsageCreationGtvData usageCreationGtvData = usageMapper.mapToUsageCreationGtvData(ispUsageData);
-            final EventBatch eventBatch = EventBatch.builder()
-                    .eventId(ispUsageData.getMsgId())
-                    .correlationId(ispUsageNewEvent.getCorrelationId())
-                    .rawData(ispUsageData)
-                    .gtvData(usageCreationGtvData).build();
-            usageEvents.add(eventBatch);
+
+            final UsageAdapterEvent usageAdapterEvent = new UsageAdapterEvent();
+            usageAdapterEvent.setEventId(ispUsageData.getMsgId());
+            usageAdapterEvent.setCorrelationId(ispUsageNewEvent.getCorrelationId());
+            usageAdapterEvent.setOperation(ispUsageNewEvent.getOperation());
+            usageAdapterEvent.setTableName(ispUsageNewEvent.getTableName());
+            usageAdapterEvent.setRawData(ispUsageData);
+            usageAdapterEvent.setGtvData(usageCreationGtvData);
+
+            usageEvents.add(usageAdapterEvent);
         });
 
-        final UsageStoreEvent usageStoreEvent = new UsageStoreEvent();
-        usageStoreEvent.setEventId(CCSIUUIDUtils.generateUUID());
-        usageStoreEvent.setCorrelationId(CCSIUUIDUtils.generateUUID());
-        usageStoreEvent.setData(usageEvents);
+        final UsageBatchStoreEvent usageBatchStoreEvent = new UsageBatchStoreEvent();
+        usageBatchStoreEvent.setEventId(CCSIUUIDUtils.generateUUID());
+        usageBatchStoreEvent.setCorrelationId(CCSIUUIDUtils.generateUUID());
+        usageBatchStoreEvent.setEventBatch(usageEvents);
 
-        return usageStoreEvent;
+        return usageBatchStoreEvent;
     }
 
     @Override
     public String eventType() {
         return IspUsageNewEvent.TYPE;
     }
+
 }
