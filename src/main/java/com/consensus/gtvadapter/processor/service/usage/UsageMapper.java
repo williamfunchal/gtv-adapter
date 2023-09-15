@@ -20,27 +20,29 @@ public class UsageMapper {
     private static final Map<String, String> resourceTypes = Map.of(
             "INBOX_GENERIC", "local",
             "INBOX_ONLY","local",
-            "INBOX_FREE", "local",
             "INBOX_TOLLFREE","toll-free",
             "INBOX_ONLY_TOLLFREE","toll-free");
 
+    //TODO Finish mappings
     public UsageCreationGtvData mapToUsageCreationGtvData(IspUsageData ispUsageData){
         final ZonedDateTime billingDateTime = ZonedDateTime.parse(ispUsageData.getBillingDateTime(), ISP_DATE_PATTERN);
         final UsageCreationGtvData.UsageCreationGtvDataBuilder usageEventBuilder = UsageCreationGtvData.builder()
                 .startTime(billingDateTime)
                 .endTime(billingDateTime)
-                .serviceResourceIdentifier("query for service resource")
                 .usageUom(UsageUom.COUNT)
-                .referenceId(ispUsageData.getMessageId())
+                .usageAmount(getUsageAmount(ispUsageData.getDuration(), ispUsageData.getPages()))
+                .referenceId(ispUsageData.getMsgId())
                 .sequenceId(ispUsageData.getCustomerkey())
                 .text03(ispUsageData.getCurrencyCode())
                 .text04(ispUsageData.getCustomerkey() + "|" + ispUsageData.getServiceKey());
         if( isInbound(ispUsageData)){
             usageEventBuilder
+                    .serviceResourceIdentifier(ispUsageData.getPhoneNumber())
                     .text01("receive")
                     .text02(resourceTypes.get(ispUsageData.getResourceType()));
         }else{
             usageEventBuilder
+                    .serviceResourceIdentifier(ispUsageData.getServiceKey())
                     .text01("send")
                     .text02(ispUsageData.getServiceType().toLowerCase())
                     .text05(ispUsageData.getMessageToEmail());
@@ -51,5 +53,15 @@ public class UsageMapper {
 
     private boolean isInbound(IspUsageData ispUsageData){
         return resourceTypes.containsKey(ispUsageData.getResourceType());
+    }
+
+    private Integer getUsageAmount(Integer duration, Integer pages){
+        final int durationInMinutes = Math.round(duration / 60f);
+
+        if(durationInMinutes > pages){
+            return durationInMinutes;
+        }else{
+            return pages;
+        }
     }
 }

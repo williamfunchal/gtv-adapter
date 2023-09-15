@@ -12,6 +12,9 @@
     "message_id":"CBT-291-TEST-9854262168-6621790092-611",
     "customerkey": 31108015,
     "resource_type": "INBOX_GENERIC",
-    "service_key": 50801410
+    "service_key": 50801410,
+    "currency_code": "US",
+    "msg_id": "CBT-291-TEST-9854262168-6621790092-611",
+    "service_type": "mediad"
   }
 }

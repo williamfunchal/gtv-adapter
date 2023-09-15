@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public abstract class BatchDataStoreEvent<R,G> extends AdapterEvent {
-    protected List<EventBatch<R,G>> data;
+public abstract class BatchDataStoreEvent extends AdapterEvent {
+    protected List<EventBatch> data;
 
 }

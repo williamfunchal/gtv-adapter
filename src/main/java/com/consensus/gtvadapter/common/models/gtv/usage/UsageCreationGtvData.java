@@ -20,7 +20,7 @@ public class UsageCreationGtvData implements GtvData {
     private String serviceResourceIdentifier;
     private ZonedDateTime startTime;
     private UsageUom usageUom;
-    private Long usageAmount;
+    private Integer usageAmount;
     private String description;
     private ZonedDateTime endTime;
     private String referenceId;
