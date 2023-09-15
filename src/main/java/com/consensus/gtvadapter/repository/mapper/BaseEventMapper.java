@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 public abstract class BaseEventMapper {
 
     private static final TypeReference<Map<String, Object>> DATA_TYPE_REFERENCE = new TypeReference<>() { };
@@ -23,6 +26,9 @@ public abstract class BaseEventMapper {
     @Named("convertToAttributeValue")
     protected AttributeValue convertToAttributeValue(Object data) {
         Map<String, Object> objectMap = objectMapper.convertValue(data, DATA_TYPE_REFERENCE);
+        if (isEmpty(objectMap)) {
+            return new AttributeValue().withM(emptyMap());
+        }
         return ItemUtils.toAttributeValue(objectMap);
     }
 }

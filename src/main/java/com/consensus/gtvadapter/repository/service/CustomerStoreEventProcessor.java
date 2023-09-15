@@ -38,7 +38,7 @@ class CustomerStoreEventProcessor implements RepositoryEventProcessor<CustomerSt
                 .map(CustomerDbEvent::getStatus)
                 .orElse(EventStatus.NEW);
         if (!eventStatus.isNew()) {
-            log.warn("Customer event has already been received and processed in status: {}", eventStatus);
+            log.warn("Customer event with Id {} has already been received and processed in status: {}", eventId, eventStatus);
             return;
         }
 
@@ -50,7 +50,7 @@ class CustomerStoreEventProcessor implements RepositoryEventProcessor<CustomerSt
         CustomerStoredEvent storedEvent = customerEventMapper.toStoredEvent(storeEvent);
         dataStoredQueuePublishService.publishMessage(storedEvent);
 
-        // Update event in DynamoDB  with IN_PROGRESS status
+        // Update event in DynamoDB with IN_PROGRESS status
         newEvent.setStatus(IN_PROGRESS);
         customerEventsRepository.save(newEvent);
     }

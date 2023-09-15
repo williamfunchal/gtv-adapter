@@ -9,6 +9,7 @@ import java.util.Map;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class EventCharge {
+
     private Long id;
     private UsageUom usageUom;
     private Long usageAmount;

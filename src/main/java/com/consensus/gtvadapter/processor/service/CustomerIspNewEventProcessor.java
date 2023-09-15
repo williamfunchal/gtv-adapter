@@ -1,23 +1,23 @@
 package com.consensus.gtvadapter.processor.service;
 
-import com.consensus.gtvadapter.common.models.event.isp.ready.IspCustomerNewEvent;
+import com.consensus.gtvadapter.common.models.event.isp.ready.CustomerIspNewEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class IspCustomerNewEventProcessor implements EventProcessor<IspCustomerNewEvent> {
+class CustomerIspNewEventProcessor implements EventProcessor<CustomerIspNewEvent> {
 
     private final AccountMapper accountMapper;
 
     @Override
     public String eventType() {
-        return IspCustomerNewEvent.TYPE;
+        return CustomerIspNewEvent.TYPE;
     }
 
     @Override
-    public CustomerStoreEvent process(IspCustomerNewEvent event) {
+    public CustomerStoreEvent process(CustomerIspNewEvent event) {
         CustomerStoreEvent storeEvent = new CustomerStoreEvent();
         storeEvent.setEventId(event.getEventId());
         storeEvent.setCorrelationId(event.getCorrelationId());

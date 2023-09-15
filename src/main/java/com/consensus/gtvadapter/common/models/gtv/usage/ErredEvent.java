@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ErredEvent {
+
     private String requestId;
-    private UsageEvent unratedUsageEvent;
+    private UsageGtvData unratedUsageEvent;
     private String message;
     private String code;
     private String voidedEventId;
