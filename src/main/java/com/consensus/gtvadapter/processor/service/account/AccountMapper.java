@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.processor.service;
+package com.consensus.gtvadapter.processor.service.account;
 
 import com.consensus.gtvadapter.common.models.gtv.account.*;
 import com.consensus.gtvadapter.common.models.rawdata.CustomerIspData;

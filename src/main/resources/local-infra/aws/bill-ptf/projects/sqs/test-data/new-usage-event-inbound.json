@@ -1,0 +1,20 @@
+{
+  "event_type": "usage-isp-new",
+  "event_id": "e5a1eb55-d0d6-48e5-83ce-00db173d0a37",
+  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
+  "operation": "CREATE",
+  "table_name": "j2_inbox_log",
+  "data":{
+    "billing_date_time": "2019-10-23 00:00:00.000",
+    "phone_number": "13036484942",
+    "pages": 1,
+    "duration": 1000,
+    "message_id":"CBT-291-TEST-9854262168-6621790092-611",
+    "customerkey": 31108015,
+    "resource_type": "INBOX_GENERIC",
+    "service_key": 50801410,
+    "currency_code": "US",
+    "msg_id": "CBT-291-TEST-9854262168-6621790092-611",
+    "service_type": "mediad"
+  }
+}
