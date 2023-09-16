@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class UsageEventsRepository {
+public class ServiceResourceEventsRepository {
 
-    public static final String USAGE_EVENTS_TABLE = "usage_events";
+    public static final String SERVICE_RESOURCE_EVENTS_TABLE = "service_resource_events";
 
     private final DynamoDB dynamoDB;
     private final ObjectMapper objectMapper;
     private final String tableName;
 
-    public UsageEventsRepository(DynamoDB dynamoDB, ObjectMapper objectMapper,
+    public ServiceResourceEventsRepository(DynamoDB dynamoDB, ObjectMapper objectMapper,
             @Value("${ENVIRONMENT}") String env, @Value("${NAMESPACE}") String namespace) {
         this.dynamoDB = dynamoDB;
         this.objectMapper = objectMapper;
-        this.tableName = env + "_" + namespace + "_" + USAGE_EVENTS_TABLE;
+        this.tableName = env + "_" + namespace + "_" + SERVICE_RESOURCE_EVENTS_TABLE;
     }
 }

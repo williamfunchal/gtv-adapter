@@ -2,7 +2,6 @@ package com.consensus.gtvadapter.common.models.event.isp.store;
 
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.models.event.UsageAdapterEvent;
-import com.consensus.gtvadapter.common.models.rawdata.DataOperation;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -13,11 +12,8 @@ import java.util.Optional;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageBatchStoreEvent extends AdapterEvent {
-
     public static final String TYPE = "usage-adapter-store";
 
-    private String tableName;
-    private DataOperation operation;
     private List<UsageAdapterEvent> eventBatch;
 
     public UsageBatchStoreEvent() {
