@@ -10,5 +10,5 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageEventsBulkRequest {
     private String mode;
-    private List<UsageEvent> usageEvents;
+    private List<UsageCreationGtvData> usageEvents;
 }
