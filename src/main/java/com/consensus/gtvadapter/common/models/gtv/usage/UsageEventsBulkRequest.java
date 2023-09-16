@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageEventsBulkRequest {
+
     private String mode;
     private List<UsageCreationGtvData> usageEvents;
 }

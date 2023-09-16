@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class CustomerIspData implements IspData {
+public class IspCustomerData implements IspData {
 
     private String customerKey;
     private String company;

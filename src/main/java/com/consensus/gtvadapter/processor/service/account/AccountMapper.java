@@ -1,7 +1,7 @@
 package com.consensus.gtvadapter.processor.service.account;
 
 import com.consensus.gtvadapter.common.models.gtv.account.*;
-import com.consensus.gtvadapter.common.models.rawdata.CustomerIspData;
+import com.consensus.gtvadapter.common.models.rawdata.IspCustomerData;
 import com.consensus.gtvadapter.config.properties.IspGtvMapsProperties;
 import com.consensus.gtvadapter.processor.persistence.entities.J2CorpProfile;
 import com.consensus.gtvadapter.processor.persistence.entities.JbcBillingEntity;
@@ -34,7 +34,7 @@ class AccountMapper {
     private final BillingEntityRepository billingEntityRepository;
     private final CorpProfileRepository corpProfileRepository;
 
-    public AccountCreationGtvData toAccountCreationData(CustomerIspData ispCustomerData) {
+    public AccountCreationGtvData toAccountCreationData(IspCustomerData ispCustomerData) {
         JbcBillingEntity billingEntity = billingEntityRepository.findBillingEntityByCustomerKey(Long.valueOf(ispCustomerData.getCustomerKey()));
         J2CorpProfile corpProfile = corpProfileRepository.findByResellerId(ispCustomerData.getResellerId());
 
@@ -73,7 +73,7 @@ class AccountMapper {
         return billingAccountCategory;
     }
 
-    private ResponsibleParty getResponsibleParty(CustomerIspData ispCustomerData) {
+    private ResponsibleParty getResponsibleParty(IspCustomerData ispCustomerData) {
         ResponsibleParty responsibleParty = new ResponsibleParty();
         responsibleParty.setPartyType(PartyType.ORGANIZATION);
         responsibleParty.setExternalCustomerNum(ispCustomerData.getCustomerKey());

@@ -12,6 +12,7 @@ import java.util.Optional;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageBatchStoreEvent extends AdapterEvent {
+
     public static final String TYPE = "usage-adapter-store";
 
     private List<UsageAdapterEvent> eventBatch;

@@ -16,8 +16,6 @@ public class UsageBatchStoredEvent extends AdapterEvent {
 
     public static final String TYPE = "usage-adapter-stored";
 
-    private String tableName;
-    private DataOperation operation;
     private List<UsageAdapterEvent> eventBatch;
 
     public UsageBatchStoredEvent() {

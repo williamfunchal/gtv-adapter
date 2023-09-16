@@ -42,10 +42,10 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
 
         List<AdapterEvent> adapterEvents = new ArrayList<>();
 
-        for(CCSIQueueMessageContext messageContext: messages){
-            try{
+        for (CCSIQueueMessageContext messageContext : messages) {
+            try {
                 adapterEvents.add(parseMessage(messageContext.getMessage()));
-            }catch (JsonProcessingException jpEx){
+            } catch (JsonProcessingException jpEx) {
                 log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
                 return CCSIQueueMessageResult.builder()
                         .logMessage("Message body parsing failed")
@@ -72,7 +72,7 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
                     .build();
         }
 
-        if(processedEvent instanceof UsageBatchStoreEvent) {
+        if (processedEvent instanceof UsageBatchStoreEvent) {
             dataReadyToStorePublishService.publishMessage(processedEvent);
         }
 
