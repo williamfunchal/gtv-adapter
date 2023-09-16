@@ -9,7 +9,8 @@ import java.util.Map;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class RatedEvent extends UsageCreationGtvData{
+public class UsageRatedGtvData extends UsageCreationGtvData {
+
     private Long totalCharge;
     private Integer overwriteCounter;
     private String requestId;

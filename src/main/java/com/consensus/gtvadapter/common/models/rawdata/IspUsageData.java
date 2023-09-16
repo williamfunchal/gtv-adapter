@@ -13,13 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class IspUsageData implements IspData{
+public class IspUsageData implements IspData {
+
     private String billingDateTime;
     private String phoneNumber;
     private Integer pages;
     private Integer duration;
     private String msgId;
-    private String customerkey;
+    private String customerKey;
     private String resourceType;
     private String currencyCode;
     private String serviceKey;

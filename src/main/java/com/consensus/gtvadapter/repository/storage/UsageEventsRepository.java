@@ -1,25 +1,11 @@
 package com.consensus.gtvadapter.repository.storage;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.consensus.gtvadapter.repository.entities.UsageDbEvent;
+import org.springframework.data.repository.Repository;
 
-@Slf4j
-@Component
-public class UsageEventsRepository {
+public interface UsageEventsRepository extends Repository<UsageDbEvent, String>, UsageEventsRepositoryCustom {
 
-    public static final String USAGE_EVENTS_TABLE = "usage_events";
+    UsageDbEvent findByEventId(String eventId);
 
-    private final DynamoDB dynamoDB;
-    private final ObjectMapper objectMapper;
-    private final String tableName;
-
-    public UsageEventsRepository(DynamoDB dynamoDB, ObjectMapper objectMapper,
-            @Value("${ENVIRONMENT}") String env, @Value("${NAMESPACE}") String namespace) {
-        this.dynamoDB = dynamoDB;
-        this.objectMapper = objectMapper;
-        this.tableName = env + "_" + namespace + "_" + USAGE_EVENTS_TABLE;
-    }
+    void save(UsageDbEvent usageDbEvent);
 }

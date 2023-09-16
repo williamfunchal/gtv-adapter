@@ -11,35 +11,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class IspUsageNewEventProcessor implements BatchEventProcessor<IspUsageNewEvent> {
+
     private final UsageMapper usageMapper;
 
     @Override
     public UsageBatchStoreEvent process(List<IspUsageNewEvent> ispUsageNewEvents) {
+        List<UsageAdapterEvent> usageEvents = ispUsageNewEvents.stream()
+                .map(this::createUsageAdapterEvent)
+                .collect(toList());
 
-        final List<UsageAdapterEvent> usageEvents = new ArrayList<>();
-        ispUsageNewEvents.forEach(ispUsageNewEvent -> {
-            final IspUsageData ispUsageData = ispUsageNewEvent.getData();
-            final UsageCreationGtvData usageCreationGtvData = usageMapper.mapToUsageCreationGtvData(ispUsageData);
-
-            final UsageAdapterEvent usageAdapterEvent = new UsageAdapterEvent();
-            usageAdapterEvent.setEventId(ispUsageData.getMsgId());
-            usageAdapterEvent.setCorrelationId(ispUsageNewEvent.getCorrelationId());
-            usageAdapterEvent.setOperation(ispUsageNewEvent.getOperation());
-            usageAdapterEvent.setTableName(ispUsageNewEvent.getTableName());
-            usageAdapterEvent.setRawData(ispUsageData);
-            usageAdapterEvent.setGtvData(usageCreationGtvData);
-
-            usageEvents.add(usageAdapterEvent);
-        });
-
-        final UsageBatchStoreEvent usageBatchStoreEvent = new UsageBatchStoreEvent();
+        UsageBatchStoreEvent usageBatchStoreEvent = new UsageBatchStoreEvent();
         usageBatchStoreEvent.setEventId(CCSIUUIDUtils.generateUUID());
         usageBatchStoreEvent.setCorrelationId(CCSIUUIDUtils.generateUUID());
         usageBatchStoreEvent.setEventBatch(usageEvents);
@@ -47,9 +36,23 @@ public class IspUsageNewEventProcessor implements BatchEventProcessor<IspUsageNe
         return usageBatchStoreEvent;
     }
 
+    private UsageAdapterEvent createUsageAdapterEvent(IspUsageNewEvent ispUsageNewEvent) {
+        IspUsageData ispUsageData = ispUsageNewEvent.getData();
+        UsageCreationGtvData usageCreationGtvData = usageMapper.mapToUsageCreationGtvData(ispUsageData);
+
+        UsageAdapterEvent usageAdapterEvent = new UsageAdapterEvent();
+        usageAdapterEvent.setEventId(ispUsageNewEvent.getEventId());
+        usageAdapterEvent.setCorrelationId(ispUsageNewEvent.getCorrelationId());
+        usageAdapterEvent.setOperation(ispUsageNewEvent.getOperation());
+        usageAdapterEvent.setTableName(ispUsageNewEvent.getTableName());
+        usageAdapterEvent.setRawData(ispUsageData);
+        usageAdapterEvent.setGtvData(usageCreationGtvData);
+
+        return usageAdapterEvent;
+    }
+
     @Override
     public String eventType() {
         return IspUsageNewEvent.TYPE;
     }
-
 }
