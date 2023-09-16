@@ -84,6 +84,7 @@ public class QueueMessageBatchListener extends QueueMessageListener {
             return new MessageRunnableGroup(queueProperties.getQueueShortName(), runnableGroup);
         }
 
+        @Override
         protected Runnable messageGroupHandler(String groupName, List<Message> messages) {
             Set<String> batchGroups = queueMessageBatchProcessor.getBatchGroups();
             if (batchGroups.contains(groupName) || batchGroups.contains("All")) {
