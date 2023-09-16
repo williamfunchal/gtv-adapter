@@ -2,7 +2,6 @@ package com.consensus.gtvadapter.processor.sqs;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
-import com.consensus.common.sqs.CCSIQueueMessage;
 import com.consensus.common.sqs.CCSIQueueMessageContext;
 import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
@@ -44,7 +43,7 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
 
         for (CCSIQueueMessageContext messageContext : messages) {
             try {
-                adapterEvents.add(parseMessage(messageContext.getMessage()));
+                adapterEvents.add(parseSqsEvent(messageContext.getMessage()));
             } catch (JsonProcessingException jpEx) {
                 log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
                 return CCSIQueueMessageResult.builder()
@@ -94,10 +93,4 @@ public class IspDataReadyProcessor extends BaseDataReadyProcessor implements Que
                 .filter(MESSAGE_BATCH_GROUPS::contains)
                 .orElseGet(() -> super.messageGroupId(message));
     }
-
-    private AdapterEvent parseMessage(CCSIQueueMessage message) throws JsonProcessingException {
-        return objectMapper.readValue(message.getBody(), AdapterEvent.class);
-    }
-
-
 }

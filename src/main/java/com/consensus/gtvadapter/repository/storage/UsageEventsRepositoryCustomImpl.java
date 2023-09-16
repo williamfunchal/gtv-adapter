@@ -3,19 +3,17 @@ package com.consensus.gtvadapter.repository.storage;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.TransactionWriteRequest;
 import com.consensus.gtvadapter.repository.entities.UsageDbEvent;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
+@RequiredArgsConstructor
 public class UsageEventsRepositoryCustomImpl implements UsageEventsRepositoryCustom {
 
     private final DynamoDBMapper dynamoDBMapper;
-
-    public UsageEventsRepositoryCustomImpl(DynamoDBMapper dynamoDBMapper) {
-        this.dynamoDBMapper = dynamoDBMapper;
-    }
 
     @Override
     public List<UsageDbEvent> findByEventIdIn(Set<String> eventIds) {

@@ -25,8 +25,8 @@ public class UsageMapper {
 
     //TODO Finish mappings
     public UsageCreationGtvData mapToUsageCreationGtvData(IspUsageData ispUsageData) {
-        final ZonedDateTime billingDateTime = ZonedDateTime.parse(ispUsageData.getBillingDateTime(), ISP_DATE_PATTERN);
-        final UsageCreationGtvData.UsageCreationGtvDataBuilder usageEventBuilder = UsageCreationGtvData.builder()
+        ZonedDateTime billingDateTime = ZonedDateTime.parse(ispUsageData.getBillingDateTime(), ISP_DATE_PATTERN);
+        UsageCreationGtvData.UsageCreationGtvDataBuilder usageEventBuilder = UsageCreationGtvData.builder()
                 .startTime(billingDateTime)
                 .endTime(billingDateTime)
                 .usageUom(UsageUom.COUNT)
@@ -56,7 +56,7 @@ public class UsageMapper {
     }
 
     private Integer getUsageAmount(Integer duration, Integer pages) {
-        final int durationInMinutes = Math.round(duration / 60f);
+        int durationInMinutes = Math.round(duration / 60f);
 
         if (durationInMinutes > pages) {
             return durationInMinutes;
