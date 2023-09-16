@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = {
         "com.consensus.gtvadapter",
-        "com.consensus.common.sqs",
         "com.consensus.common.logging",
         "com.consensus.common.metrics",
         "com.consensus.common.dynamo.db",
