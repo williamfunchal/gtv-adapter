@@ -10,14 +10,14 @@ import com.consensus.gtvadapter.repository.sqs.DataStoredQueuePublishService;
 import com.consensus.gtvadapter.repository.storage.CustomerEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 import static com.consensus.gtvadapter.repository.entities.EventStatus.IN_PROGRESS;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 class CustomerStoreEventProcessor implements RepositoryEventProcessor<CustomerStoreEvent> {
 

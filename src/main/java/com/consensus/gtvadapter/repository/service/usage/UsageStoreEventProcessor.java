@@ -11,7 +11,7 @@ import com.consensus.gtvadapter.repository.sqs.DataStoredQueuePublishService;
 import com.consensus.gtvadapter.repository.storage.UsageEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 class UsageStoreEventProcessor implements RepositoryEventProcessor<UsageBatchStoreEvent> {
 
