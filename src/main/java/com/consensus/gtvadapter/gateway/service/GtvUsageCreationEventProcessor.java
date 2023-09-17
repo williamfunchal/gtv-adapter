@@ -1,15 +1,13 @@
 package com.consensus.gtvadapter.gateway.service;
 
-import com.consensus.gtvadapter.common.models.event.gtv.request.AccountCreationGtvRequest;
 import com.consensus.gtvadapter.common.models.event.gtv.request.UsageCreationGtvRequest;
-import com.consensus.gtvadapter.common.models.event.gtv.response.AccountCreationGtvResponse;
 import com.consensus.gtvadapter.common.models.event.gtv.response.GtvResponseData;
 import com.consensus.gtvadapter.common.models.event.gtv.response.UsageCreationGtvResponse;
 import com.consensus.gtvadapter.gateway.client.GtvRestClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 class GtvUsageCreationEventProcessor implements GatewayEventProcessor<UsageCreationGtvRequest> {
 

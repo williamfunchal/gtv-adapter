@@ -8,12 +8,12 @@ import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
 import com.consensus.gtvadapter.repository.storage.CustomerEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import static com.consensus.gtvadapter.repository.entities.EventStatus.REPLICATED;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 class CustomerUpdateEventProcessor implements RepositoryEventProcessor<CustomerUpdateEvent> {
 
