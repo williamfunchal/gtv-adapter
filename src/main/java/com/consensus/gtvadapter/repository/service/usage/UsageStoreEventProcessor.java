@@ -1,4 +1,4 @@
-package com.consensus.gtvadapter.repository.service;
+package com.consensus.gtvadapter.repository.service.usage;
 
 import com.consensus.gtvadapter.common.models.event.UsageAdapterEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.UsageBatchStoreEvent;
@@ -6,6 +6,7 @@ import com.consensus.gtvadapter.common.models.event.isp.stored.UsageBatchStoredE
 import com.consensus.gtvadapter.repository.entities.EventStatus;
 import com.consensus.gtvadapter.repository.entities.UsageDbEvent;
 import com.consensus.gtvadapter.repository.mapper.UsageEventMapper;
+import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
 import com.consensus.gtvadapter.repository.sqs.DataStoredQueuePublishService;
 import com.consensus.gtvadapter.repository.storage.UsageEventsRepository;
 import lombok.RequiredArgsConstructor;
