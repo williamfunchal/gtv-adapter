@@ -1,7 +1,9 @@
 package com.consensus.gtvadapter.common.models.event;
 
 import com.consensus.gtvadapter.common.models.event.gtv.request.AccountCreationGtvRequest;
+import com.consensus.gtvadapter.common.models.event.gtv.request.UsageCreationGtvRequest;
 import com.consensus.gtvadapter.common.models.event.gtv.response.AccountCreationGtvResponse;
+import com.consensus.gtvadapter.common.models.event.gtv.response.UsageCreationGtvResponse;
 import com.consensus.gtvadapter.common.models.event.isp.ready.IspCustomerNewEvent;
 import com.consensus.gtvadapter.common.models.event.isp.ready.IspUsageNewEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
@@ -9,6 +11,7 @@ import com.consensus.gtvadapter.common.models.event.isp.store.UsageBatchStoreEve
 import com.consensus.gtvadapter.common.models.event.isp.stored.CustomerStoredEvent;
 import com.consensus.gtvadapter.common.models.event.isp.stored.UsageBatchStoredEvent;
 import com.consensus.gtvadapter.common.models.event.isp.update.CustomerUpdateEvent;
+import com.consensus.gtvadapter.common.models.event.isp.update.UsageUpdateEvent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -29,10 +32,13 @@ import lombok.Data;
         @JsonSubTypes.Type(value = CustomerUpdateEvent.class, name = CustomerUpdateEvent.TYPE),
 
         // New Usage Event Flow
-        @JsonSubTypes.Type(value = IspUsageNewEvent.class, name = IspUsageNewEvent.TYPE),
         @JsonSubTypes.Type(value = UsageAdapterEvent.class, name = UsageAdapterEvent.TYPE),
+        @JsonSubTypes.Type(value = IspUsageNewEvent.class, name = IspUsageNewEvent.TYPE),
         @JsonSubTypes.Type(value = UsageBatchStoreEvent.class, name = UsageBatchStoreEvent.TYPE),
-        @JsonSubTypes.Type(value = UsageBatchStoredEvent.class, name = UsageBatchStoredEvent.TYPE)
+        @JsonSubTypes.Type(value = UsageBatchStoredEvent.class, name = UsageBatchStoredEvent.TYPE),
+        @JsonSubTypes.Type(value = UsageCreationGtvRequest.class, name = UsageCreationGtvRequest.TYPE),
+        @JsonSubTypes.Type(value = UsageCreationGtvResponse.class, name = UsageCreationGtvResponse.TYPE),
+        @JsonSubTypes.Type(value = UsageUpdateEvent.class, name = UsageUpdateEvent.TYPE),
 
 })
 public abstract class AdapterEvent {
