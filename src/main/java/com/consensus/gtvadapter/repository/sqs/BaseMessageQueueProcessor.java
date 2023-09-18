@@ -7,27 +7,22 @@ import com.consensus.common.sqs.CCSIQueueMessageResult;
 import com.consensus.common.sqs.CCSIQueueMessageStatus;
 import com.consensus.gtvadapter.common.models.event.AdapterEvent;
 import com.consensus.gtvadapter.common.sqs.listener.QueueMessageProcessor;
-import com.consensus.gtvadapter.config.properties.QueueProperties;
 import com.consensus.gtvadapter.repository.service.RepositoryEventProcessingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class DataReadyToStoreProcessor implements QueueMessageProcessor {
+abstract class BaseMessageQueueProcessor implements QueueMessageProcessor {
 
     private final ObjectMapper objectMapper;
     private final CCSIQueueListenerProperties queueProperties;
-    private final DataStoredPublishService dataStoredPublishService;
     private final RepositoryEventProcessingService repositoryEventProcessingService;
 
-    public DataReadyToStoreProcessor(QueueProperties queueProperties, ObjectMapper objectMapper,
-            DataStoredPublishService dataStoredPublishService, RepositoryEventProcessingService repositoryEventProcessingService) {
+    public BaseMessageQueueProcessor(CCSIQueueListenerProperties queueProperties, ObjectMapper objectMapper,
+            RepositoryEventProcessingService repositoryEventProcessingService) {
         this.objectMapper = objectMapper;
-        this.queueProperties = queueProperties.getDataReadyToStore();
-        this.dataStoredPublishService = dataStoredPublishService;
+        this.queueProperties = queueProperties;
         this.repositoryEventProcessingService = repositoryEventProcessingService;
     }
 
@@ -41,8 +36,7 @@ public class DataReadyToStoreProcessor implements QueueMessageProcessor {
         log.debug("Processing SQS message of type: {}", messageContext.getEventType());
         try {
             AdapterEvent adapterEvent = parseMessage(messageContext.getMessage().getBody());
-            AdapterEvent storedEvent = repositoryEventProcessingService.process(adapterEvent);
-            dataStoredPublishService.publishMessage(storedEvent);
+            repositoryEventProcessingService.process(adapterEvent);
         } catch (JsonProcessingException jpEx) {
             log.error("Exception parsing SQS event: {}", jpEx.getMessage(), jpEx);
             return CCSIQueueMessageResult.builder()
@@ -59,7 +53,6 @@ public class DataReadyToStoreProcessor implements QueueMessageProcessor {
                     .status(CCSIQueueMessageStatus.RECOVERABLE_ERROR)
                     .build();
         }
-
         return CCSIQueueMessageResult.builder()
                 .status(CCSIQueueMessageStatus.SUCCESS)
                 .build();

@@ -23,8 +23,7 @@ public class GatewayEventProcessingService {
         this.eventProcessors = eventProcessors.stream()
                 .collect(Collectors.toMap(
                         GatewayEventProcessor::eventType,
-                        Function.identity(),
-                        (o1, o2) -> o1)
+                        Function.identity())
                 );
     }
 

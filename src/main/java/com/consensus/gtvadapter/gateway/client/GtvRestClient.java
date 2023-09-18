@@ -20,6 +20,8 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 
 import static com.consensus.common.logging.LogConstants.WebClientKeys.TRACE_RESPONSE_DISABLE_ATTRIBUTE;
+import static com.consensus.gtvadapter.util.GtvConstants.HttpHeaders.GTV_API_KEY;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Component
@@ -39,8 +41,8 @@ public class GtvRestClient {
                     .method(gtvRequest.getMethod())
                     .uri(gtvRequest.getApi())
                     .bodyValue(gtvRequest.getBody())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .header(GtvConstants.HttpHeaders.GTV_API_KEY, gtvProperties.getApiXKey())
+                    .accept(APPLICATION_JSON)
+                    .header(GTV_API_KEY, gtvProperties.getApiXKey())
                     .attribute(TRACE_RESPONSE_DISABLE_ATTRIBUTE, true)
                     .retrieve()
                     .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())

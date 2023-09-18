@@ -17,6 +17,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageCreationGtvData implements GtvData {
+
     private String serviceResourceIdentifier;
     private ZonedDateTime startTime;
     private UsageUom usageUom;

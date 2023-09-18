@@ -6,5 +6,5 @@ interface RepositoryEventProcessor<T extends AdapterEvent> {
 
     String eventType();
 
-    AdapterEvent process(T message);
+    void process(T message);
 }
