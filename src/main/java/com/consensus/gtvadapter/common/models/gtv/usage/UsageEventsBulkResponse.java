@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsageEventsBulkResponse {
-    private List<RatedEvent> ratedEvents;
+
+    private List<UsageRatedGtvData> ratedEvents;
     private List<ErredEvent> erredEvents;
 }

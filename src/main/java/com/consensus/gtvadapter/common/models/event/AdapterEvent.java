@@ -7,6 +7,7 @@ import com.consensus.gtvadapter.common.models.event.isp.ready.IspUsageNewEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
 import com.consensus.gtvadapter.common.models.event.isp.store.UsageBatchStoreEvent;
 import com.consensus.gtvadapter.common.models.event.isp.stored.CustomerStoredEvent;
+import com.consensus.gtvadapter.common.models.event.isp.stored.UsageBatchStoredEvent;
 import com.consensus.gtvadapter.common.models.event.isp.update.CustomerUpdateEvent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -29,8 +30,9 @@ import lombok.Data;
 
         // New Usage Event Flow
         @JsonSubTypes.Type(value = IspUsageNewEvent.class, name = IspUsageNewEvent.TYPE),
-        @JsonSubTypes.Type(value = UsageBatchStoreEvent.class, name = UsageBatchStoreEvent.TYPE),
         @JsonSubTypes.Type(value = UsageAdapterEvent.class, name = UsageAdapterEvent.TYPE),
+        @JsonSubTypes.Type(value = UsageBatchStoreEvent.class, name = UsageBatchStoreEvent.TYPE),
+        @JsonSubTypes.Type(value = UsageBatchStoredEvent.class, name = UsageBatchStoredEvent.TYPE)
 
 })
 public abstract class AdapterEvent {

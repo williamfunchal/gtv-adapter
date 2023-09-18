@@ -10,6 +10,7 @@ import java.util.Optional;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class IspUsageNewEvent extends BaseIspDataReadyEvent<IspUsageData> {
+
     public static final String TYPE = "usage-isp-new";
 
     public IspUsageNewEvent() {
@@ -19,7 +20,7 @@ public class IspUsageNewEvent extends BaseIspDataReadyEvent<IspUsageData> {
     @Override
     public String getGroupId() {
         return Optional.ofNullable(data)
-                .map(IspUsageData::getCustomerkey)
+                .map(IspUsageData::getCustomerKey)
                 .orElse(TYPE);
     }
 }

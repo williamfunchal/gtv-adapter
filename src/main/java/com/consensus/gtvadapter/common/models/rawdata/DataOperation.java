@@ -3,17 +3,19 @@ package com.consensus.gtvadapter.common.models.rawdata;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Getter
+@RequiredArgsConstructor
 public enum DataOperation {
 
     CREATE("CREATE"),
     UPDATE("UPDATE"),
-    DELETE("DELETE");
+    DELETE("DELETE"),
+    UNKNOWN("UNKNOWN");
 
     private static final Map<String, DataOperation> CONSTANTS = new HashMap<>();
 
@@ -25,10 +27,6 @@ public enum DataOperation {
 
     private final String value;
 
-    DataOperation(String value) {
-        this.value = value;
-    }
-
     @JsonValue
     public String value() {
         return this.value;
@@ -36,7 +34,6 @@ public enum DataOperation {
 
     @JsonCreator
     public static DataOperation fromValue(String value) {
-        return Optional.ofNullable(CONSTANTS.get(value))
-                .orElseThrow(() -> new IllegalArgumentException("Unsupported operation exception: " + value));
+        return CONSTANTS.getOrDefault(value, UNKNOWN);
     }
 }

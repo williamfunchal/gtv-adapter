@@ -19,28 +19,28 @@ public class UsageMapper {
     private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(UTC);
     private static final Map<String, String> resourceTypes = Map.of(
             "INBOX_GENERIC", "local",
-            "INBOX_ONLY","local",
-            "INBOX_TOLLFREE","toll-free",
-            "INBOX_ONLY_TOLLFREE","toll-free");
+            "INBOX_ONLY", "local",
+            "INBOX_TOLLFREE", "toll-free",
+            "INBOX_ONLY_TOLLFREE", "toll-free");
 
     //TODO Finish mappings
-    public UsageCreationGtvData mapToUsageCreationGtvData(IspUsageData ispUsageData){
-        final ZonedDateTime billingDateTime = ZonedDateTime.parse(ispUsageData.getBillingDateTime(), ISP_DATE_PATTERN);
-        final UsageCreationGtvData.UsageCreationGtvDataBuilder usageEventBuilder = UsageCreationGtvData.builder()
+    public UsageCreationGtvData mapToUsageCreationGtvData(IspUsageData ispUsageData) {
+        ZonedDateTime billingDateTime = ZonedDateTime.parse(ispUsageData.getBillingDateTime(), ISP_DATE_PATTERN);
+        UsageCreationGtvData.UsageCreationGtvDataBuilder usageEventBuilder = UsageCreationGtvData.builder()
                 .startTime(billingDateTime)
                 .endTime(billingDateTime)
                 .usageUom(UsageUom.COUNT)
                 .usageAmount(getUsageAmount(ispUsageData.getDuration(), ispUsageData.getPages()))
                 .referenceId(ispUsageData.getMsgId())
-                .sequenceId(ispUsageData.getCustomerkey())
+                .sequenceId(ispUsageData.getCustomerKey())
                 .text03(ispUsageData.getCurrencyCode())
-                .text04(ispUsageData.getCustomerkey() + "|" + ispUsageData.getServiceKey());
-        if( isInbound(ispUsageData)){
+                .text04(ispUsageData.getCustomerKey() + "|" + ispUsageData.getServiceKey());
+        if (isInbound(ispUsageData)) {
             usageEventBuilder
                     .serviceResourceIdentifier(ispUsageData.getPhoneNumber())
                     .text01("receive")
                     .text02(resourceTypes.get(ispUsageData.getResourceType()));
-        }else{
+        } else {
             usageEventBuilder
                     .serviceResourceIdentifier(ispUsageData.getServiceKey())
                     .text01("send")
@@ -51,16 +51,16 @@ public class UsageMapper {
         return usageEventBuilder.build();
     }
 
-    private boolean isInbound(IspUsageData ispUsageData){
+    private boolean isInbound(IspUsageData ispUsageData) {
         return resourceTypes.containsKey(ispUsageData.getResourceType());
     }
 
-    private Integer getUsageAmount(Integer duration, Integer pages){
-        final int durationInMinutes = Math.round(duration / 60f);
+    private Integer getUsageAmount(Integer duration, Integer pages) {
+        int durationInMinutes = Math.round(duration / 60f);
 
-        if(durationInMinutes > pages){
+        if (durationInMinutes > pages) {
             return durationInMinutes;
-        }else{
+        } else {
             return pages;
         }
     }
