@@ -19,8 +19,6 @@ public class IspUsageNewEvent extends BaseIspDataReadyEvent<IspUsageData> {
 
     @Override
     public String getGroupId() {
-        return Optional.ofNullable(data)
-                .map(IspUsageData::getCustomerKey)
-                .orElse(TYPE);
+        return Optional.ofNullable(eventId).orElse(TYPE);
     }
 }
