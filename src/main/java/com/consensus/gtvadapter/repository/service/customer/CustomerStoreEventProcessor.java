@@ -1,22 +1,23 @@
-package com.consensus.gtvadapter.repository.service;
+package com.consensus.gtvadapter.repository.service.customer;
 
 import com.consensus.gtvadapter.common.models.event.isp.store.CustomerStoreEvent;
 import com.consensus.gtvadapter.common.models.event.isp.stored.CustomerStoredEvent;
 import com.consensus.gtvadapter.repository.entities.CustomerDbEvent;
 import com.consensus.gtvadapter.repository.entities.EventStatus;
 import com.consensus.gtvadapter.repository.mapper.CustomerEventMapper;
+import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
 import com.consensus.gtvadapter.repository.sqs.DataStoredQueuePublishService;
 import com.consensus.gtvadapter.repository.storage.CustomerEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 import static com.consensus.gtvadapter.repository.entities.EventStatus.IN_PROGRESS;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 class CustomerStoreEventProcessor implements RepositoryEventProcessor<CustomerStoreEvent> {
 
