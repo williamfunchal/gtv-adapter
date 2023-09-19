@@ -31,20 +31,5 @@ public class UsageCreationGtvData implements GtvData {
     private String text03;
     private String text04;
     private String text05;
-    private String text06;
     private Long number01;
-    private Long number02;
-    private Long number03;
-    private Long number04;
-    private Long number05;
-    private Boolean boolean01;
-    private Boolean boolean02;
-    private Boolean boolean03;
-    private Boolean boolean04;
-    private Boolean boolean05;
-    private ZonedDateTime date01;
-    private ZonedDateTime date02;
-    private ZonedDateTime date03;
-    private ZonedDateTime date04;
-    private ZonedDateTime date05;
 }
