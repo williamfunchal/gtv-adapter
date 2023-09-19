@@ -1,12 +1,25 @@
 package com.consensus.gtvadapter.repository.service.usage;
 
+import com.consensus.gtvadapter.common.models.event.gtv.response.GtvResponseData;
 import com.consensus.gtvadapter.common.models.event.isp.update.UsageUpdateEvent;
+import com.consensus.gtvadapter.common.models.gtv.usage.UsageCreationGtvData;
+import com.consensus.gtvadapter.common.models.gtv.usage.UsageEventsBulkRequest;
+import com.consensus.gtvadapter.repository.entities.UsageDbEvent;
 import com.consensus.gtvadapter.repository.mapper.UsageEventMapper;
 import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
 import com.consensus.gtvadapter.repository.storage.UsageEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+
+import static com.consensus.gtvadapter.repository.entities.EventStatus.REPLICATED;
+import static java.util.Collections.emptyList;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Slf4j
 @Component
@@ -23,6 +36,36 @@ class UsageUpdateEventProcessor implements RepositoryEventProcessor<UsageUpdateE
 
     @Override
     public void process(UsageUpdateEvent updateEvent) {
-        //TODO implement 'eventId' can be taken from 'UsageCreationGtvData.referenceId'
+        List<UsageCreationGtvData> usageCreationEvents = Optional.ofNullable(updateEvent.getBody())
+                .map(UsageEventsBulkRequest::getUsageEvents)
+                .orElse(emptyList());
+        if (isEmpty(usageCreationEvents)) {
+            log.error("Received empty usage update event. Update eventId={}", updateEvent.getEventId());
+            return;
+        }
+        Set<String> eventIds = usageCreationEvents.stream()
+                .map(UsageCreationGtvData::getReferenceId)
+                .collect(toSet());
+
+        Map<String, UsageDbEvent> usageEventsInDb = usageEventsRepository.findByEventIdIn(eventIds)
+                .stream()
+                .collect(toMap(UsageDbEvent::getEventId, identity()));
+
+        List<UsageDbEvent> dbEventsToUpdate = new ArrayList<>(eventIds.size());
+        for (UsageCreationGtvData event : usageCreationEvents) {
+            String eventId = event.getReferenceId();
+            UsageDbEvent usageDbEvent = usageEventsInDb.get(eventId);
+            if (usageDbEvent == null) {
+                log.warn("Usage event with Id {} is missing from DB. Creating DB record.", eventId);
+                usageDbEvent = usageEventMapper.toEventEntity(event, updateEvent.getCorrelationId());
+            }
+            usageDbEvent.setStatus(REPLICATED);
+            dbEventsToUpdate.add(usageDbEvent);
+        }
+
+        usageEventsRepository.saveAll(dbEventsToUpdate);
+
+        // TODO create record in 'gtv_api_calls' table
+        GtvResponseData gtvResponseData = updateEvent.getResult();
     }
 }
