@@ -38,7 +38,7 @@ public class IspUsageNewEventProcessor implements BatchEventProcessor<IspUsageNe
 
     private UsageAdapterEvent createUsageAdapterEvent(IspUsageNewEvent ispUsageNewEvent) {
         IspUsageData ispUsageData = ispUsageNewEvent.getData();
-        UsageCreationGtvData usageCreationGtvData = usageMapper.mapToUsageCreationGtvData(ispUsageData);
+        UsageCreationGtvData usageCreationGtvData = usageMapper.toGtvData(ispUsageData);
 
         UsageAdapterEvent usageAdapterEvent = new UsageAdapterEvent();
         usageAdapterEvent.setEventId(ispUsageNewEvent.getEventId());

@@ -5,16 +5,16 @@
   "operation": "CREATE",
   "table_name": "j2_inbox_log",
   "data":{
-    "billing_date_time": "2019-10-23 00:00:00.000",
-    "phone_number": "13036484942",
-    "pages": 1,
-    "duration": 1000,
-    "message_id":"CBT-291-TEST-9854262168-6621790092-611",
-    "customerkey": 31108015,
-    "resource_type": "INBOX_GENERIC",
-    "service_key": 50801410,
-    "currency_code": "US",
-    "msg_id": "CBT-291-TEST-9854262168-6621790092-611",
-    "service_type": "mediad"
+    "start_time": "2021-04-22T15:44:20Z",
+    "end_time": "2021-04-22T15:44:20Z",
+    "service_resource_identifier": 94610603,
+    "usage_uom": "COUNT",
+    "usage_amount": 5,
+    "reference_id": "chd-7333D37641026F49E05369690B0A3789",
+    "sequence_id": "48766628",
+    "text01": "receive",
+    "text02": "local",
+    "text03": "USD",
+    "text04": "48767323|94610603"
   }
 }
