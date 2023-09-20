@@ -1,23 +1,20 @@
 {
-  "event_type": "isp-new-customer",
-  "event_id": "e5a1eb55-d0d6-48e5-83ce-00db173d0a37",
-  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
+  "event_type": "customer-isp-new",
+  "table_name": "ISPCUSTOMER",
   "operation": "CREATE",
-  "table_name": "ispcustomer",
-  "data":{
-    "customerkey": 8983539,
-    "company": "Test account",
+  "data": {
+    "customer_key": "46487972",
+    "company": "Coldwell Banker Griffith",
     "country": "US",
-    "address_line1": "620 Congress Ave.",
-    "address_line2": "Suite 100",
-    "city": "Austin",
-    "mail_region": "TX",
-    "mail_code": "78701",
-    "email_address": "test@email.com",
-    "start_date": "2015-04-21",
+    "address_line1": "2222 SW 29th St.",
+    "address_line2": "",
+    "city": "Topeka",
+    "mail_region": "KS",
+    "mail_code": "66611",
+    "email_address": "46487972@test.j2noc.com",
+    "start_date": "2005-01-21 00:00:00.000",
     "currency_code": "USD",
-    "payment_terms": "Upon Receipt",
-    "reseller_id": 31907,
-    "offer_code": "CORP_10DID_1495_NOTRI_NOACT_25PGIFT_1000SEND"
+    "reseller_id": "72821",
+    "offer_code": "CORPAUTO_STD_USD"
   }
 }
