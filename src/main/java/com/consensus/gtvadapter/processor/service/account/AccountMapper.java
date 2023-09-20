@@ -27,7 +27,7 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 class AccountMapper {
 
-    private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    private static final DateTimeFormatter ISP_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
     private static final DateTimeFormatter CUSTOM_FIELD_DATE_PATTERN = DateTimeFormatter.ofPattern("MM/dd/yyyy").withZone(UTC);
 
     private final IspGtvMapsProperties mappingProperties;
