@@ -34,7 +34,7 @@ public class DataStoredProcessor implements QueueMessageProcessor {
 
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
-        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
+        log.debug("Processing SQS message, Type: {}, Body: {}", messageContext.getEventType(), messageContext.getMessage().getBody());
 
         AdapterEvent adapterEvent = parseMessage(messageContext.getMessage().getBody());
         AdapterEvent nextEvent = eventProcessingService.processEvent(adapterEvent);

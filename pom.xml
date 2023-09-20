@@ -11,7 +11,7 @@
 
     <groupId>com.consensus.billplatform</groupId>
     <artifactId>gtv-adapter</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
     <name>gtv-adapter</name>
     <description>GTV Adapter for Usage and Customer Data Processing</description>
     <packaging>jar</packaging>

@@ -41,7 +41,7 @@ public abstract class BaseDataReadyProcessor implements QueueMessageProcessor {
 
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
-        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
+        log.debug("Processing SQS message, Type: {}, Body: {}", messageContext.getEventType(), messageContext.getMessage().getBody());
 
         BaseIspDataReadyEvent<?> dataReadyEvent;
         try {
