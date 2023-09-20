@@ -38,7 +38,7 @@ public class GtvRequestProcessor implements QueueMessageProcessor {
 
     @Override
     public CCSIQueueMessageResult process(CCSIQueueMessageContext messageContext) {
-        log.debug("Processing SQS message of type: {}", messageContext.getEventType());
+        log.debug("Processing SQS message, Type: {}, Body: {}", messageContext.getEventType(), messageContext.getMessage().getBody());
         try {
             BaseGtvRequest<?> request = parseMessage(messageContext.getMessage().getBody());
             BaseGtvResponse<?> response = gatewayEventProcessingService.processEvent(request);
