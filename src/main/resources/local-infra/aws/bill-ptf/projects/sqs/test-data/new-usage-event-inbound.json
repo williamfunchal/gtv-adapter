@@ -1,7 +1,5 @@
 {
   "event_type": "usage-isp-new",
-  "event_id": "e5a1eb55-d0d6-48e5-83ce-00db173d0a37",
-  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
   "operation": "CREATE",
   "table_name": "j2_inbox_log",
   "data":{
@@ -10,7 +8,7 @@
     "service_resource_identifier": 94610603,
     "usage_uom": "COUNT",
     "usage_amount": 5,
-    "reference_id": "chd-7333D37641026F49E05369690B0A3789",
+    "reference_id": "05d01322-e0ac-4c71-8079-7104ab0c5c75",
     "sequence_id": "48766628",
     "text01": "receive",
     "text02": "local",

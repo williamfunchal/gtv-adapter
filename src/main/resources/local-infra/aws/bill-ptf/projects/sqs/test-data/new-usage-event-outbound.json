@@ -1,13 +1,11 @@
 {
   "event_type": "usage-isp-new",
-  "event_id": "1813977721",
-  "correlation_id": "e5f1eb55-d0d6-48e5-83ce-00db173d0a72",
   "operation": "CREATE",
   "table_name": "ispjfaxusagelog",
   "data":{
     "start_time": "2021-04-22T15:44:20Z",
     "end_time": "2021-04-22T15:44:20Z",
-    "service_resource_identifier": 94610603,
+    "service_resource_identifier": 10040645591,
     "usage_uom": "COUNT",
     "usage_amount": 5,
     "reference_id": "chd-7333D37641026F49E05369690B0A3789",

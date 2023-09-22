@@ -1,0 +1,43 @@
+{
+  "event_type": "usage-gtv-request",
+  "correlation_id": "f5f1eb55-d0d6-48e5-83ce-00db173d0a71",
+  "method": "POST",
+  "api": "/billing/2/usage-events/bulk",
+  "body": {
+    "mode":"FAIL_ON_EXISTING",
+    "usage_events":[
+      {
+        "start_time":"2023-07-01T05:03:32.555Z",
+        "end_time":"2023-07-01T05:03:32.555Z",
+        "service_resource_identifier":"10040645591",
+        "usage_uom":"COUNT",
+        "usage_amount":15,
+        "reference_id":"37071679",
+        "sequence_id":"682fe07a-b979-4c9d-9bb4-2bb85961dac2",
+        "description":"46588174",
+        "text01":"send",
+        "text02":"send",
+        "text03":"USD",
+        "text04":"46947064|91019485",
+        "text05":"15623461847",
+        "number01":10
+      },
+      {
+        "start_time":"2022-07-01T05:03:32.555Z",
+        "end_time":"2022-07-01T05:03:32.555Z",
+        "service_resource_identifier":"10040645591",
+        "usage_uom":"COUNT",
+        "usage_amount":15,
+        "reference_id":"37071679",
+        "sequence_id":"782fe07a-b979-4c9d-9bb4-2bb85961dac2",
+        "description":"46588174",
+        "text01":"send",
+        "text02":"send",
+        "text03":"USD",
+        "text04":"46947064|91019485",
+        "text05":"15623461847",
+        "number01":10
+      }
+    ]
+  }
+}

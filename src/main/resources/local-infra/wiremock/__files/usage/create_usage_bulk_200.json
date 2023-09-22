@@ -1,102 +1,75 @@
 {
   "rated_events": [
     {
-      "id": "1438752",
-      "description": "string",
-      "start_time": "2019-08-24T14:15:22Z",
-      "end_time": "2019-08-24T14:15:22Z",
-      "service_resource_identifier": "string",
-      "usage_uom": "MILLISECOND",
-      "usage_amount": 0,
-      "reference_id": "string",
-      "sequence_id": "string",
-      "text01": "string",
-      "text02": "string",
-      "text03": "string",
-      "text04": "string",
-      "text05": "string",
-      "text06": "string",
-      "number01": 0,
-      "number02": 0,
-      "number03": 0,
-      "number04": 0,
-      "number05": 0,
-      "boolean01": true,
-      "boolean02": true,
-      "boolean03": true,
-      "boolean04": true,
-      "boolean05": true,
-      "date01": "2019-08-24T14:15:22Z",
-      "date02": "2019-08-24T14:15:22Z",
-      "date03": "2019-08-24T14:15:22Z",
-      "date04": "2019-08-24T14:15:22Z",
-      "date05": "2019-08-24T14:15:22Z",
-      "total_charge": 0,
-      "overwrite_counter": 0,
-      "request_id": "string",
+      "id": "1001210058",
+      "description": "46588174",
+      "total_charge": 0E-20,
+      "start_time": "2023-07-01T05:03:32Z",
+      "end_time": "2023-07-01T05:03:32Z",
+      "service_resource_identifier": "10040645591",
+      "usage_uom": "COUNT",
+      "usage_amount": 1.65003,
+      "reference_id": "37071679",
+      "sequence_id": "682fe07a-b979-4c9d-9bb4-2bb85961dac2",
+      "request_id": "a0dc7615-8683-44a6-b092-a95b97765091",
+      "text01": "send",
+      "text02": "send",
+      "text03": "USD",
+      "text04": "46947064|91019485",
+      "text05": "15623461847",
+      "number01": 10.00000000000000000000,
+      "number03": 15.00000000000000000000,
+      "number04": 0.10000200000000000000,
+      "number05": 0.15000300000000000000,
       "service_period": {
-        "id": "1438752"
+        "id": "970545"
       },
+      "overwrite_counter": 0,
       "event_charges": [
         {
-          "id": "1438752",
-          "usage_uom": "MILLISECOND",
-          "usage_amount": 0,
+          "id": "1001560076",
+          "charge": 0E-20,
           "usage_rule": {
-            "id": "1438752"
+            "id": "761214"
           },
-          "charge": 0,
           "charge_category": {
-            "id": "1438752",
-            "charge_category_type": "adjustment",
-            "name": "string"
+            "charge_category_type": "usage-charge",
+            "id": "1898",
+            "name": "Outbound",
+            "code": "Outbound-ZZnGd"
           },
-          "consume_prepaid_balance": true,
+          "usage_uom": "COUNT",
+          "usage_amount": 1.65003,
+          "consume_prepaid_balance": false,
           "service": {
-            "id": "1438752"
+            "id": "93726"
           }
         }
-      ],
-      "overwritten_event_id": "string"
+      ]
     }
   ],
   "erred_events": [
     {
-      "request_id": "string",
       "unrated_usage_event": {
-        "description": "string",
-        "start_time": "2019-08-24T14:15:22Z",
-        "end_time": "2019-08-24T14:15:22Z",
-        "service_resource_identifier": "string",
-        "usage_uom": "MILLISECOND",
-        "usage_amount": 0,
-        "reference_id": "string",
-        "sequence_id": "string",
-        "text01": "string",
-        "text02": "string",
-        "text03": "string",
-        "text04": "string",
-        "text05": "string",
-        "text06": "string",
-        "number01": 0,
-        "number02": 0,
-        "number03": 0,
-        "number04": 0,
-        "number05": 0,
-        "boolean01": true,
-        "boolean02": true,
-        "boolean03": true,
-        "boolean04": true,
-        "boolean05": true,
-        "date01": "2019-08-24T14:15:22Z",
-        "date02": "2019-08-24T14:15:22Z",
-        "date03": "2019-08-24T14:15:22Z",
-        "date04": "2019-08-24T14:15:22Z",
-        "date05": "2019-08-24T14:15:22Z"
+        "description": "46588174",
+        "start_time": "2022-07-01T05:03:32Z",
+        "end_time": "2022-07-01T05:03:32Z",
+        "service_resource_identifier": "10040645591",
+        "usage_uom": "COUNT",
+        "usage_amount": 15,
+        "reference_id": "37071679",
+        "sequence_id": "782fe07a-b979-4c9d-9bb4-2bb85961dac2",
+        "text01": "send",
+        "text02": "send",
+        "text03": "USD",
+        "text04": "46947064|91019485",
+        "text05": "15623461847",
+        "number01": 10.00000000000000000000,
+        "overwrite_counter": 0
       },
-      "message": "string",
-      "code": "string",
-      "voided_event_id": "string"
+      "request_id": "a0dc7615-8683-44a6-b092-a95b97765091",
+      "message": "Could not find a service with identifier 10040645591 for the event start time.",
+      "code": "400"
     }
   ]
 }
