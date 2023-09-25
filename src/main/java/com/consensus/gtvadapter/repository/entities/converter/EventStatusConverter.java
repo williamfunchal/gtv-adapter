@@ -6,6 +6,7 @@ import com.consensus.gtvadapter.repository.entities.EventStatus;
 import java.util.Optional;
 
 public class EventStatusConverter implements DynamoDBTypeConverter<String, EventStatus> {
+
     @Override
     public String convert(EventStatus status) {
         return Optional.ofNullable(status).map(EventStatus::value).orElse(null);

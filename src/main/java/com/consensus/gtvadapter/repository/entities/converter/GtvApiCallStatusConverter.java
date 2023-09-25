@@ -6,6 +6,7 @@ import com.consensus.gtvadapter.repository.entities.GtvApiCallStatus;
 import java.util.Optional;
 
 public class GtvApiCallStatusConverter implements DynamoDBTypeConverter<String, GtvApiCallStatus> {
+
     @Override
     public String convert(GtvApiCallStatus status) {
         return Optional.ofNullable(status).map(GtvApiCallStatus::value).orElse(null);
