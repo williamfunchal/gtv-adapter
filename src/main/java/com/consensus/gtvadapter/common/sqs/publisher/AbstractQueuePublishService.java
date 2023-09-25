@@ -22,10 +22,13 @@ public abstract class AbstractQueuePublishService<T extends AdapterEvent> implem
 
     @Override
     public SendMessageResult publishMessage(AdapterEvent event) {
-        log.debug("Publishing message to '{}' SQS queue: {}", queueProperties.getQueueShortName(), event);
         SendMessageRequest sendMessageRequest = createSendRequest(event);
+        String messageBody = sendMessageRequest.getMessageBody();
+
+        log.debug("Publishing message to '{}' SQS queue: {}", queueProperties.getQueueShortName(), messageBody);
         SendMessageResult result = amazonSQS.sendMessage(sendMessageRequest);
-        log.debug("Message published to '{}' SQS queue: {}", queueProperties.getQueueShortName(), sendMessageRequest.getMessageBody());
+        log.debug("Message published to '{}' SQS queue: {}", queueProperties.getQueueShortName(), messageBody);
+
         return result;
     }
 
