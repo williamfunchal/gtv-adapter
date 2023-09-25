@@ -52,6 +52,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     data-ready-to-update:
       queueUrl: ${/sqs/adapter-data-ready-to-update-url}
       queueShortName: adapter-data-ready-to-update
@@ -61,6 +63,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     data-updated:
       queueUrl: ${/sqs/adapter-data-updated-url}
       queueShortName: adapter-data-updated
@@ -70,6 +74,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     data-ready-to-store:
       queueUrl: ${/sqs/adapter-data-ready-to-store-url}
       queueShortName: adapter-data-ready-to-store
@@ -79,6 +85,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     data-stored:
       queueUrl: ${/sqs/adapter-data-stored-url}
       queueShortName: adapter-data-stored
@@ -88,6 +96,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     gtv-request:
       queueUrl: ${/sqs/adapter-gtv-data-ready-url}
       queueShortName: adapter-gtv-data-ready
@@ -97,6 +107,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
     gtv-response:
       queueUrl: ${/sqs/adapter-gtv-response-received-url}
       queueShortName: adapter-gtv-response-received
@@ -106,6 +118,8 @@ aws:
       emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: ${/sqs/concurrency:10}
       enableTracing: true
+      tracingConfig:
+        requestLoggingEnabled: true
 
 gtv:
   host: ${/gtv/host}

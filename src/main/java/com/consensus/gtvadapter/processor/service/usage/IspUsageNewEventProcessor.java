@@ -24,25 +24,28 @@ public class IspUsageNewEventProcessor implements BatchEventProcessor<IspUsageNe
 
     @Override
     public UsageBatchStoreEvent process(List<IspUsageNewEvent> ispUsageNewEvents) {
+        String batchEventId = CCSIUUIDUtils.generateUUID();
+        String batchCorrelationId = CCSIUUIDUtils.generateUUID();
+
         List<UsageAdapterEvent> usageEvents = ispUsageNewEvents.stream()
-                .map(this::createUsageAdapterEvent)
+                .map(event -> createUsageAdapterEvent(event, batchCorrelationId))
                 .collect(toList());
 
         UsageBatchStoreEvent usageBatchStoreEvent = new UsageBatchStoreEvent();
-        usageBatchStoreEvent.setEventId(CCSIUUIDUtils.generateUUID());
-        usageBatchStoreEvent.setCorrelationId(CCSIUUIDUtils.generateUUID());
+        usageBatchStoreEvent.setEventId(batchEventId);
+        usageBatchStoreEvent.setCorrelationId(batchCorrelationId);
         usageBatchStoreEvent.setEventBatch(usageEvents);
 
         return usageBatchStoreEvent;
     }
 
-    private UsageAdapterEvent createUsageAdapterEvent(IspUsageNewEvent ispUsageNewEvent) {
+    private UsageAdapterEvent createUsageAdapterEvent(IspUsageNewEvent ispUsageNewEvent, String correlationId) {
         IspUsageData ispUsageData = ispUsageNewEvent.getData();
         UsageCreationGtvData usageCreationGtvData = usageMapper.toGtvData(ispUsageData);
 
         UsageAdapterEvent usageAdapterEvent = new UsageAdapterEvent();
         usageAdapterEvent.setEventId(ispUsageNewEvent.getEventId());
-        usageAdapterEvent.setCorrelationId(ispUsageNewEvent.getCorrelationId());
+        usageAdapterEvent.setCorrelationId(correlationId);
         usageAdapterEvent.setOperation(ispUsageNewEvent.getOperation());
         usageAdapterEvent.setTableName(ispUsageNewEvent.getTableName());
         usageAdapterEvent.setRawData(ispUsageData);

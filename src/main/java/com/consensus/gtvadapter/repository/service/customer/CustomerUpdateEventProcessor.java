@@ -3,9 +3,12 @@ package com.consensus.gtvadapter.repository.service.customer;
 import com.consensus.gtvadapter.common.models.event.gtv.response.GtvResponseData;
 import com.consensus.gtvadapter.common.models.event.isp.update.CustomerUpdateEvent;
 import com.consensus.gtvadapter.repository.entities.CustomerDbEvent;
+import com.consensus.gtvadapter.repository.entities.GtvApiCall;
 import com.consensus.gtvadapter.repository.mapper.CustomerEventMapper;
+import com.consensus.gtvadapter.repository.mapper.GtvApiCallMapper;
 import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
 import com.consensus.gtvadapter.repository.storage.CustomerEventsRepository;
+import com.consensus.gtvadapter.repository.storage.GtvApiCallsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,8 @@ class CustomerUpdateEventProcessor implements RepositoryEventProcessor<CustomerU
 
     private final CustomerEventsRepository customerEventsRepository;
     private final CustomerEventMapper customerEventMapper;
+    private final GtvApiCallsRepository gtvApiCallsRepository;
+    private final GtvApiCallMapper gtvApiCallMapper;
 
     @Override
     public String eventType() {
@@ -38,7 +43,7 @@ class CustomerUpdateEventProcessor implements RepositoryEventProcessor<CustomerU
         customerDbEvent.setStatus(REPLICATED);
         customerEventsRepository.save(customerDbEvent);
 
-        // TODO create record in 'gtv_api_calls' table
-        GtvResponseData gtvResponseData = updateEvent.getResult();
+        GtvApiCall gtvApiCall = gtvApiCallMapper.toGtvApiCall(updateEvent);
+        gtvApiCallsRepository.save(gtvApiCall);
     }
 }

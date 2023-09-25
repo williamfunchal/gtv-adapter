@@ -1,12 +1,14 @@
 package com.consensus.gtvadapter.repository.service.usage;
 
-import com.consensus.gtvadapter.common.models.event.gtv.response.GtvResponseData;
 import com.consensus.gtvadapter.common.models.event.isp.update.UsageUpdateEvent;
 import com.consensus.gtvadapter.common.models.gtv.usage.UsageCreationGtvData;
 import com.consensus.gtvadapter.common.models.gtv.usage.UsageEventsBulkRequest;
+import com.consensus.gtvadapter.repository.entities.GtvApiCall;
 import com.consensus.gtvadapter.repository.entities.UsageDbEvent;
+import com.consensus.gtvadapter.repository.mapper.GtvApiCallMapper;
 import com.consensus.gtvadapter.repository.mapper.UsageEventMapper;
 import com.consensus.gtvadapter.repository.service.RepositoryEventProcessor;
+import com.consensus.gtvadapter.repository.storage.GtvApiCallsRepository;
 import com.consensus.gtvadapter.repository.storage.UsageEventsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,8 @@ class UsageUpdateEventProcessor implements RepositoryEventProcessor<UsageUpdateE
 
     private final UsageEventsRepository usageEventsRepository;
     private final UsageEventMapper usageEventMapper;
+    private final GtvApiCallsRepository gtvApiCallsRepository;
+    private final GtvApiCallMapper gtvApiCallMapper;
 
     @Override
     public String eventType() {
@@ -62,10 +66,9 @@ class UsageUpdateEventProcessor implements RepositoryEventProcessor<UsageUpdateE
             usageDbEvent.setStatus(REPLICATED);
             dbEventsToUpdate.add(usageDbEvent);
         }
-
         usageEventsRepository.saveAll(dbEventsToUpdate);
 
-        // TODO create record in 'gtv_api_calls' table
-        GtvResponseData gtvResponseData = updateEvent.getResult();
+        GtvApiCall gtvApiCall = gtvApiCallMapper.toGtvApiCall(updateEvent);
+        gtvApiCallsRepository.save(gtvApiCall);
     }
 }
